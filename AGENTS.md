@@ -60,5 +60,7 @@ retired" or "no Claude/Fable bootstrap is active" is superseded.
 - The app lives in `SOURCE/` (Flutter). Product summaries live in `APP/`.
   Pre-change snapshots live in `ARCHIVE/`.
 - Run the app with `SOURCE/run.sh`. It resolves paths relative to itself.
+- Next read `MAP.md`: every WAFA document by ID and the task routes. Open only what the
+  task needs.
 - Group lessons every agent must read first:
   `../BLACK UMBRELLA GROUP/SYSTEM/DOCUMENTS/MASTER_GOVERNANCE/AGENT_LESSONS_LEARNED_CURRENT_VERSION_V1.md`

@@ -1,3 +1,13 @@
+---
+id: DOC-WAFA-0006
+type: GUIDE
+status: CURRENT
+feature: CODE AND RUNNING
+purpose: Wafa First Phone Preview
+links: []
+owner: WAFA chat
+---
+
 # Wafa First Phone Preview
 
 Wafa – Islamic Contracts is a standalone Flutter visual prototype with a white

@@ -1,3 +1,13 @@
+---
+id: DOC-WAFA-0001
+type: SPEC
+status: CURRENT
+feature: APP: AI FEATURES
+purpose: Ai Features — summary of this part of the app
+links: []
+owner: WAFA chat
+---
+
 PROJECT
 WAFA (وفاء)
 Feature: AI Features

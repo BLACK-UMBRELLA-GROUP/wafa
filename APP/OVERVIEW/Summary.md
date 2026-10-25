@@ -1,3 +1,13 @@
+---
+id: DOC-WAFA-0004
+type: SPEC
+status: CURRENT
+feature: APP: OVERVIEW
+purpose: Overview — summary of this part of the app
+links: []
+owner: WAFA chat
+---
+
 PROJECT
 WAFA (وفاء)
 Working title: Wafa – Islamic Contracts

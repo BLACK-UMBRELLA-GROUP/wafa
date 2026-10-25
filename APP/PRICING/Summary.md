@@ -1,3 +1,13 @@
+---
+id: DOC-WAFA-0005
+type: SPEC
+status: CURRENT
+feature: APP: PRICING
+purpose: Pricing — summary of this part of the app
+links: []
+owner: WAFA chat
+---
+
 PROJECT
 WAFA (وفاء)
 Feature: Pricing

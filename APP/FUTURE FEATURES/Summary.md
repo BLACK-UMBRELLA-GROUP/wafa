@@ -1,3 +1,13 @@
+---
+id: DOC-WAFA-0003
+type: SPEC
+status: CURRENT
+feature: APP: FUTURE FEATURES
+purpose: Future Features — summary of this part of the app
+links: []
+owner: WAFA chat
+---
+
 PROJECT
 WAFA (وفاء)
 Feature: Future Features

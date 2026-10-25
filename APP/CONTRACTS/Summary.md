@@ -1,3 +1,13 @@
+---
+id: DOC-WAFA-0002
+type: SPEC
+status: CURRENT
+feature: APP: CONTRACTS
+purpose: Contracts — summary of this part of the app
+links: []
+owner: WAFA chat
+---
+
 PROJECT
 WAFA (وفاء)
 Feature: Contracts

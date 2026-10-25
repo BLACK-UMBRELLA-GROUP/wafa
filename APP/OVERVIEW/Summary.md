@@ -50,14 +50,15 @@ Naming trace:
   • On 12 October, six local files were updated: the five
     APP summaries and the repository-label comment in .gitignore.
   • Unchanged originals preserved in
-    ARCHIVE/PRE_WAFA_20261012.j3xPWM/.
+    ARCHIVE/MITHAQ_ORIGINALS_2026-06-25/.
   • Title selection authority: Founder's direct confirmation
     in this app's chat, 13 October 2026. Only this Overview
     was changed to adopt Wafa – Islamic Contracts.
   • The pre-selection Overview is preserved in
-    ARCHIVE/PRE_ISLAMIC_TITLE_20261013.2JcxI4/.
-  • The naming changes retained the existing MITHAQ folder
-    location and did not build, publish or register anything.
+    ARCHIVE/PRE_ISLAMIC_TITLE_20261013.2JcxI4/ (removed 24 Oct;
+    git and the USB backup hold it).
+  • The naming changes at first kept the MITHAQ folder
+    location (the folder was renamed WAFA on 24 October) and did not build, publish or register anything.
   • Pricing, feature scope and existing outstanding tasks
     are unchanged by this name decision.
 
@@ -73,7 +74,8 @@ Initial phone prototype — 13 October 2026:
     limits are recorded in SOURCE/README.md. Installation
     is separate from Founder visual acceptance.
   • Previous Overview preserved unchanged in
-    ARCHIVE/PRE_PHONE_PREVIEW_20261013.UjLrOG/.
+    ARCHIVE/PRE_PHONE_PREVIEW_20261013.UjLrOG/ (removed 24 Oct;
+    git and the USB backup hold it).
 
 Participant preview — 13 October 2026:
   • Founder approved a local visual rehearsal for sign-in and
@@ -90,7 +92,8 @@ Participant preview — 13 October 2026:
   • This remains session-only with no backend, real invitation,
     message, QR scan, signature or production identity system.
   • The previous Overview is preserved unchanged in
-    ARCHIVE/PRE_PARTICIPANT_PREVIEW_20261013.QHBC82/.
+    ARCHIVE/PRE_PARTICIPANT_PREVIEW_20261013.QHBC82/ (removed 24 Oct;
+    git and the USB backup hold it).
 
 Agreement document and payments preview — 13 October 2026:
   • Each confirmed participant can open a document-style
@@ -111,7 +114,8 @@ Agreement document and payments preview — 13 October 2026:
     clean and all 88 tests pass. At the Founder's request, build
     3 has not yet been built, installed or launched on his phone.
   • The previous Overview is preserved unchanged in
-    ARCHIVE/PRE_DOCUMENT_PAYMENTS_PREVIEW_20261013.VawiNW/.
+    ARCHIVE/PRE_DOCUMENT_PAYMENTS_PREVIEW_20261013.VawiNW/ (removed 24 Oct;
+    git and the USB backup hold it).
 
 Future:
   • Domain availability check

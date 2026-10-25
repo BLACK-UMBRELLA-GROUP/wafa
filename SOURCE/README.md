@@ -72,8 +72,9 @@ signature is sent. No religious certification or legal enforceability is claimed
 | test/*.dart | Domain, creation, detail and app regressions |
 
 The generic Flutter backend retains its BSD licence in tooling/LICENSE.
-Its launcher paths and cache checks are adapted locally. The physical project folder remains
-DEVELOPMENT/SUB BUSINESS/MITHAQ to preserve existing paths.
+Its launcher paths and cache checks are adapted locally and resolve relative to this folder.
+The project folder is DEVELOPMENT/WAFA (renamed from MITHAQ on 2026-10-24 by
+Founder decision; no script hard-coded the old name).
 
 ## Data flow and invariants
 
@@ -239,7 +240,7 @@ database migrations.
 No new shared OA is raised for these existing roadmap items in this bounded
 visual preview: it does not authorise their production implementation. Future
 work needs its own scoped approval and action trace. Existing group OA-101 covers
-whether this formerly MITHAQ project needs a dedicated governance SYSTEM; this
+whether this project (formerly MITHAQ) needs a dedicated governance SYSTEM; this
 preview does not create a separate governance programme or close that action.
 
 Next, the Founder reviews the phone layout and navigation. Visual acceptance

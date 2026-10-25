@@ -1,5 +1,5 @@
 PROJECT
-MITHAQ (ميثاق)
+WAFA (وفاء)
 Feature: Contracts
 
 ============================================================
@@ -84,7 +84,7 @@ If prohibited wording is detected:
   • Explains why it is prohibited
   • Suggests halal wording
 
-Mithaq never generates interest-bearing contracts.
+Wafa never generates interest-bearing contracts.
 
 ------------------------------------------------------------
 LOAN CREATION — QARD HASAN

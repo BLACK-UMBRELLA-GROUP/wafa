@@ -1,21 +1,117 @@
 PROJECT
-MITHAQ (ميثاق)
-Pronunciation: Mee-thaak
+WAFA (وفاء)
+Working title: Wafa – Islamic Contracts
+Pronunciation: wa-FAA
 
 ============================================================
 OVERVIEW
 ============================================================
 
 Meaning:
-  • Covenant
-  • Solemn Agreement
-  • Binding Pledge
+  • Faithfulness
+  • Loyalty
+  • Reliability
 
 The name reflects the platform's purpose: helping Muslims
 create and honour agreements according to Islamic principles.
 
 Status:
-  Approved as the current working name.
+  Founder approved the Wafa brand on 12 October 2026,
+  replacing MITHAQ, initially using the working title
+  Wafa – Contracts & Agreements.
+  On 13 October 2026, the Founder selected
+  Wafa – Islamic Contracts as the current working title.
+  The short brand name remains Wafa.
+  This is a local planning-name change only. No App Store
+  listing, company registration, domain or trademark changed.
+  On 13 October 2026, the Founder authorised a first local
+  phone prototype with a white and dark-green interface.
+  Standalone demo source now exists under SOURCE/.
+  The capabilities below remain the product roadmap unless
+  explicitly listed as built in SOURCE/README.md. The preview
+  does not implement real contracts, AI, signatures or payments.
+
+App Store wording — Founder-approved working title:
+  • Current working title: Wafa – Islamic Contracts
+    (24 characters).
+  • Proposed subtitle: Create, sign & track contracts
+    (30 characters).
+  • The previous title Wafa – Contracts & Agreements
+    (29 characters) is superseded. The subtitle remains
+    a proposal, not a separately approved store submission.
+  • Islamic describes the intended product focus, not a
+    certification or a guarantee of religious compliance
+    or legal enforceability. Legal and qualified scholarly
+    validation remain outstanding before public claims.
+
+Naming trace:
+  • Original transition authority: Founder's direct naming
+    instruction in this app's chat, 12 October 2026.
+  • On 12 October, six local files were updated: the five
+    APP summaries and the repository-label comment in .gitignore.
+  • Unchanged originals preserved in
+    ARCHIVE/PRE_WAFA_20261012.j3xPWM/.
+  • Title selection authority: Founder's direct confirmation
+    in this app's chat, 13 October 2026. Only this Overview
+    was changed to adopt Wafa – Islamic Contracts.
+  • The pre-selection Overview is preserved in
+    ARCHIVE/PRE_ISLAMIC_TITLE_20261013.2JcxI4/.
+  • The naming changes retained the existing MITHAQ folder
+    location and did not build, publish or register anything.
+  • Pricing, feature scope and existing outstanding tasks
+    are unchanged by this name decision.
+
+Initial phone prototype — 13 October 2026:
+  • Separate Flutter app: Wafa, bundle app.wafa.preview.
+  • White background with dark-green secondary colours.
+  • Home, searchable agreements, three-step demo creation,
+    details, simulated repayments, tracker and demo profile.
+  • Fictional session-only records; restarting resets edits.
+  • No ZYRA source, backend, member data or accounts copied.
+    ZYRA ADMIN supplied bounded phone-delivery guidance only.
+  • As-built files, tests, delivery evidence and remaining
+    limits are recorded in SOURCE/README.md. Installation
+    is separate from Founder visual acceptance.
+  • Previous Overview preserved unchanged in
+    ARCHIVE/PRE_PHONE_PREVIEW_20261013.UjLrOG/.
+
+Participant preview — 13 October 2026:
+  • Founder approved a local visual rehearsal for sign-in and
+    two or more people on one agreement.
+  • Apple and Google buttons select one of three fictional
+    identities; no provider opens and no account is created.
+  • An unsigned draft creator can prepare one invitation per
+    fictional person using a Wafa ID, saved Wafa contact,
+    invitation preview or QR preview.
+  • An invite allows only a request. The creator confirms the
+    exact fictional account before the shared draft appears.
+  • Joining, access, accepting terms and signing are kept as
+    separate states. Phone contacts are not read or uploaded.
+  • This remains session-only with no backend, real invitation,
+    message, QR scan, signature or production identity system.
+  • The previous Overview is preserved unchanged in
+    ARCHIVE/PRE_PARTICIPANT_PREVIEW_20261013.QHBC82/.
+
+Agreement document and payments preview — 13 October 2026:
+  • Each confirmed participant can open a document-style
+    agreement copy generated from the fields held by the demo.
+  • The copy lists the agreement ID, people and roles, type,
+    title, counterparty label, value, due date, paid balance,
+    remaining balance and signature state. It does not invent
+    missing clauses and is clearly unsigned, non-legal and
+    without scholarly certification.
+  • A separate Payments page shows the agreement due date and
+    itemised fictional payments. Party roles can record amount,
+    payment date, bank transfer/cash/card/other method, optional
+    reference and notes; Witness roles are view-only.
+  • Payment entries are unverified local records. They do not
+    move money, connect to a bank or prove payment. The preview
+    warns against entering account or card details.
+  • Source is prepared as Wafa 0.1.0 build 3. Cached analysis is
+    clean and all 88 tests pass. At the Founder's request, build
+    3 has not yet been built, installed or launched on his phone.
+  • The previous Overview is preserved unchanged in
+    ARCHIVE/PRE_DOCUMENT_PAYMENTS_PREVIEW_20261013.VawiNW/.
 
 Future:
   • Domain availability check
@@ -60,7 +156,7 @@ CORE PRINCIPLES
 DESIGN PHILOSOPHY
 ------------------------------------------------------------
 
-Mithaq is not designed to feel like legal software.
+Wafa is not designed to feel like legal software.
 
 It should feel:
   • Premium
@@ -114,7 +210,7 @@ Designed with a clean, modern, premium user experience.
 BUSINESS MODEL
 ------------------------------------------------------------
 
-Mithaq is not marketed as an AI contract generator.
+Wafa is not marketed as an AI contract generator.
 
 Positioned as:
   "The trusted Islamic platform for creating, managing
@@ -126,7 +222,7 @@ AI powers the experience but is not the product itself.
 CORE VALUE PROPOSITION
 ------------------------------------------------------------
 
-Mithaq combines:
+Wafa combines:
   • AI-assisted Islamic contract creation
   • Islamic compliance checking
   • Riba prevention

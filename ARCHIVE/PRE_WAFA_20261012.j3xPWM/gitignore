@@ -1,0 +1,6 @@
+# MITHAQ repo
+# Secrets — never commit (OA-AIOS-307 Finding 2, 2026-08-18)
+*.env
+*.key
+*.pem
+*.secret

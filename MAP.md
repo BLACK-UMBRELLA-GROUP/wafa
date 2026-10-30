@@ -27,7 +27,7 @@ re-run the tool.
 
 _Stop here unless you need to look up another ID._
 
-## Documents (6 live)
+## Documents (7 live)
 
 ### APP: AI FEATURES
 
@@ -64,6 +64,12 @@ _Stop here unless you need to look up another ID._
 | ID | File | Type | Purpose | KB |
 |---|---|---|---|---|
 | DOC-WAFA-0006 | `SOURCE/README.md` | GUIDE | Wafa First Phone Preview | 14 |
+
+### GOVERNANCE
+
+| ID | File | Type | Purpose | Links | KB |
+|---|---|---|---|---|---|
+| DOC-WAFA-0007 | `APP/APPROVED/BUILD_QUEUE.md` | REGISTER | Build queue - every LOCKed brief waits here; Codex builds WAITING lines at 04:00 or on GO (charters rule 9) | AD-AIOS-115 | 1 |
 
 ## Needs attention
 

@@ -1,6 +1,6 @@
 # WAFA roadmap
 
-WAFA is a local, fictional-data prototype. App feature development remains frozen. The current `APP/APPROVED/BUILD_QUEUE.md` has no task rows, and no venture outstanding-actions index is present in the routed location. The work below comes from the existing approved to-do lists in the [Overview](APP/OVERVIEW/Summary.md) and [Future Features](APP/FUTURE%20FEATURES/Summary.md) summaries. It is planning work awaiting scheduling, not a list of approved implementation briefs.
+WAFA is a local, fictional-data prototype. App feature development is paused until ZYRA launches. The current `APP/APPROVED/BUILD_QUEUE.md` has no task rows, and no venture outstanding-actions index is present in the routed location. The work below comes from the existing approved to-do lists in the [Overview](APP/OVERVIEW/Summary.md) and [Future Features](APP/FUTURE%20FEATURES/Summary.md) summaries. It is planning work awaiting scheduling, not a list of approved implementation briefs.
 
 ## Next planning work — approximately 27 hours
 

@@ -27,7 +27,7 @@ re-run the tool.
 
 _Stop here unless you need to look up another ID._
 
-## Documents (7 live)
+## Documents (8 live)
 
 ### APP: AI FEATURES
 
@@ -69,7 +69,8 @@ _Stop here unless you need to look up another ID._
 
 | ID | File | Type | Purpose | Links | KB |
 |---|---|---|---|---|---|
-| DOC-WAFA-0007 | `APP/APPROVED/BUILD_QUEUE.md` | REGISTER | Build queue - every LOCKed brief waits here; Codex builds WAITING lines at 04:00 or on GO (charters rule 9) | AD-AIOS-115 | 1 |
+| DOC-WAFA-0007 | `APP/APPROVED/BUILD_QUEUE.md` | REGISTER | Build queue - every LOCKed brief waits here; Codex builds WAITING lines at 01:00 or on GO (charters rule 9) | AD-AIOS-115 | 1 |
+| DOC-WAFA-0008 | `APP/APPROVED/QUESTIONS.md` | REGISTER | Codex's questions for the WAFA chat - Codex never asks Shakeel in chat; he files the question here, marks… | AD-AIOS-116 | 1 |
 
 ## Needs attention
 

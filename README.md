@@ -6,7 +6,7 @@ People, agreements and payments in this preview are fictional. Records stay in m
 
 ## Status
 
-Pre-launch visual demo, version `0.1.0+3`. A local iPhone preview has been delivered; the current source and its delivery limits are documented in [SOURCE/README.md](SOURCE/README.md). Installation and Founder visual acceptance are separate checks. App feature development is frozen until the Founder authorizes it. No production backend, Supabase integration or public app release is included.
+Pre-launch visual demo, version `0.1.0+3`. A local iPhone preview has been delivered; the current source and its delivery limits are documented in [SOURCE/README.md](SOURCE/README.md). Feature development is paused while the Founder's first product (ZYRA) reaches launch. No production backend or public app release yet.
 
 ## Built with
 

@@ -7,3 +7,13 @@
 
 # Left-overs a mounted drive creates when an open file is deleted (lesson S12, 25 Oct 2026)
 .fuse_hidden*
+
+# Local environment, signing and generated files
+.env*
+*.keystore
+*.p12
+*.mobileprovision
+GoogleService-Info.plist
+google-services.json
+build/
+.dart_tool/

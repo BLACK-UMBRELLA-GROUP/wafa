@@ -1,1 +1,1 @@
-Moved to the private [BLACK UMBRELLA GROUP/BUSINESS/WAFA/PRICING](<../../../BLACK UMBRELLA GROUP/BUSINESS/WAFA/PRICING/>).
+Pricing notes are kept in a private repository and are not part of this public source.

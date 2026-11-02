@@ -1,6 +1,6 @@
-# WAFA — Islamic Contracts
+# WAFA — Contracts
 
-WAFA is a standalone Flutter prototype for Muslims exploring how to create and honour agreements. It rehearses agreement creation, participants, unsigned document copies and payment records in a local phone preview.
+WAFA (وفاء, "faithfulness") is a standalone Flutter prototype for a faith community exploring how to create and honour agreements. It rehearses agreement creation, participants, unsigned document copies and payment records in a local phone preview.
 
 People, agreements and payments in this preview are fictional. Records stay in memory and reset when the process restarts. Authentication and invitations are simulations. Agreement copies remain unsigned, no signatures are collected, and payment records are fictional. The app does not create binding contracts, move money or claim religious certification.
 

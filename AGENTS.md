@@ -1,8 +1,9 @@
 # AGENTS.md — WAFA
 
-WAFA (وفاء) — Islamic contracts. Formerly MITHAQ; renamed in the product on
-2026-10-12 and in the folder on 2026-10-24 by Founder decision. This folder is
-its own git repository, so this file is what agents read here.
+WAFA (وفاء) — agreements made in line with the community's values.
+Formerly MITHAQ; renamed in the product on 2026-10-12 and in the folder on
+2026-10-24 by Founder decision. This folder is its own git repository, so this
+file is what agents read here.
 
 <!-- BLACK-UMBRELLA-CORE-RULES v4 START — master copy: BLACK UMBRELLA GROUP/SYSTEM/DOCUMENTS/MASTER_GOVERNANCE/AGENT_CORE_RULES_CURRENT_VERSION_V4.md. Edit the master, then re-sync every copy. -->
 ## Core rules — every AI agent, every Black Umbrella Group project

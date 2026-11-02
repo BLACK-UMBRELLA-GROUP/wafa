@@ -22,8 +22,8 @@ Meaning:
   • Loyalty
   • Reliability
 
-The name reflects the platform's purpose: helping Muslims
-create and honour agreements according to Islamic principles.
+The name reflects the platform's purpose: helping the community
+create and honour agreements according to its values.
 
 Status:
   Founder approved the Wafa brand on 12 October 2026,
@@ -49,7 +49,7 @@ App Store wording — Founder-approved working title:
   • The previous title Wafa – Contracts & Agreements
     (29 characters) is superseded. The subtitle remains
     a proposal, not a separately approved store submission.
-  • Islamic describes the intended product focus, not a
+  • The working title describes the intended product focus, not a
     certification or a guarantee of religious compliance
     or legal enforceability. Legal and qualified scholarly
     validation remain outstanding before public claims.
@@ -136,10 +136,10 @@ Future:
 PROJECT VISION
 ------------------------------------------------------------
 
-Build the world's leading AI-powered Islamic contract
-platform that enables Muslims to create, manage, sign,
-fulfil and preserve agreements according to Islamic
-principles.
+Build the world's leading AI-powered contract
+platform that enables the community to create, manage, sign,
+fulfil and preserve agreements according to the community's
+values.
 
 The platform is built around:
   • Amanah (Trust)
@@ -156,7 +156,7 @@ prohibited clauses and suggesting halal alternatives.
 CORE PRINCIPLES
 ------------------------------------------------------------
 
-• Islamic-first
+• Community values first
 • AI-assisted
 • No Riba
 • Modern UI
@@ -193,7 +193,7 @@ USER JOURNEY
 
  1. Create Contract
  2. AI asks conversational questions
- 3. AI generates an Islamic-compliant contract
+ 3. AI generates a contract aligned with the community's values
  4. Users review
  5. Unlimited edits
  6. AI regenerates
@@ -237,8 +237,9 @@ CORE VALUE PROPOSITION
 ------------------------------------------------------------
 
 Wafa combines:
-  • AI-assisted Islamic contract creation
-  • Islamic compliance checking
+  • AI-assisted creation of contracts aligned with the
+    community's values
+  • Checking alignment with the community's values
   • Riba prevention
   • Digital signatures
   • Verified witnesses
@@ -252,8 +253,8 @@ Wafa combines:
   • Scholar services (future)
   • Charity integration (future)
 
-The objective is to help Muslims create, honour and
-preserve agreements according to Islamic principles while
+The objective is to help the community create, honour and
+preserve agreements according to its values while
 using modern technology to reduce disputes, improve
 transparency and strengthen Amanah.
 
@@ -261,21 +262,22 @@ transparency and strengthen Amanah.
 LONG-TERM VISION
 ------------------------------------------------------------
 
-Create the world's most trusted Islamic contract ecosystem.
+Create the world's most trusted ecosystem for contracts
+aligned with the community's values.
 
 Not simply a document generator, but a complete platform
-where Muslims can:
+where members of the community can:
   • Create agreements
   • Understand agreements
   • Sign securely
   • Preserve evidence
   • Fulfil obligations
-  • Receive Islamic educational guidance
+  • Receive educational guidance on the community's values
   • Build trust through transparency and accountability
 
 Every feature should reinforce the platform's core values:
   Amanah • Justice • Transparency • Accountability •
-  Islamic Compliance
+  Alignment with the community's values
 
 ============================================================
 APPROVED TO-DO LIST

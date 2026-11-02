@@ -100,9 +100,9 @@ record user input. The fixed default demo date is 13 October 2026. Use
 fictional details only.
 
 The agreement copy is derived from the exact stored demo fields. It does not
-silently add clauses, signatures, evidence, legal status or Islamic scholarly
-approval. Confirmed participants may view it; a pending invitation still
-reveals nothing. Copying places the labelled demo text on the local clipboard.
+silently add clauses, signatures, evidence, legal status or approval from
+qualified scholars of the community. Confirmed participants may view it; a
+pending invitation still reveals nothing. Copying places the labelled demo text on the local clipboard.
 
 Every agreement has one immutable fictional creator and a separate access
 roster. Only the creator can invite people, and only while the agreement is an

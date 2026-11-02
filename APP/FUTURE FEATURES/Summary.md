@@ -33,7 +33,7 @@ Potential factors:
   • Dispute history
 
 Purpose: Encourage trustworthy behaviour while remaining
-fair and aligned with Islamic values.
+fair and aligned with the community's values.
 
 ------------------------------------------------------------
 EVIDENCE VAULT (TBC)
@@ -62,8 +62,8 @@ Paid services:
   • Ask Contract Questions
 
 Future possibility: Approved scholars may also act as
-verified witnesses where Islamically and legally
-appropriate.
+verified witnesses where appropriate under the community's
+religious requirements and the law.
 
 ------------------------------------------------------------
 EXPANDED ISLAMIC CONTRACT LIBRARY
@@ -102,8 +102,8 @@ ADVANCED FEATURES (FUTURE)
   • Advanced reporting and analytics
   • API integrations
   • Enhanced biometric authentication
-  • Additional Islamic educational content throughout
-    the platform
+  • Additional educational content on the community's values
+    throughout the platform
   • Live market valuation for Rahn (see AI Features)
   • Translation verification AI (see AI Features)
   • Contract lifecycle intelligence (see AI Features)

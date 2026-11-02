@@ -46,10 +46,10 @@ AI CONTRACT GENERATOR
   purchasing.
 
 ------------------------------------------------------------
-ISLAMIC TERMINOLOGY
+COMMUNITY TERMINOLOGY
 ------------------------------------------------------------
 
-Where appropriate, the application displays Islamic
+Where appropriate, the application displays the community's
 terminology alongside plain English.
 
 Term         Plain English
@@ -65,10 +65,10 @@ Zakat        Obligatory Charity
 'Aqd         Contract / Agreement
 Kafalah      Guarantee (TBC)
 
-Each Islamic term can be tapped to view:
+Each community term can be tapped to view:
   • Meaning
   • Short explanation
-  • Islamic significance
+  • Significance within the community
   • Future: scholar guidance
   • Future: Qur'an and Hadith references
 
@@ -82,7 +82,7 @@ Checks include:
   • Riba detection
   • Interest wording
   • Prohibited clauses
-  • Missing Islamic considerations
+  • Missing considerations under the community's values
   • Ambiguous wording
 
 If prohibited wording is detected:
@@ -267,7 +267,7 @@ Optional questions help explain:
   • Cash flow impact
   • Financial planning
   • Repayment ability
-  • Islamic financial considerations
+  • Financial considerations under the community's values
 
 AI provides educational guidance only.
 

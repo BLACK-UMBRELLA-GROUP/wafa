@@ -23,7 +23,7 @@ re-run the tool.
 
 | ID | File | KB |
 |---|---|---|
-| DOC-WAFA-0004 | `APP/OVERVIEW/Summary.md` | 9 |
+| DOC-WAFA-0004 | `APP/OVERVIEW/Summary.md` | 10 |
 | DOC-WAFA-0006 | `SOURCE/README.md` | 14 |
 
 _Stop here unless you need to look up another ID._
@@ -52,7 +52,7 @@ _Stop here unless you need to look up another ID._
 
 | ID | File | Type | Purpose | KB |
 |---|---|---|---|---|
-| DOC-WAFA-0004 | `APP/OVERVIEW/Summary.md` | SPEC | Overview — summary of this part of the app | 9 |
+| DOC-WAFA-0004 | `APP/OVERVIEW/Summary.md` | SPEC | Overview — summary of this part of the app | 10 |
 
 ### CODE AND RUNNING
 

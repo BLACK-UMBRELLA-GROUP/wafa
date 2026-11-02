@@ -26,7 +26,7 @@ AI provides:
   • Clause-by-clause review
   • Missing clauses
   • Potential risks
-  • Islamic compliance observations
+  • Observations on alignment with the community's values
   • Suggested improvements
 
 ------------------------------------------------------------
@@ -90,7 +90,7 @@ AI explains:
   • Meaning
   • Purpose
   • Plain English version
-  • Islamic considerations
+  • The community's religious considerations
   • Possible risks
 
 ------------------------------------------------------------

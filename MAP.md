@@ -69,7 +69,4 @@ _Stop here unless you need to look up another ID._
 
 ## Needs attention
 
-
-Documents without a header (1) — add one so they appear above:
-
-- `ROADMAP.md` (2 KB)
+Nothing — every live document has a valid header.

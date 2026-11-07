@@ -15,3 +15,5 @@ outside the encrypted USB backups. Reference only — the current documents are 
 | pricing-Summary.md | `APP/PRICING/Summary.md` |
 | future-features-Summary.md | `APP/FUTURE FEATURES/Summary.md` |
 | gitignore | the repo's `.gitignore` (Aug 2026 version) |
+
+Private documents from this folder moved to the private group folder (7 Nov 2026).

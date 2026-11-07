@@ -12,7 +12,7 @@ outside the encrypted USB backups. Reference only — the current documents are 
 | overview-Summary.md | `APP/OVERVIEW/Summary.md` |
 | contracts-Summary.md | `APP/CONTRACTS/Summary.md` |
 | ai-features-Summary.md | `APP/AI FEATURES/Summary.md` |
-| pricing-Summary.md | `APP/PRICING/Summary.md` |
+| pricing-Summary.md — moved to the private group folder (7 Nov 2026) | `APP/PRICING/Summary.md` |
 | future-features-Summary.md | `APP/FUTURE FEATURES/Summary.md` |
 | gitignore | the repo's `.gitignore` (Aug 2026 version) |
 

@@ -17,6 +17,14 @@ Pre-launch visual demo, version `0.1.0+3`. A local iPhone preview has been deliv
 
 ## Prepare and check a checkout
 
+Check the preview command's argument validation with Python 3 and Bash:
+
+```bash
+python3 -B SOURCE/tooling/test_run_cli.py
+```
+
+These tests run without Flutter dependencies and do not build, sign or install an app.
+
 Use an existing Flutter `3.44.2` installation with its Dart SDK, Flutter tools snapshot and version metadata already cached. The project wrapper checks the pinned release; it does not install or repair the SDK. Point it at that installation:
 
 ```bash

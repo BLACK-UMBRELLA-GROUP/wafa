@@ -1,0 +1,75 @@
+{
+  "id": "EVID-WAFA-ROW2-2026-11-08",
+  "queue_line": 2,
+  "result": "FAILED",
+  "captured_at_utc": "2026-11-08T15:02:14.379485+00:00",
+  "source_commit": "0eebf4a8b5b1aa7296070ee714041bcf3e9a518e",
+  "requested_viewport": {
+    "width_points": 430,
+    "height_points": 932,
+    "scale": 3,
+    "png_pixels": [
+      1290,
+      2796
+    ]
+  },
+  "simulator": {
+    "udid": "5DD1AB8F-C0A2-4B1E-9B47-A4535BDE7740",
+    "name": "iPhone 18 Pro Max",
+    "runtime": "iOS 27.2",
+    "initial_state": "Shutdown",
+    "boot_exit": 0,
+    "final_shutdown_exit": 0,
+    "target_resolution_verified": false
+  },
+  "app_bundle_id": "app.wafa.preview",
+  "flutter_version": "3.44.2 (SOURCE/README.md; runtime version query refused by wrapper)",
+  "build_mode": "Debug simulator attempted; no app produced",
+  "attempts": [
+    {
+      "command": "xcrun simctl appinfo 5DD1AB8F-C0A2-4B1E-9B47-A4535BDE7740 app.wafa.preview",
+      "exit": 3,
+      "output": "Application not found. No application record found for that bundle identifier."
+    },
+    {
+      "command": "./run.sh --build-only --unsigned",
+      "exit": 1,
+      "output": "Dependencies are not prepared. Run tooling/flutter_cached.sh pub get first."
+    },
+    {
+      "command": "./tooling/flutter_cached.sh build ios --simulator --debug --no-pub",
+      "exit": 2,
+      "output": "Use --config-only or --no-codesign. Signed preview builds use run.sh so Flutter cannot enable provisioning updates."
+    },
+    {
+      "command": "./tooling/flutter_cached.sh build ios --simulator --debug --no-codesign --no-pub",
+      "exit": 1,
+      "output": "Xcode failed to resolve Swift Package Manager dependencies: package SOURCE/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage cannot be accessed because it does not exist in the file system."
+    },
+    {
+      "command": "./tooling/flutter_cached.sh --version",
+      "exit": 2,
+      "output": "Command outside the Wafa preview scope. SDK upgrades, channels and Git operations belong to the Founder."
+    }
+  ],
+  "missing_local_paths": [
+    "SOURCE/.dart_tool/package_config.json",
+    "SOURCE/build/ios/iphonesimulator/Runner.app",
+    "SOURCE/build/wafa-ios-release/Build/Products/Release-iphoneos/Runner.app",
+    "SOURCE/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage"
+  ],
+  "screens_requested": [
+    "Home top",
+    "Home bottom",
+    "Agreements list",
+    "Agreement detail",
+    "Payments",
+    "Tracker",
+    "Profile",
+    "Create step 1",
+    "Invitations"
+  ],
+  "screenshots": [],
+  "written_refusal": "Dependency preparation, downloads, new simulator configuration and app changes are outside this capture-only task. No drawn or substituted screens. Lead owner must resolve the local run prerequisites and requeue line 2.",
+  "approval_waits": []
+}

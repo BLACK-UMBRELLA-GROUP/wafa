@@ -25,7 +25,24 @@ python3 -B SOURCE/tooling/test_run_cli.py
 
 These tests run without Flutter dependencies and do not build, sign or install an app.
 
-Use an existing Flutter `3.44.2` installation with its Dart SDK, Flutter tools snapshot and version metadata already cached. The project wrapper checks the pinned release; it does not install or repair the SDK. Point it at that installation:
+Use an existing Flutter `3.44.2` installation with its Dart SDK, Flutter tools snapshot and version metadata already cached. The project wrapper checks the pinned release; it does not install or repair the SDK.
+
+The cache validator also has standalone CLI regression tests. Supply the raw Dart
+executable from that installation and a new scratch directory under an existing
+parent, for example from the repository root:
+
+```bash
+python3 -B SOURCE/tooling/test_cached_version.py \
+  --dart /path/to/flutter-3.44.2/bin/cache/dart-sdk/bin/dart \
+  --scratch /tmp/wafa-cache-validator-check
+```
+
+These checks use synthetic metadata and empty tool placeholders without Flutter
+packages. Fixtures remain in the scratch directory for inspection; move the whole
+directory to your permitted trash location when finished. Use a new scratch path
+for each run. The installed SDK is not modified.
+
+To prepare and check the Flutter app with the cached installation:
 
 ```bash
 cd SOURCE

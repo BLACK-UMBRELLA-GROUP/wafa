@@ -17,3 +17,4 @@ the Answer column, and sets the queue line back to WAITING. Fable checks at 04:1
 
 | # | Date | Queue line | Question (one plain sentence) | Options Codex sees | Codex's default if no answer | Answer (WAFA chat, date) | Status (OPEN / ANSWERED) |
 |---|---|---|---|---|---|---|---|
+| 1 | 2026-11-08 | 2; blocks 3–6 | Please reissue line 2 with a scoped task to restore the existing simulator run prerequisites (`.dart_tool/package_config.json` and `FlutterGeneratedPluginSwiftPackage`) before retrying the nine baseline captures. | Prepare the existing toolchain's local dependencies and generated files in a named repair brief; identify any required download or installation separately for Founder approval. | Written refusal: keep line 2 FAILED and dependent lines WAITING; no unbriefed repair, replacement screenshots or dependency bypass. |  | OPEN |

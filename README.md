@@ -25,6 +25,16 @@ python3 -B SOURCE/tooling/test_run_cli.py
 
 These tests run without Flutter dependencies and do not build, sign or install an app.
 
+Check the cached command wrapper's scope refusals with:
+
+```bash
+python3 -B SOURCE/tooling/test_flutter_cached_cli.py
+```
+
+Unsupported commands and signing or version-check overrides are rejected before
+SDK validation. These tests need Python 3 and Bash, create no disk fixtures and
+do not invoke the SDK.
+
 Use an existing Flutter `3.44.2` installation with its Dart SDK, Flutter tools snapshot and version metadata already cached. The project wrapper checks the pinned release; it does not install or repair the SDK.
 
 The cache validator also has standalone CLI regression tests. Supply the raw Dart

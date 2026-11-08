@@ -4,7 +4,6 @@ set -euo pipefail
 unset CDPATH
 
 WAFA_SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
-source "$WAFA_SCRIPT_DIR/flutter_env.sh"
 
 if [[ $# -eq 0 ]]; then
   printf '%s\n' 'Usage: tooling/flutter_cached.sh {analyze|test|pub get|build ios|assemble} [arguments]' >&2
@@ -52,4 +51,6 @@ for argument in "$@"; do
   fi
 done
 
+# Reject unsupported requests before inspecting or invoking the cached SDK.
+source "$WAFA_SCRIPT_DIR/flutter_env.sh"
 exec "$WAFA_CACHED_DART" "$WAFA_FLUTTER_SNAPSHOT" --no-version-check --suppress-analytics "$@"

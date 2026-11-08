@@ -10,7 +10,7 @@ owner: WAFA chat
 
 # Wafa First Phone Preview
 
-Wafa – Islamic Contracts is a standalone Flutter visual prototype with a white
+Wafa is a standalone Flutter visual prototype with a white
 background and dark-green accents. Records are fictional and session-local.
 There is no backend, real AI, binding contract generation, signature collection,
 bank connection or payment processing. Apple and Google buttons, Wafa IDs,
@@ -128,26 +128,41 @@ prepare, build and embed phases use the same local adapter. SDK changes require
 review; the scripts must fail rather than fall back to the ordinary wrappers.
 
 Runner uses app.wafa.preview, display name Wafa, and an iOS 15 minimum for this
-SDK. Source is prepared as version 0.1.0 build 3. Build 3 has not been natively
-built, installed, launched or visually accepted; the Founder asked to wait
-until he returns to the computer. The scaffold's selected development team and
-an existing local wildcard provisioning profile support the signed preview. No
-account, certificate, device or profile is registered by these scripts. run.sh
-omits Apple provisioning-update and device-registration flags; missing local
-signing must stop for a Founder-controlled setup step.
+SDK. Source is prepared as version 0.1.0 build 3. The delivery results below
+record earlier local builds; they do not establish signing readiness for a new
+checkout or visual acceptance of build 3.
 
-From this SOURCE directory:
+### Prepare a checkout for native delivery
+
+Start with the cached SDK and dependency preparation in the repository's
+[setup instructions](../README.md#prepare-and-check-a-checkout). The generated
+Flutter configuration and package cache are local prerequisites, not supplied
+by the checked-in iOS project.
+
+For a build without signing or installing, run from this SOURCE directory:
 
 ```bash
-./tooling/flutter_cached.sh analyze --no-pub
-./tooling/flutter_cached.sh test --no-pub
+./run.sh --build-only --unsigned
+```
+
+A signed build requires separate local Xcode setup. All three app build
+configurations in `ios/Runner.xcodeproj/project.pbxproj` contain the placeholder
+`YOUR_APPLE_TEAM_ID`. Replace it locally with your development team, prepare a
+signing identity and provisioning profile for `app.wafa.preview` in Xcode, and
+pair the target phone before using:
+
+```bash
 ./run.sh --build-only
 ./run.sh --device DEVICE_ID
 ```
 
-The final command requires an explicitly selected paired phone. Verify the
-artifact's signature and bundle before installing; availability is not proof
-that an app was installed or that the Founder accepted its design.
+The first command builds and signs without installation; the second also
+requires an explicitly selected paired phone. No account, certificate, device
+or profile is registered by these scripts. run.sh omits Apple provisioning-update
+and device-registration flags; missing local signing must stop for a
+Founder-controlled setup step. Verify the artifact's signature and bundle
+before installing; availability is not proof that an app was installed or that
+the Founder accepted its design.
 
 ## Verification on 13 October 2026
 

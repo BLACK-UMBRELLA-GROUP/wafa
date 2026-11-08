@@ -6,7 +6,7 @@ People, agreements and payments in this preview are fictional. Records stay in m
 
 ## Status
 
-Pre-launch visual demo, version `0.1.0+3`. A local iPhone preview has been delivered; the current source and its delivery limits are documented in [SOURCE/README.md](SOURCE/README.md). Feature development is paused while the Founder's first product (ZYRA) reaches launch. No production backend or public app release yet.
+Pre-launch visual demo, version `0.1.0+3`. A local iPhone preview has been delivered; the current source and its delivery limits are documented in [SOURCE/README.md](SOURCE/README.md). WAFA is active again (8 Nov 2026): design work goes ahead with the WAFA design chat, and features are built only from LOCKed briefs in `APP/APPROVED/BUILD_QUEUE.md`. No production backend or public app release yet.
 
 ## Built with
 
@@ -57,7 +57,7 @@ The script uses existing local signing and does not register devices or update p
 
 ## How work is done
 
-The WAFA design chat prepares designs and specifications. The Founder locks designs before AI coding assistants implement them. Authorized builds pass through `APP/APPROVED/BUILD_QUEUE.md`; its current task list is empty. Review, documentation and a separately approved repository preparation task do not lift the app feature freeze.
+The WAFA design chat prepares designs and specifications. The Founder locks designs before AI coding assistants implement them. Authorized builds pass through `APP/APPROVED/BUILD_QUEUE.md`. Nothing is built without a LOCK.
 
 ## History and sample data
 

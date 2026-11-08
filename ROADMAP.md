@@ -2,7 +2,7 @@
 
 **Overall:** roughly **150 hours** of work to a usable first version (real agreements, participants and records, a backend, document copies, tests). The table below is the first slice.
 
-WAFA is a local, fictional-data prototype. App feature development is paused until ZYRA launches. The current `APP/APPROVED/BUILD_QUEUE.md` has no task rows, and no venture outstanding-actions index is present in the routed location. The work below comes from the existing approved to-do lists in the [Overview](APP/OVERVIEW/Summary.md) and [Future Features](APP/FUTURE%20FEATURES/Summary.md) summaries. It is planning work awaiting scheduling, not a list of approved implementation briefs.
+WAFA is a local, fictional-data prototype. WAFA is active again (Founder, 8 Nov 2026). Work is built only from LOCKed briefs in `APP/APPROVED/BUILD_QUEUE.md`. The work below comes from the existing approved to-do lists in the [Overview](APP/OVERVIEW/Summary.md) and [Future Features](APP/FUTURE%20FEATURES/Summary.md) summaries. It is planning work awaiting scheduling, not a list of approved implementation briefs.
 
 ## Next planning work — approximately 27 hours
 
@@ -24,7 +24,7 @@ The Founder and the WAFA design chat decide scope and priorities. Codex does not
 
 ## Gates before product implementation
 
-1. The Founder lifts WAFA's app build freeze for the named work.
+1. The Founder lifts WAFA's app build freeze for the named work. - done 8 Nov 2026.
 2. The WAFA design chat resolves the relevant product, legal and scholarly questions and records the required specifications.
 3. The Founder says LOCK. Approved files include real-size pictures with navigation, all required states, measurements and his recorded words.
 4. The design chat adds an implementation brief to `APP/APPROVED/BUILD_QUEUE.md`.

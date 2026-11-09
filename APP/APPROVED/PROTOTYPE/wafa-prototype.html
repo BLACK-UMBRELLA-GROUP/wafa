@@ -1,0 +1,390 @@
+<title>WAFA Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: control rail beside one real-size phone; the phone shows the WAFA app (light, as the app is). */
+:root{
+  --page:#f3f6f4; --panel:#ffffff; --text:#182d25; --soft:#5f6e66; --edge:#dbe4de; --pick:#123f32; --pickText:#ffffff;
+  /* app tokens = WafaColors in SOURCE/lib/ui/wafa_ui.dart */
+  --green:#123f32; --ink:#182d25; --muted:#68776f; --mint:#edf5ef; --line:#e3eae5; --field:#f7f9f7;
+  --warnBg:#fcf2e8; --warn:#9b541d; --bad:#a3312a; --badBg:#fbecea; --onGreen:#c8dfd3; --onGreen2:#bddccc;
+  --ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0f1714;--panel:#17221e;--text:#e6eee9;--soft:#9fb1a7;--edge:#2a3a33;--pick:#bddccc;--pickText:#0f1714;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#0f1714;--panel:#17221e;--text:#e6eee9;--soft:#9fb1a7;--edge:#2a3a33;--pick:#bddccc;--pickText:#0f1714;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--page);color:var(--text);font-family:var(--ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px;box-sizing:border-box}
+.wrap{display:flex;gap:24px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.rail{width:280px;max-width:100%;display:flex;flex-direction:column;gap:14px}
+.rail h1{font-size:18px;margin:0;letter-spacing:-.3px}
+.rail .ver{font-size:12px;color:var(--soft)}
+.box{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.box h2{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--soft);margin:0}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{border:1px solid var(--edge);background:transparent;color:var(--text);border-radius:999px;padding:6px 10px;font:500 13px var(--ui);cursor:pointer}
+.pill[aria-pressed="true"]{background:var(--pick);color:var(--pickText);border-color:var(--pick)}
+.pill:focus-visible,.app button:focus-visible{outline:2px solid #2f7d62;outline-offset:2px}
+.demo{display:flex;flex-direction:column;gap:4px}
+.demo button{text-align:left;border:0;background:transparent;color:var(--text);font:14px var(--ui);padding:6px 8px;border-radius:8px;cursor:pointer}
+.demo button:hover{background:var(--page)}
+.demo button[aria-pressed="true"]{background:var(--pick);color:var(--pickText)}
+.hint{font-size:12.5px;line-height:1.45;color:var(--soft);margin:0}
+.stage{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
+.backout{align-self:flex-start;border:1px solid var(--edge);background:var(--panel);color:var(--text);border-radius:999px;padding:6px 12px;font:500 13px var(--ui);cursor:pointer}
+.fit{position:relative}
+#dev{width:430px;height:932px;border-radius:54px;background:#0b0f0d;padding:12px;box-sizing:content-box;transform-origin:top left;position:absolute;top:0;left:0}
+.app{width:430px;height:932px;border-radius:44px;overflow:hidden;background:#fff;color:var(--ink);font-family:var(--ui);position:relative;display:flex;flex-direction:column}
+.app.se{width:375px;height:667px;border-radius:30px}
+.app button{font-family:var(--ui)}
+.sb{height:54px;flex:0 0 54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font:600 16px var(--ui);color:var(--ink)}
+.se .sb{height:24px;flex-basis:24px;font-size:13px;padding:0 18px}
+.island{width:124px;height:36px;border-radius:20px;background:#000}
+.se .island{display:none}
+.body{flex:1;overflow-y:auto;display:flex;flex-direction:column;padding:8px 20px 16px;gap:14px;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.body>*{flex-shrink:0}
+.body>.spacer{flex-shrink:1}
+.nav{flex:0 0 auto;display:flex;border-top:1px solid var(--line);background:#fff;padding:8px 0 30px}
+.se .nav{padding-bottom:10px}
+.nav button{flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);cursor:pointer;padding:4px 0}
+.nav button .ic{width:56px;height:30px;border-radius:15px;display:grid;place-items:center}
+.nav button[aria-current="page"]{color:var(--green);font-weight:600}
+.nav button[aria-current="page"] .ic{background:var(--mint)}
+svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.top{display:flex;align-items:center;gap:10px}
+.mark{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;letter-spacing:-.4px;color:var(--green)}
+.mark .dot{width:30px;height:30px;border-radius:9px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:15px}
+.badge{font-size:10.5px;font-weight:600;letter-spacing:1px;color:var(--green);background:var(--mint);border-radius:999px;padding:4px 8px}
+.av{margin-left:auto;width:40px;height:40px;border-radius:50%;background:var(--mint);color:var(--green);border:0;font-weight:700;cursor:pointer}
+.hello{font-size:26px;font-weight:700;letter-spacing:-.8px;margin:0}
+.sub{font-size:14.5px;line-height:1.5;color:var(--muted);margin:0}
+.btnG{border:0;background:var(--green);color:#fff;border-radius:14px;padding:15px;font-weight:600;font-size:15.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btnO{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:14px;padding:12px 14px;font-weight:500;font-size:14.5px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.sec{display:flex;align-items:baseline;justify-content:space-between}
+.sec h4{margin:0;font-size:17px;letter-spacing:-.2px}
+.link{border:0;background:none;color:var(--green);font-weight:600;font-size:14px;cursor:pointer;padding:4px}
+.tile{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#fff;cursor:pointer;width:100%;text-align:left;color:var(--ink)}
+.tile .tic{width:40px;height:40px;border-radius:12px;background:var(--mint);color:var(--green);display:grid;place-items:center;flex:0 0 40px}
+.tile .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tile .t1{font-weight:600;font-size:15px}
+.tile .t2{font-size:13px;color:var(--muted)}
+.tile .amt{font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;text-align:right;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.st{font-size:11px;font-weight:600;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.st.active{background:var(--mint);color:var(--green)}
+.st.overdue{background:var(--badBg);color:var(--bad)}
+.st.awaiting{background:var(--warnBg);color:var(--warn)}
+.st.draft{background:var(--field);color:var(--muted);border:1px solid var(--line)}
+.st.completed{background:#eef1f6;color:#3d4f6b}
+/* option A */
+.need{border-radius:20px;border:1px solid var(--line);overflow:hidden}
+.need .nh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px}
+.need .nh b{font-size:15px}
+.need .nh span{font-size:12.5px;color:var(--muted)}
+.nrow{display:flex;gap:12px;align-items:center;padding:12px 16px;border:0;border-top:1px solid var(--line);background:#fff;width:100%;text-align:left;cursor:pointer;color:var(--ink)}
+.nrow:first-of-type{border-top:0}
+.stripe{width:4px;align-self:stretch;border-radius:4px;flex:0 0 4px}
+.stripe.overdue{background:var(--bad)}.stripe.awaiting{background:var(--warn)}.stripe.soon{background:var(--green)}
+.nrow .tx{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.nrow .t1{font-weight:600;font-size:14.5px}
+.nrow .t2{font-size:13px;color:var(--muted)}
+.nrow .go{font-size:13px;font-weight:600;color:var(--green);white-space:nowrap}
+.grid3{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.grid3>*{grid-column:span 2}
+.grid3>:nth-child(n+4){grid-column:span 3}
+.sq{border:1px solid var(--line);background:#fff;border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;text-align:left;cursor:pointer;color:var(--ink)}
+.sq .v{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.sq .l{font-size:12.5px;color:var(--muted);line-height:1.25}
+.sq.hot{background:var(--badBg);border-color:#f1d3cf}.sq.hot .v{color:var(--bad)}
+.sq.zero .v{color:#b3bfb8}
+.calm{display:flex;gap:12px;align-items:center;background:var(--mint);border-radius:18px;padding:16px;color:var(--green)}
+.calm b{display:block;font-size:15px}
+.calm span{font-size:13px;color:var(--muted)}
+/* states */
+.sk{background:linear-gradient(90deg,#eef2ef 0%,#f7f9f7 50%,#eef2ef 100%);background-size:200% 100%;border-radius:16px;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.sk{animation:none}}
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:28px 12px;flex:1;justify-content:center}
+.empty .eic{width:64px;height:64px;border-radius:20px;background:var(--mint);color:var(--green);display:grid;place-items:center}
+.empty h5{margin:0;font-size:19px}
+.err{border:1px solid #f1d3cf;background:var(--badBg);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;color:var(--bad)}
+.err p{margin:0;color:var(--ink);font-size:14px;line-height:1.45}
+.spacer{flex:1}
+/* pages */
+.ph{display:flex;align-items:center;gap:8px}
+.ph .bk{border:0;background:var(--field);width:38px;height:38px;border-radius:50%;cursor:pointer;color:var(--ink);display:grid;place-items:center}
+.ph h4{margin:0;font-size:20px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;border:1px solid var(--line);border-radius:18px;padding:16px;font-size:14.5px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--green)}
+.steps{display:flex;gap:8px}.steps span{flex:1;font-size:12px;font-weight:600;color:var(--muted);border-top:3px solid var(--line);padding-top:6px}.steps .on{color:var(--green);border-color:var(--green)}
+.kind{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:13px 14px;text-align:left;cursor:pointer;color:var(--ink);width:100%}
+.kind.on{background:var(--mint);border:1.4px solid var(--green)}
+.kind .tic{width:42px;height:42px;border-radius:13px;background:var(--mint);color:var(--green);display:grid;place-items:center;flex:0 0 42px}.kind.on .tic{background:#fff}
+.kind .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.kind .t1{font-weight:600;font-size:15px}.kind .t2{font-size:12.5px;color:var(--muted);line-height:1.35}
+.kind .rad{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);color:var(--green);display:grid;place-items:center;flex:0 0 22px}.kind.on .rad{border:0}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink)}.fld em{font-style:normal;font-weight:400;color:var(--muted)}
+.fld input{border:1px solid var(--line);background:var(--field);border-radius:12px;padding:12px;font:15px var(--ui);color:var(--ink)}
+.plist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.prow{box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:10px 12px;border:0;border-top:1px solid var(--line);background:#fff;color:var(--ink);text-align:left;width:100%;font-family:var(--ui)}
+.plist>.prow:first-child{border-top:0}.prow.tap{cursor:pointer}.prow:disabled{opacity:.55;cursor:default}
+.pav{width:34px;height:34px;border-radius:50%;background:var(--mint);color:var(--green);display:grid;place-items:center;font-weight:700;flex:0 0 34px}
+.prow .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;align-items:flex-start}.prow .t1{font-weight:600;font-size:14.5px}.prow .t2{font-size:12.5px;color:var(--muted)}
+.pamt{font-weight:600;font-variant-numeric:tabular-nums;font-size:14.5px}.pamt.muted{color:#b3bfb8}
+.rolechip{border:0;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:600;cursor:pointer}
+.rolechip.owes{background:var(--warnBg);color:var(--warn)}.rolechip.owed{background:var(--mint);color:var(--green)}.rolechip.witness{background:#eef1f6;color:#3d4f6b}
+.rm{border:0;background:var(--field);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--muted);font-size:16px}
+.addp{border:0;border-top:1px solid var(--line);background:#fff;color:var(--green);font-weight:600;font-size:14px;padding:12px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.amtIn{display:flex;align-items:center;gap:2px;border:1px solid var(--line);background:var(--field);border-radius:10px;padding:4px 8px;font-weight:600}
+.amtIn input{width:56px;border:0;background:transparent;font:600 14.5px var(--ui);color:var(--ink);text-align:right}
+.amtIn.big{padding:8px 12px;font-size:17px}.amtIn.big input{width:100%;text-align:left;font-size:17px}
+.seg{display:flex;background:var(--field);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;border-radius:9px;padding:9px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--green);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.datebtn{border:1px solid var(--line);background:var(--field);border-radius:12px;padding:12px;font:15px var(--ui);color:var(--ink);text-align:left;cursor:pointer}
+.errline{margin:0;background:var(--badBg);color:var(--bad);border-radius:12px;padding:10px 12px;font-size:13.5px;font-weight:600}
+.warnline{margin:0;background:var(--warnBg);color:var(--warn);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.4}
+.vb{display:inline-block;font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 7px;vertical-align:2px;margin-left:4px}.vb.v{background:var(--green);color:#fff}.vb.b{background:var(--mint);color:var(--green)}
+.vhead{display:flex;gap:12px;align-items:center}.vhead p{margin:4px 0 0}
+.lv{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lv span{border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-weight:600;font-size:14px;color:var(--muted)}.lv span small{font-weight:400;font-size:12px}.lv span.on{background:var(--mint);border-color:var(--green);color:var(--green)}
+.chipbtn{border:1px solid var(--green);background:#fff;color:var(--green);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer}
+.trc{font-weight:600;color:var(--green)}
+.trlink{border:0;background:none;padding:0;font:inherit;color:var(--green);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.mini{width:56px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.mini i{display:block;height:100%;background:var(--green)}
+.toast{position:absolute;left:20px;right:20px;bottom:104px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.4;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}
+.toast.on{opacity:1;transform:none}
+.demoBtn{border:1px dashed #b7c7bd;background:#fbfdfb;color:var(--muted);border-radius:12px;padding:10px;font-size:13px;cursor:pointer}
+@media (max-width:760px){.rail{width:100%}}
+</style>
+
+<div class="wrap">
+  <div class="rail">
+    <div><h1>WAFA Prototype</h1><div class="ver" id="ver">V13 · LOCK 4 track record · 8 Nov 2026</div></div>
+    <div class="box"><h2>Home</h2><p class="hint">LOCK 1 · Needs you first (8 Nov). The agreement page, Tracker and Profile here are rough redraws, not part of the LOCK.</p></div>
+    <div class="box"><h2>Try a state</h2><div class="demo" id="demo"></div></div>
+    <div class="box"><h2>Launch types</h2><div class="pills" id="ts"></div><p class="hint" id="tsHint"></p></div>
+    <div class="box"><h2>Many people, one agreement</h2><p class="hint">LOCK 2 (8 Nov). Open “Mum’s care costs”, or Create an agreement → any type → Continue to add people and split the amount.</p><button class="pill" data-fam="1">Open Mum’s care costs</button></div>
+    <div class="box"><h2>Verification</h2><p class="hint">LOCK 3 (8 Nov): two badges, always optional.</p><button class="pill" data-vo="A">Open Verification</button></div>
+    <div class="box"><h2>Track record</h2><p class="hint">LOCK 4 (8 Nov): facts, not a score. Also open Mum’s care costs and tap the link by Omar.</p><button class="pill" data-ao="A">Open my track record</button></div>
+    <div class="box"><h2>Phone</h2><div class="pills" id="size"></div></div>
+    <p class="hint">Example records only. Tap anything inside the phone: sections open filtered lists, agreements open their details, and the tabs work.</p>
+  </div>
+  <div class="stage">
+    <button class="backout" id="backout" type="button">‹ Back</button>
+    <div class="fit" id="fit"><div id="dev"><div class="app" id="screen"></div></div></div>
+  </div>
+</div>
+
+<script>
+/* ---------- icons ---------- */
+const P={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',pen:'<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',edit:'<path d="M4 6h10M4 10h10M4 14h6"/><path d="M14 20l1-4 5-5 3 3-5 5z"/>',check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',scale:'<path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/>',plus:'<path d="M12 5v14M5 12h14"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',back:'<path d="M15 5l-7 7 7 7"/>',leaf:'<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19l7-7"/>',bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',key:'<circle cx="8" cy="14" r="4"/><path d="M11 11l9-9M17 5l3 3"/>',case:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>',hand:'<path d="M3 14l4-4 4 2 3-3 7 7-4 4-6-2-4 1z"/>',box:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c1-4 4-6 7-6s6 2 7 6"/><circle cx="17" cy="7" r="2.5"/><path d="M17 12c2.5 0 4.5 2 5 5"/>',gift:'<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>',wifi:'<path d="M2 9a15 15 0 0 1 20 0M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0"/><path d="M12 20v.5"/>'};
+const ic=(n,s)=>`<svg class="i" viewBox="0 0 24 24" ${s?`style="width:${s}px;height:${s}px"`:''} aria-hidden="true">${P[n]}</svg>`;
+
+/* ---------- example data (fictional; today = 8 Nov 2026) ---------- */
+const TODAY=new Date(2026,10,8);
+const BASE=[
+ {id:'a1',title:'Family support',who:'Yusuf Rahman',kind:'Interest-free loan',amt:480,paid:160,due:new Date(2026,10,28),status:'active'},
+ {id:'a2',title:'Van hire',who:'Maryam Saleh',kind:'Item rental',amt:850,paid:0,due:new Date(2026,10,12),status:'active'},
+ {id:'a3',title:'Bicycle sale',who:'Adam Yusuf',kind:'Sale',amt:75,paid:0,due:new Date(2026,10,30),status:'awaiting'},
+ {id:'a4',title:'Garden design',who:'Samira Khan',kind:'Service',amt:120,paid:0,due:new Date(2026,10,1),status:'overdue'},
+ {id:'a5',title:'Laptop sale',who:'Bilal Ahmed',kind:'Sale',amt:300,paid:0,due:new Date(2026,11,15),status:'draft'},
+ {id:'a6',title:'Travel support',who:'Zain Idris',kind:'Interest-free loan',amt:150,paid:150,due:new Date(2026,9,10),status:'completed'},
+ {id:'a7',title:'Mum’s care costs',who:'You, Omar and Sara',kind:'Family agreement',amt:300,paid:100,due:new Date(2026,10,30),status:'active',
+  people:[{name:'Amina Noor',you:true,role:'owes',share:150,paid:100},{name:'Omar Farooq',role:'owes',share:150,paid:0},{name:'Sara Malik',role:'owed',share:0,paid:0}]}
+];
+const SECTIONS=[
+ ['active','Active','check'],['draft','Drafts','edit'],['awaiting','Awaiting signatures','pen'],
+ ['completed','Completed','leaf'],['overdue','Overdue','alert']]; /* Disputes added later, when the dispute flow is designed (Founder 8 Nov "Add later") */
+const LABEL={active:'Active',draft:'Draft',awaiting:'Awaiting signatures',completed:'Completed',overdue:'Overdue'};
+const gbp=n=>'£'+n.toLocaleString('en-GB');
+const days=d=>Math.round((d-TODAY)/864e5);
+const fmt=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+
+/* ---------- state ---------- */
+const S={ver:{email:true,phone:false,id:false,selfie:false},d:null,ts:'A',kind:null,invite:true,scen:'normal',tab:0,pages:[],size:'pro',filt:'all',list:[]};
+const page=()=>S.pages[S.pages.length-1];
+const open=p=>{S.pages.push(p);render()};
+const back=()=>{if(S.pages.length){S.pages.pop();render()}else say('You are on a main tab. Use the tabs below.')};
+function data(){
+  if(S.scen==='empty') return [];
+  if(S.scen==='calm') return S.list.filter(a=>a.status==='completed'||a.id==='a1');
+  return S.list;
+}
+const count=k=>data().filter(a=>a.status===k).length;
+
+/* ---------- option strip ---------- */
+
+/* ---------- screen parts ---------- */
+const topBar=()=>`<div class="top"><div class="mark"><span class="dot">و</span>Wafa</div><span class="badge">PREVIEW</span><button class="av" data-act="profile" aria-label="Your profile">A</button></div>`;
+const tile=a=>`<button class="tile" data-ag="${a.id}"><span class="tic">${ic(a.people?'users':a.kind==='Item rental'?'key':a.kind==='Sale'?'doc':a.kind==='Service'?'pen':'leaf')}</span><span class="tx"><span class="t1">${a.title}</span><span class="t2">${a.who} · ${a.kind}</span></span><span class="amt">${gbp(a.amt)}<span class="st ${a.status}">${LABEL[a.status]}</span></span></button>`;
+function needs(){
+  const L=[];
+  if(S.invite) L.push(['soon',null,'Invitation · Omar Farooq','Asks you to join an agreement','Open']);
+  data().filter(a=>a.status==='overdue').forEach(a=>L.push(['overdue',a,`${a.title} · ${a.who}`,`${-days(a.due)} days overdue · ${gbp(a.amt-a.paid)} left`,'Open']));
+  data().filter(a=>a.status==='awaiting').forEach(a=>L.push(['awaiting',a,`${a.title} · ${a.who}`,'Waiting for your signature','Open']));
+  data().filter(a=>a.status==='active'&&days(a.due)<=7).forEach(a=>L.push(['soon',a,`${a.title} · ${a.who}`,`Due in ${days(a.due)} days · ${gbp(a.amt-a.paid)} left`,'Open']));
+  return L;
+}
+function skeleton(){return `${topBar()}<div class="sk" style="height:34px;width:70%"></div><div class="sk" style="height:180px"></div><div class="grid3">${'<div class="sk" style="height:76px"></div>'.repeat(5)}</div><div class="sk" style="height:64px"></div><div class="sk" style="height:64px"></div><div class="sk" style="flex:1;min-height:40px"></div>`}
+function errorState(){return `${topBar()}<p class="hello">Good morning, Amina</p><div class="err"><b>${ic('wifi',20)} Your agreements didn’t load</b><p>Check your connection, then try again. Nothing you saved has been lost.</p><button class="btnG" data-act="retry">Try again</button></div><div class="spacer"></div><button class="btnO" data-act="create" style="justify-content:center">${ic('plus',18)} Create an agreement</button>`}
+function emptyState(){return `${topBar()}<p class="hello">Welcome, Amina</p><div class="empty"><span class="eic">${ic('doc',30)}</span><h5>No agreements yet</h5><p class="sub">Write down what you agree with someone, sign it together, and keep track of every payment.</p></div><button class="btnG" data-act="create">${ic('plus',18)} Create your first agreement</button><button class="btnO" data-act="invites" style="justify-content:center">${ic('mail',18)} Invitations · 1 waiting</button>`}
+
+/* LOCK 1 V1 · Home dashboard A, five sections (Founder 8 Nov 2026: "A · Needs you first (Recommended)", "Add later (Recommended)", "LOCK it") */
+function homeA(){
+  const N=needs();
+  const box=N.length?`<div class="need"><div class="nh"><b>Needs you</b><span>${N.length} ${N.length===1?'thing':'things'}</span></div>${N.map(([k,a,t,s,g])=>`<button class="nrow" ${a?`data-ag="${a.id}"`:'data-act="invite"'}><span class="stripe ${k}"></span><span class="tx"><span class="t1">${t}</span><span class="t2">${s}</span></span><span class="go">${g} ›</span></button>`).join('')}</div>`
+    :`<div class="calm">${ic('check',28)}<div><b>Nothing needs you today</b><span>We’ll tell you when a payment or signature is due.</span></div></div>`;
+  const grid=`<div class="grid3">${SECTIONS.map(([k,l])=>{const c=count(k);return `<button class="sq ${k==='overdue'&&c?'hot':''} ${c?'':'zero'}" data-sec="${k}"><span class="v">${c}</span><span class="l">${l}</span></button>`}).join('')}</div>`;
+  const next=data().filter(a=>a.status==='active'&&days(a.due)>7).sort((a,b)=>a.due-b.due)[0]; /* never repeat a row already in Needs you */
+  return `${topBar()}<div><p class="hello">Good morning, Amina</p><p class="sub">${fmt(TODAY)} · ${(n=>n+(n===1?' agreement':' agreements'))(count('active')+count('overdue'))} running</p></div>${box}<div class="sec"><h4>Your agreements</h4><button class="link" data-tab="1">See all</button></div>${grid}${next&&!N.length?`<div class="sec"><h4>Next payment</h4></div>${tile(next)}`:''}<div class="spacer"></div><button class="btnG" data-act="create">${ic('plus',18)} Create an agreement</button>`;
+}
+function home(){
+  if(S.scen==='loading') return skeleton();
+  if(S.scen==='error') return errorState();
+  if(S.scen==='empty') return emptyState();
+  return homeA();
+}
+function agreementsTab(){
+  const D=data();
+  return `<div class="ph"><h4>Agreements</h4></div><div class="chips"><button class="chip" data-lf="all" aria-pressed="${S.filt==='all'}">All <b>${D.length}</b></button>${SECTIONS.map(([k,l])=>`<button class="chip" data-lf="${k}" aria-pressed="${S.filt===k}">${l} <b>${count(k)}</b></button>`).join('')}</div>${listOf(S.filt==='all'?D:D.filter(a=>a.status===S.filt),S.filt)}`;
+}
+function listOf(L,k){
+  if(L.length) return L.map(tile).join('')+'<div class="spacer"></div>';
+  const msg={draft:'No drafts. Agreements you start but don’t send wait here.',overdue:'Nothing overdue.',awaiting:'Nothing waiting for a signature.',completed:'No completed agreements yet.',active:'No active agreements.',all:'No agreements yet.'}[k]||'Nothing here yet.';
+  return `<div class="empty"><span class="eic">${ic('doc',28)}</span><h5>Nothing here yet</h5><p class="sub">${msg}</p></div>`;
+}
+function tracker(){
+  const D=data().filter(a=>a.kind==='Interest-free loan');
+  const lent=D.reduce((s,a)=>s+a.amt,0),paid=D.reduce((s,a)=>s+a.paid,0);
+  return `<div class="ph"><h4>Tracker</h4></div><p class="sub">A simple view of your example loan records.</p><dl class="kv"><dt>Lent</dt><dd>${gbp(lent)}</dd><dt>Paid back</dt><dd>${gbp(paid)}</dd><dt>Still owed</dt><dd>${gbp(lent-paid)}</dd></dl>${D.map(tile).join('')}<div class="spacer"></div><p class="sub" style="font-size:12.5px">Tracking, not banking: Wafa records payments; it does not move money.</p>`;
+}
+/* Verification - two badges (Founder 8 Nov "A · Two badges (Recommended)"; always optional: "No, always optional (Recommended)") */
+const VER={A:[['email','Email address','Confirmed by a code we email you','basic'],['phone','Phone number','Confirmed by a text message code','basic'],['id','Photo ID and selfie','A passport or driving licence, matched to a live selfie','verified']]};
+function level(v){return v.id?'verified':(v.email&&v.phone)?'basic':'none'}
+function badge(v){const l=level(v);return l==='verified'?'<span class="vb v">✓ Verified</span>':l==='basic'?'<span class="vb b">Basic</span>':''}
+const PV={'Amina Noor':null,'Omar Farooq':{email:true,phone:true,id:true,selfie:true},'Sara Malik':{email:true,phone:true,id:false,selfie:false},'Yusuf Rahman':{email:true,phone:false,id:false,selfie:false},'Maryam Saleh':{email:true,phone:true,id:true,selfie:true}};
+const vOf=name=>PV[name]||S.ver;
+function profile(){return `<div class="ph"><h4>Profile</h4></div><div class="calm" style="align-items:flex-start">${ic('alert',22)}<div><b>A first look at Wafa</b><span>Fictional examples only. Changes last for this session. No real AI, signatures or payments are connected.</span></div></div><dl class="kv"><dt>Name</dt><dd>Amina Noor ${badge(S.ver)}</dd><dt>Wafa ID</dt><dd>WAFA-AMINA</dd></dl><button class="tile" data-act="verify"><span class="tic">${ic('check')}</span><span class="tx"><span class="t1">Verification</span><span class="t2">${({none:'Not verified yet',basic:'Basic · add photo ID to be Verified',verified:'Verified'})[level(S.ver)]}</span></span><span class="go" style="color:var(--green);font-weight:600">›</span></button><button class="tile" data-act="myrecord"><span class="tic">${ic('chart')}</span><span class="tx"><span class="t1">Your track record</span><span class="t2">${TR['Amina Noor'].shared?'Shared on your agreements':'Only you can see it'}</span></span><span class="go" style="color:var(--green);font-weight:600">›</span></button><div class="spacer"></div><button class="btnO" data-act="todo" style="justify-content:center">Sign out</button>`}
+
+/* LOCK 2 V1 · Seven launch types (Founder 8 Nov "a - plus custom agreemtn and family agreement", "LOCK both (Recommended)") */
+const KINDS={loan:['Interest-free loan','Qard Hasan · Record what is lent and repaid','hand'],sale:['Sale','Make the item, price and handover clear','bag'],itemrent:['Item rental','Hire out a car, tools or equipment. Not homes or rooms','key'],lend:['Item lending','Lend something for free and agree when it comes back','box'],service:['Service','Set out the work, timing and agreed value','case'],family:['Family agreement','Record what family members agree between them','users'],custom:['Custom agreement','Write your own terms','edit']};
+const TYPESETS={A:['loan','sale','lend','itemrent','service','family','custom']};
+const LATER={A:'Later, after review: business partnership, charity pledge, employment.'};
+/* LOCK 2 V1 · Many people, one agreement (Founder 8 Nov "Many people, one agreement", "LOCK both (Recommended)"; signing: "option 2" = everyone signs, witnesses included) */
+const PEOPLE=['Omar Farooq','Sara Malik','Yusuf Rahman','Maryam Saleh'];
+const ROLES=['owes','owed','witness'];
+const RLAB={owes:'Owes a share',owed:'Is owed',witness:'Witness'};
+function newDraft(){S.d={kind:S.kind,title:'',total:300,split:'equal',people:[{name:'Amina Noor',you:true,role:'owes',share:0,paid:0},{name:'Omar Farooq',role:'owed',share:0,paid:0}]}}
+const owers=()=>S.d.people.filter(x=>x.role==='owes');
+function shares(){const o=owers();if(S.d.split==='equal'){const n=o.length||1,b=Math.floor(S.d.total/n);o.forEach((x,i)=>x.share=b+(i<S.d.total-b*n?1:0))}S.d.people.forEach(x=>{if(x.role!=='owes')x.share=0});return S.d.split==='equal'?S.d.total:o.reduce((t,x)=>t+x.share,0)}
+function draftError(){const total=shares();if(!S.d.people.some(x=>x.role==='owes'))return 'Someone needs to owe a share.';if(!S.d.people.some(x=>x.role==='owed'))return 'Someone needs to be owed.';if(!(total>0))return 'Enter an amount above £0.';if(owers().some(x=>!(x.share>0)))return 'Give everyone who owes a share an amount above £0.';return ''}
+function saveDraft(){const total=shares(),k=KINDS[S.d.kind][0],others=S.d.people.filter(x=>!x.you).map(x=>x.name.split(' ')[0]);
+  const a={id:'d'+Date.now(),title:S.d.title||k,who:S.d.people.length>2?'You, '+others.slice(0,-1).join(', ')+' and '+others.slice(-1):S.d.people.find(x=>!x.you).name,kind:k,amt:total,paid:0,due:new Date(2026,11,15),status:'draft',people:S.d.people.length>2?S.d.people.map(x=>({...x})):undefined};
+  S.list.unshift(a);return a}
+const personRow=(x,i,edit)=>`<div class="prow"><span class="pav">${x.name[0]}</span><span class="tx"><span class="t1">${x.you?'You':x.name} ${badge(vOf(x.you?null:x.name))}</span>${edit?`<button class="rolechip ${x.role}" data-act="role" data-i="${i}">${RLAB[x.role]} ▾</button>`:`<span class="t2">${RLAB[x.role]}</span>`}</span>${x.role==='owes'?(edit&&S.d.split==='set'?`<label class="amtIn">£<input type="number" inputmode="numeric" min="0" id="share-${i}" data-share="${i}" value="${x.share||''}" aria-label="Share for ${x.name}"></label>`:`<span class="pamt">${gbp(x.share)}</span>`):'<span class="pamt muted">—</span>'}${edit&&!x.you?`<button class="rm" data-act="rmp" data-i="${i}" aria-label="Remove ${x.name}">×</button>`:''}</div>`;
+/* LOCK 4 V1 · Track record - facts, not a score (Founder 8 Nov "A · Facts, not a score (Recommended)", "LOCK it (Recommended)", name "Track record (Recommended)") */
+const TR={'Amina Noor':{done:6,ontime:5,late:1,ext:1,open:3,disp:0,since:'Mar 2026',shared:true},'Omar Farooq':{done:14,ontime:14,late:0,ext:2,open:2,disp:0,since:'Jan 2025',shared:true},'Sara Malik':{done:2,ontime:1,late:1,ext:0,open:1,disp:1,since:'Aug 2026',shared:false},'Yusuf Rahman':{done:0,ontime:0,late:0,ext:0,open:1,disp:0,since:'Oct 2026',shared:false},'Maryam Saleh':{done:9,ontime:8,late:1,ext:0,open:1,disp:0,since:'Jun 2025',shared:true}};
+function trChip(name){const t=TR[name];return t&&t.shared?'<span class="trc">Record ›</span>':''}
+function trBody(name,me){const t=TR[name];const pct=t.done?Math.round(t.ontime/t.done*100):0;
+ const facts=`<dl class="kv"><dt>Agreements completed</dt><dd>${t.done}</dd><dt>Paid on time</dt><dd>${t.done?`${t.ontime} of ${t.done} (${pct}%)`:'—'}</dd><dt>Extensions agreed</dt><dd>${t.ext}</dd><dt>Open now</dt><dd>${t.open}</dd><dt>On Wafa since</dt><dd>${t.since}</dd></dl>`;
+ const head=`<div class="calm" style="align-items:flex-start">${ic('check',22)}<div><b>${me?'Your track record':'Track record'}</b><span>${me?'Only facts, never a score. You choose whether people on your agreements can see it.':'Shared by '+name.split(' ')[0]+'. Facts only, never a score.'}</span></div></div>`;
+ return head+facts+`<p class="sub" style="font-size:12.5px">An extension both sides agreed is never counted as late. Wealth, amounts and income are never used.</p>`+(me?`<button class="btnO" data-act="trshare" style="justify-content:center">${TR['Amina Noor'].shared?'Stop sharing my record':'Share my record on my agreements'}</button>`:'')}
+const PAGES={
+ record:p=>`<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>${p.me?'Your track record':p.name}</h4></div>${trBody(p.me?'Amina Noor':p.name,p.me)}<div class="spacer"></div>`,
+ verify:()=>{const L=VER.A;return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>Verification</h4></div><div class="vhead"><span class="pav" style="width:48px;height:48px;flex-basis:48px;font-size:18px">A</span><div><b>Amina Noor</b> ${badge(S.ver)}<p class="sub" style="font-size:13px">Others see your badge next to your name on every agreement. Verification is optional.</p></div></div>${`<div class="lv"><span class="${['basic','verified'].includes(level(S.ver))?'on':''}">Basic<br><small>Email + phone</small></span><span class="${level(S.ver)==='verified'?'on':''}">Verified<br><small>+ photo ID and selfie</small></span></div>`}<div class="plist">${L.map(([k,t,d])=>`<div class="prow"><span class="pav">${S.ver[k]?ic('check',18):''}</span><span class="tx"><span class="t1">${t}</span><span class="t2">${d}</span></span>${S.ver[k]?'<span class="pamt" style="color:var(--green)">Done</span>':`<button class="chipbtn" data-act="vdo" data-k="${k}">${k==='id'||k==='selfie'?'Verify':'Add'}</button>`}</div>`).join('')}</div><p class="sub" style="font-size:12.5px">Photo ID is checked by a specialist ID company. Wafa keeps the result, not a copy of your ID.</p><div class="spacer"></div><button class="demoBtn" data-act="vreset">Demo: start again as email only</button>`},
+ details:()=>{const total=shares();const nO=owers().length;return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>New agreement</h4></div><div class="steps"><span class="on">1  Type</span><span class="on">2  Details</span><span>3  Review</span></div><div><p class="hello" style="font-size:22px">Make the details clear.</p><p class="sub">${KINDS[S.d.kind][0]} · add everyone who is part of it.</p></div><label class="fld"><span>Agreement title <em>optional</em></span><input id="d-title" value="${S.d.title}" placeholder="Give this promise a name"></label><div class="sec"><h4>Who’s in it</h4><span class="sub" style="font-size:13px">${S.d.people.length} people</span></div><div class="plist">${S.d.people.map((x,i)=>personRow(x,i,true)).join('')}<button class="addp" data-act="addp">${ic('plus',18)} Add a person</button></div><div class="seg" role="group" aria-label="How is it split?"><button data-act="split" data-v="equal" aria-pressed="${S.d.split==='equal'}">Split equally</button><button data-act="split" data-v="set" aria-pressed="${S.d.split==='set'}">Set each amount</button></div>${S.d.split==='equal'?`<label class="fld"><span>Total amount</span><span class="amtIn big">£<input type="number" inputmode="numeric" min="0" id="d-total" value="${S.d.total||''}"></span></label><p class="sub" style="font-size:13px">${nO?`${nO} ${nO===1?'person owes':'people owe'} ${gbp(Math.floor(total/nO))} each`:'Nobody owes a share yet'}</p>`:`<p class="sub" style="font-size:13px">Total: <b>${gbp(total)}</b></p>`}<label class="fld"><span>Due date</span><button class="datebtn" data-act="date">15 Dec 2026</button></label>${S.d.kind==='custom'?`<p class="warnline">Your own terms must not include interest or anything prohibited. If you are unsure, ask a scholar before you sign.</p>`:''}<div class="spacer"></div>${S.d.err?`<p class="errline" role="alert">${S.d.err}</p>`:''}<button class="btnG" data-act="review">Review draft</button>`},
+ review:()=>{const total=shares();return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>New agreement</h4></div><div class="steps"><span class="on">1  Type</span><span class="on">2  Details</span><span class="on">3  Review</span></div><div><p class="hello" style="font-size:22px">${S.d.title||KINDS[S.d.kind][0]}</p><p class="sub">Take a moment to check your draft. Nothing is signed or sent.</p></div><dl class="kv"><dt>Type</dt><dd>${KINDS[S.d.kind][0]}</dd><dt>Total</dt><dd>${gbp(total)}</dd><dt>People</dt><dd>${S.d.people.length}</dd><dt>Currency</dt><dd>British pound (GBP)</dd></dl><div class="plist">${S.d.people.map((x,i)=>personRow(x,i,false)).join('')}</div><p class="sub" style="font-size:13px">Each person gets an invitation and signs the same agreement. It becomes active when everyone has signed, witnesses too.</p><div class="spacer"></div><button class="btnG" data-act="save">Save draft</button>`},
+ payby:p=>{const a=S.list.find(x=>x.id===p.id);return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>Who paid?</h4></div><p class="sub">${a.title} · choose who this payment is from. Demo: records £50.</p><div class="plist">${a.people.map((x,i)=>x.role!=='owes'?'':`<button class="prow tap" data-act="paid" data-i="${i}" ${x.paid>=x.share?'disabled':''}><span class="pav">${x.name[0]}</span><span class="tx"><span class="t1">${x.you?'You':x.name}</span><span class="t2">${gbp(x.paid)} of ${gbp(x.share)} paid</span></span><span class="pamt">${x.paid>=x.share?'Paid':gbp(x.share-x.paid)+' left'}</span></button>`).join('')}</div><div class="spacer"></div>`},
+ create:()=>{const set=TYPESETS[S.ts];return `<div class="ph"><button class="bk" data-act="back" aria-label="Close">${ic('back',18)}</button><h4>New agreement</h4></div><div class="steps"><span class="on">1  Type</span><span>2  Details</span><span>3  Review</span></div><div><p class="hello" style="font-size:22px">Every promise starts here.</p><p class="sub">Choose what you would like to record. You can review everything before saving.</p></div>${set.map(k=>{const [l,d,i]=KINDS[k];const on=S.kind===k;return `<button class="kind ${on?'on':''}" data-kind="${k}"><span class="tic">${ic(i)}</span><span class="tx"><span class="t1">${l}</span><span class="t2">${d}</span></span><span class="rad">${on?ic('check',22):''}</span></button>`}).join('')}${LATER[S.ts]?`<p class="sub" style="font-size:13px">${LATER[S.ts]}</p>`:''}<div class="spacer"></div><button class="btnG" data-act="cont">Continue</button>`},
+ section:p=>{const l=SECTIONS.find(s=>s[0]===p.k)[1];return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>${l}</h4></div>${listOf(data().filter(a=>a.status===p.k),p.k)}`},
+ agreement:p=>{const a=data().find(x=>x.id===p.id)||BASE.find(x=>x.id===p.id);const pc=Math.round(a.paid/a.amt*100);
+  const act={overdue:`<button class="btnG" data-act="remind">Send a reminder</button>`,awaiting:`<button class="btnG" data-act="sign">Sign this agreement</button>`,draft:`<button class="btnG" data-act="send">Send for signatures</button>`,active:`<button class="btnG" data-act="pay">Record a payment</button>`,completed:''}[a.status];
+  return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>${a.title}</h4></div><span class="st ${a.status}" style="align-self:flex-start">${LABEL[a.status]}</span>${a.people?`<div class="sec"><h4>Who’s in it</h4><span class="sub" style="font-size:13px">${a.people.length} people</span></div><div class="plist">${a.people.map(x=>`<div class="prow"><span class="pav">${x.name[0]}</span><span class="tx"><span class="t1">${x.you?'You':x.name} ${badge(vOf(x.you?null:x.name))}</span><span class="t2">${RLAB[x.role]}${!x.you&&TR[x.name]?` · <button class="trlink" data-act="other" data-n="${x.name}">${trChip(x.name)||'No shared record'}</button>`:''}${x.role==='owes'?` · ${gbp(x.paid)} of ${gbp(x.share)} paid`:''}</span></span>${x.role==='owes'?`<span class="mini"><i style="width:${x.share?Math.round(x.paid/x.share*100):0}%"></i></span>`:''}</div>`).join('')}</div>`:''}<dl class="kv">${a.people?'':`<dt>With</dt><dd>${a.who}</dd>`}<dt>Type</dt><dd>${a.kind}</dd><dt>Amount</dt><dd>${gbp(a.amt)}</dd><dt>Paid</dt><dd>${gbp(a.paid)}</dd><dt>Due</dt><dd>${fmt(a.due)}</dd></dl><div class="bar" aria-label="${pc}% paid"><i style="width:${pc}%"></i></div><p class="sub">${pc}% paid · ${gbp(a.amt-a.paid)} left</p><button class="btnO" data-act="docview">${ic('doc',18)} View the agreement copy</button><div class="spacer"></div>${act}`}
+};
+
+/* ---------- render ---------- */
+const screen=document.getElementById('screen');
+function render(){
+  const pg=page();
+  const inner=pg?PAGES[pg.t](pg):[home,agreementsTab,tracker,profile][S.tab]();
+  screen.className='app'+(S.size==='se'?' se':'');
+  screen.innerHTML=`<div class="sb"><span>9:41</span><span class="island"></span><span>●●● ▮</span></div><div class="body" id="body">${inner}</div><nav class="nav">${['Home','Agreements','Tracker','Profile'].map((n,i)=>`<button data-tab="${i}" ${!pg&&S.tab===i?'aria-current="page"':''}><span class="ic">${ic(['home','doc','chart','user'][i])}</span>${n}</button>`).join('')}</nav><div class="toast" id="toast"></div>`;
+  drawRail(); fit();
+}
+let tt; function say(m){const t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
+
+screen.addEventListener('change',e=>{const t=e.target;if(!S.d)return;S.d.err='';
+  if(t.id==='d-title')S.d.title=t.value.trim();
+  if(t.id==='d-total')S.d.total=Math.max(0,Math.round(+t.value||0));
+  if(t.dataset.share!==undefined)S.d.people[+t.dataset.share].share=Math.max(0,Math.round(+t.value||0));
+  render();});
+screen.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.tab!==undefined){S.tab=+b.dataset.tab;S.pages=[];S.filt='all';return render()}
+  if(b.dataset.sec) return open({t:'section',k:b.dataset.sec});
+  if(b.dataset.ag) return open({t:'agreement',id:b.dataset.ag});
+  if(b.dataset.kind){S.kind=b.dataset.kind;return render()}
+  if(S.d&&['addp','rmp','role','split'].includes(b.dataset.act))S.d.err='';
+  if(b.dataset.lf){S.filt=b.dataset.lf;return render()}
+  const a=b.dataset.act;
+  switch(a){
+    case 'back':return back();
+    case 'profile':S.tab=3;S.pages=[];return render();
+    case 'retry':S.scen='normal';return render();
+    case 'create':return open({t:'create'});
+    case 'cont':if(!S.kind)return say('Choose a type first.');newDraft();return open({t:'details'});
+    case 'addp':{const next=PEOPLE.find(n=>!S.d.people.some(x=>x.name===n));if(!next)return say('Everyone in this demo is already added.');S.d.people.push({name:next,role:'owes',share:0,paid:0});return render()}
+    case 'rmp':S.d.people.splice(+b.dataset.i,1);return render();
+    case 'role':{const x=S.d.people[+b.dataset.i];x.role=ROLES[(ROLES.indexOf(x.role)+1)%3];return render()}
+    case 'split':S.d.split=b.dataset.v;return render();
+    case 'verify':return open({t:'verify'});
+    case 'myrecord':return open({t:'record',me:true});
+    case 'other':{const n=b.dataset.n;if(!TR[n].shared)return say(n.split(' ')[0]+' hasn’t shared a track record.');return open({t:'record',name:n})}
+    case 'trshare':TR['Amina Noor'].shared=!TR['Amina Noor'].shared;render();return say(TR['Amina Noor'].shared?'People on your agreements can now see your track record.':'Your track record is private again.');
+    case 'vdo':{const k=b.dataset.k;if(k==='id'){S.ver.id=true;S.ver.selfie=true}else S.ver[k]=true;render();return say(k==='id'||k==='selfie'?'Demo: identity checked. In the real app a specialist ID company does this.':'Demo: confirmed. In the real app you enter a code we send you.')}
+    case 'vreset':S.ver={email:true,phone:false,id:false,selfie:false};return render();
+    case 'date':return say('Opens the date picker, as in the app.');
+    case 'review':{const e=draftError();if(e){S.d.err=e;return render()}return open({t:'review'})}
+    case 'save':{const a=saveDraft();S.pages=[];S.tab=0;open({t:'agreement',id:a.id});return say('Draft saved. Send it when everyone’s details are right.')}
+    case 'payby':return open({t:'payby',id:page().id});
+    case 'paid':{const ag=S.list.find(x=>x.id===page().id);const x=ag.people[+b.dataset.i];const add=Math.min(50,x.share-x.paid);x.paid+=add;ag.paid+=add;if(ag.paid>=ag.amt)ag.status='completed';S.pages.pop();render();return say(`£${add} from ${x.you?'you':x.name.split(' ')[0]} recorded (example).`)}
+    case 'invites':return say('Invitations are already in the app. Not redrawn here yet.');
+    case 'invite':S.invite=false;render();return say('Opens Invitations (already in the app). Removed from Needs you for this demo.');
+    case 'docview':return say('The agreement copy is already in the app. Not redrawn here yet.');
+    case 'remind':{const ag=S.list.find(x=>x.id===page().id);return say(`Reminder sent to ${ag.who.split(' ')[0]} (example).`)}
+    case 'sign':{const ag=S.list.find(x=>x.id===page().id);ag.status='active';render();return say('Signed. The agreement is now active.')}
+    case 'send':{const ag=S.list.find(x=>x.id===page().id);ag.status='awaiting';render();return say('Sent. Waiting for signatures.')}
+    case 'pay':{if(S.list.find(x=>x.id===page().id).people)return open({t:'payby',id:page().id});const ag=S.list.find(x=>x.id===page().id);ag.paid=Math.min(ag.amt,ag.paid+50);if(ag.paid===ag.amt)ag.status='completed';render();return say('Payment of £50 recorded (example).')}
+    default:return say('Not part of this design yet.');
+  }
+});
+document.getElementById('backout').onclick=back;
+
+/* ---------- rail ---------- */
+const STATES=[['normal','Example records'],['calm','Nothing needs you'],['empty','New member (no agreements)'],['loading','Loading'],['error','Couldn’t load']];
+function drawRail(){
+  document.getElementById('demo').innerHTML=STATES.map(([k,l])=>`<button data-s="${k}" aria-pressed="${S.scen===k}">${l}</button>`).join('');
+  document.getElementById('ts').innerHTML=`<button class="pill" data-ts="A" aria-pressed="true">Seven launch types</button>`;
+  document.getElementById('tsHint').textContent='LOCK 2 (8 Nov): A plus family and custom. Tap to open the Type step.';
+  document.getElementById('size').innerHTML=[['pro','iPhone 15 Pro Max'],['se','iPhone SE']].map(([k,l])=>`<button class="pill" data-z="${k}" aria-pressed="${S.size===k}">${l}</button>`).join('');
+}
+const reset=()=>{S.list=BASE.map(a=>({...a}));S.tab=0;S.pages=[];S.filt='all';S.invite=S.scen!=='calm'};
+document.querySelector('.rail').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.s){S.scen=b.dataset.s;reset()}
+  if(b.dataset.z){S.size=b.dataset.z}
+  if(b.dataset.ao){S.scen='normal';S.tab=3;S.pages=[{t:'record',me:true}]}
+  if(b.dataset.vo){S.scen='normal';S.tab=3;S.pages=[{t:'verify'}]}
+  if(b.dataset.fam){S.scen='normal';reset();S.tab=1;S.pages=[{t:'agreement',id:'a7'}]}
+  if(b.dataset.ts){S.ts=b.dataset.ts;S.kind=null;if(!page()||page().t!=='create'){S.scen='normal';S.tab=0;S.pages=[{t:'create'}]}}
+  render();});
+
+/* ---------- scale phone to fit ---------- */
+function fit(){
+  const dev=document.getElementById('dev'),w=(S.size==='se'?375:430)+24,h=(S.size==='se'?667:932)+24;
+  dev.style.width=(w-24)+'px';dev.style.height=(h-24)+'px';
+  const avail=Math.min(window.innerWidth-32,w), availH=Math.max(window.innerHeight-90,420);
+  const s=Math.min(1,avail/w,availH/h);
+  dev.style.transform=`scale(${s})`;
+  const f=document.getElementById('fit');f.style.width=w*s+'px';f.style.height=h*s+'px';
+}
+window.addEventListener('resize',fit);
+reset(); render();
+</script>

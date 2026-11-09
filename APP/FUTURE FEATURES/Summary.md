@@ -35,6 +35,10 @@ Potential factors:
 Purpose: Encourage trustworthy behaviour while remaining
 fair and aligned with the community's values.
 
+Decided 8 Nov 2026 (LOCK 4): shown in the app as a private,
+shareable "Track record" of facts - never a score, rank
+or level. Spec: APP/APPROVED/TRACK_RECORD/RECORD/.
+
 ------------------------------------------------------------
 EVIDENCE VAULT (TBC)
 ------------------------------------------------------------

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../domain/demo_connections.dart';
 import '../domain/demo_models.dart';
 
 abstract final class WafaColors {
@@ -347,6 +348,55 @@ class StatusBadge extends StatelessWidget {
   }
 }
 
+class VerificationBadge extends StatelessWidget {
+  const VerificationBadge(this.level, {super.key});
+
+  final VerificationLevel level;
+
+  @override
+  Widget build(BuildContext context) {
+    if (level == VerificationLevel.none) return const SizedBox.shrink();
+    final verified = level == VerificationLevel.verified;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: verified ? WafaColors.green : WafaColors.mint,
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+        child: Text(
+          verified ? '✓ Verified' : 'Basic',
+          style: TextStyle(
+            fontSize: 10.5,
+            fontWeight: FontWeight.bold,
+            color: verified ? Colors.white : WafaColors.green,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class VerificationName extends StatelessWidget {
+  const VerificationName(this.name, this.level, {super.key, this.style});
+
+  final String name;
+  final VerificationLevel level;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = Text(name, style: style);
+    if (level == VerificationLevel.none) return label;
+    return Wrap(
+      spacing: 6,
+      runSpacing: 2,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [label, VerificationBadge(level)],
+    );
+  }
+}
+
 class KindMark extends StatelessWidget {
   const KindMark(this.kind, {super.key});
   final ContractKind kind;
@@ -458,8 +508,15 @@ class FieldLabel extends StatelessWidget {
 }
 
 class DetailRow extends StatelessWidget {
-  const DetailRow(this.label, this.value, {super.key});
+  const DetailRow(
+    this.label,
+    this.value, {
+    super.key,
+    this.labelVerification = VerificationLevel.none,
+  });
+
   final String label, value;
+  final VerificationLevel labelVerification;
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 14),
@@ -467,8 +524,9 @@ class DetailRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Text(
+          child: VerificationName(
             label,
+            labelVerification,
             style: const TextStyle(fontSize: 13, color: WafaColors.muted),
           ),
         ),

@@ -4,6 +4,8 @@ WAFA (وفاء, "faithfulness") is a standalone Flutter prototype for a faith co
 
 The preview has seven agreement types. Drafts can include several people, with amounts split equally or entered per person. Saving prepares an individual demo invitation for each other person. Access starts after the owner confirms the join request. When an open agreement has recorded shares, choose who paid before entering a payment.
 
+Profile offers optional, simulated verification. Confirming email and phone shows a Basic badge. Simulating a photo ID and selfie check shows a Verified badge. Badges appear next to people on agreements, including on the **Who paid?** screen. The preview sends no codes and collects no photos.
+
 People, agreements and payments in this preview are fictional. Records stay in memory and reset when the process restarts. Authentication and invitations are simulations. Agreement copies remain unsigned, no signatures are collected, and payment records are fictional. The app does not create binding contracts, move money or claim religious certification.
 
 ## Status

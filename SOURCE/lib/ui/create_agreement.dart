@@ -524,6 +524,9 @@ class _CreateAgreementState extends State<CreateAgreement> {
           for (final (index, row) in _people.indexed) ...[
             _personRow(
               name: row.person?.name ?? 'Choose a person',
+              verification: widget.connections.verificationLevelFor(
+                row.person?.id,
+              ),
               isMember: index == 0,
               role: row.role,
               sharePence: byId[row.person?.id]?.sharePence ?? 0,
@@ -736,6 +739,7 @@ class _CreateAgreementState extends State<CreateAgreement> {
             if (index > 0) const Divider(height: 1),
             _personRow(
               name: person.name,
+              verification: widget.connections.verificationLevelFor(person.id),
               isMember: index == 0,
               role: person.role,
               sharePence: person.sharePence,
@@ -766,6 +770,7 @@ class _CreateAgreementState extends State<CreateAgreement> {
 
   Widget _personRow({
     required String name,
+    required VerificationLevel verification,
     required bool isMember,
     required AgreementRole role,
     required int sharePence,
@@ -803,13 +808,13 @@ class _CreateAgreementState extends State<CreateAgreement> {
           ),
           const SizedBox(width: 10),
           Expanded(
-            flex: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (onChoose == null)
-                  Text(
+                  VerificationName(
                     isMember ? 'You' : name,
+                    verification,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -851,8 +856,8 @@ class _CreateAgreementState extends State<CreateAgreement> {
             ),
           ),
           const SizedBox(width: 6),
-          Expanded(
-            flex: 2,
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 80),
             child:
                 amountField ??
                 Text(

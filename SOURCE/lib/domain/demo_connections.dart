@@ -43,6 +43,10 @@ const demoSara = DemoPerson(
 );
 const List<DemoPerson> demoPeople = [demoAmina, demoOmar, demoSara];
 
+enum VerificationLevel { none, basic, verified }
+
+enum DemoVerificationCheck { email, phone, photoIdAndSelfie }
+
 enum ParticipantRole {
   party('Party'),
   witness('Witness');
@@ -130,6 +134,14 @@ class DemoConnectionsRepository {
   final Map<String, List<DemoParticipant>> _participants = {};
   final Map<String, Map<String, AgreementRole>> _draftRoles = {};
   final Map<String, Set<String>> _contacts = {};
+  final Map<String, Set<DemoVerificationCheck>> _verification = {
+    demoAmina.id: {DemoVerificationCheck.email},
+    demoOmar.id: DemoVerificationCheck.values.toSet(),
+    demoSara.id: {DemoVerificationCheck.email, DemoVerificationCheck.phone},
+    // Fixture-only people do not become sign-in or invitation choices.
+    'demo-yusuf': {DemoVerificationCheck.email},
+    'demo-maryam': DemoVerificationCheck.values.toSet(),
+  };
   final List<DemoInvite> _invites = [];
   DemoPerson? _currentPerson;
   DemoLoginMethod? _loginMethod;
@@ -140,6 +152,27 @@ class DemoConnectionsRepository {
   List<DemoPerson> get persons => demoPeople;
   DemoPerson? get currentPerson => _currentPerson;
   DemoLoginMethod? get loginMethod => _loginMethod;
+
+  VerificationLevel verificationLevelFor(String? personId) {
+    final checks = _verification[personId] ?? const <DemoVerificationCheck>{};
+    if (checks.contains(DemoVerificationCheck.photoIdAndSelfie)) {
+      return VerificationLevel.verified;
+    }
+    if (checks.contains(DemoVerificationCheck.email) &&
+        checks.contains(DemoVerificationCheck.phone)) {
+      return VerificationLevel.basic;
+    }
+    return VerificationLevel.none;
+  }
+
+  bool isVerificationCheckDone(DemoVerificationCheck check) =>
+      _verification[_currentPerson?.id]?.contains(check) ?? false;
+
+  void confirmDemoVerificationCheck(DemoVerificationCheck check) =>
+      _verification[_requireSignedIn().id]!.add(check);
+
+  void resetDemoVerification() =>
+      _verification[_requireSignedIn().id] = {DemoVerificationCheck.email};
 
   DemoPerson? person(String personId) {
     for (final candidate in demoPeople) {

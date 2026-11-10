@@ -262,6 +262,9 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
                         'participant-person-${participant.personId}',
                       ),
                       person: connections.person(participant.personId)!,
+                      verification: connections.verificationLevelFor(
+                        participant.personId,
+                      ),
                       role: participant.role,
                       isCurrent:
                           participant.personId == connections.currentPerson?.id,
@@ -316,11 +319,13 @@ class _PersonCard extends StatelessWidget {
   const _PersonCard({
     super.key,
     required this.person,
+    required this.verification,
     required this.role,
     required this.isCurrent,
   });
 
   final DemoPerson person;
+  final VerificationLevel verification;
   final ParticipantRole role;
   final bool isCurrent;
 
@@ -329,8 +334,9 @@ class _PersonCard extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        VerificationName(
           '${person.name}${isCurrent ? ' · You' : ''}',
+          verification,
           style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 6),

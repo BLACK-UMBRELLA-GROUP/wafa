@@ -284,7 +284,15 @@ void main() {
       await findPerson(tester, demoSara);
       await cycle(tester, demoSara);
       await cycle(tester, demoSara);
+      expect(find.text('✓ Verified'), findsOneWidget);
+      expect(find.text('Basic'), findsOneWidget);
       await next(tester);
+      expect(find.text('✓ Verified'), findsOneWidget);
+      expect(find.text('Basic'), findsOneWidget);
+      expect(
+        connections.verificationLevelFor(demoAmina.id),
+        VerificationLevel.none,
+      );
       await next(tester);
 
       final draft = result!;

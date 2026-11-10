@@ -14,6 +14,84 @@ void main() {
     return repository;
   }
 
+  test(
+    'verification checks are fictional and scoped to one session and person',
+    () {
+      final connections = ownedRepository();
+      expect(
+        connections.verificationLevelFor(demoAmina.id),
+        VerificationLevel.none,
+      );
+      expect(
+        connections.verificationLevelFor(demoOmar.id),
+        VerificationLevel.verified,
+      );
+      expect(
+        connections.verificationLevelFor(demoSara.id),
+        VerificationLevel.basic,
+      );
+      expect(
+        connections.verificationLevelFor('demo-yusuf'),
+        VerificationLevel.none,
+      );
+      expect(
+        connections.verificationLevelFor('demo-maryam'),
+        VerificationLevel.verified,
+      );
+      expect(
+        connections.verificationLevelFor(demoOmar.name),
+        VerificationLevel.none,
+      );
+
+      connections.confirmDemoVerificationCheck(DemoVerificationCheck.phone);
+      expect(
+        connections.verificationLevelFor(demoAmina.id),
+        VerificationLevel.basic,
+      );
+      connections.confirmDemoVerificationCheck(
+        DemoVerificationCheck.photoIdAndSelfie,
+      );
+      expect(
+        connections.verificationLevelFor(demoAmina.id),
+        VerificationLevel.verified,
+      );
+
+      connections.signOut();
+      expect(
+        () => connections.confirmDemoVerificationCheck(
+          DemoVerificationCheck.phone,
+        ),
+        throwsStateError,
+      );
+      connections.signIn(DemoLoginMethod.google, demoAmina.id);
+      expect(
+        connections.verificationLevelFor(demoAmina.id),
+        VerificationLevel.verified,
+      );
+      connections.resetDemoVerification();
+      expect(
+        connections.isVerificationCheckDone(DemoVerificationCheck.email),
+        isTrue,
+      );
+      expect(
+        connections.isVerificationCheckDone(DemoVerificationCheck.phone),
+        isFalse,
+      );
+      expect(
+        connections.verificationLevelFor(demoAmina.id),
+        VerificationLevel.none,
+      );
+      expect(
+        connections.verificationLevelFor(demoOmar.id),
+        VerificationLevel.verified,
+      );
+      expect(
+        DemoConnectionsRepository().verificationLevelFor(demoAmina.id),
+        VerificationLevel.none,
+      );
+    },
+  );
+
   group('prepared draft invitations', () {
     AgreementPerson person(DemoPerson member, AgreementRole role, int share) =>
         AgreementPerson(

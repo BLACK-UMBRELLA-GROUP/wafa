@@ -309,7 +309,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     return ListTile(
       key: ValueKey('payer-${person.id}'),
       leading: AgreementPersonAvatar(person.name),
-      title: Text(person.id == currentId ? 'You' : person.name),
+      title: VerificationName(
+        person.id == currentId ? 'You' : person.name,
+        widget.connections.verificationLevelFor(person.id),
+      ),
       subtitle: Text(
         '${money(paid)} of ${money(person.sharePence)} paid',
         style: const TextStyle(color: WafaColors.muted),

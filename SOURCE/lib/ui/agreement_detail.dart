@@ -324,7 +324,12 @@ class _AgreementDetailState extends State<AgreementDetail> {
                           foregroundColor: WafaColors.green,
                           child: Icon(Icons.person_outline_rounded),
                         ),
-                        title: Text(person?.name ?? 'Demo person'),
+                        title: VerificationName(
+                          person?.name ?? 'Demo person',
+                          widget.connections.verificationLevelFor(
+                            participant.personId,
+                          ),
+                        ),
                         subtitle: Text(
                           '${person?.wafaId ?? ''} · ${participant.role.label} · Not signed',
                         ),
@@ -513,7 +518,10 @@ class _AgreementDetailState extends State<AgreementDetail> {
     final paid = agreement.paidPenceFor(person.id);
     return ListTile(
       leading: AgreementPersonAvatar(person.name),
-      title: Text(person.id == currentId ? 'You' : person.name),
+      title: VerificationName(
+        person.id == currentId ? 'You' : person.name,
+        widget.connections.verificationLevelFor(person.id),
+      ),
       subtitle: Text(
         owes
             ? '${person.role.label} · ${money(paid)} of '

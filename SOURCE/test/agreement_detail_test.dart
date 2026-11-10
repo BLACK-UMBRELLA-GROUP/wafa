@@ -146,6 +146,8 @@ void main() {
     expect(find.text('3 people'), findsOneWidget);
     expect(find.text('Owes a share · £100 of £150 paid'), findsOneWidget);
     expect(find.text('Is owed'), findsOneWidget);
+    expect(find.text('✓ Verified'), findsOneWidget);
+    expect(find.text('Basic'), findsOneWidget);
     expect(find.text('With'), findsNothing);
 
     final you = find.byKey(ValueKey('payer-${demoAmina.id}'));
@@ -157,6 +159,14 @@ void main() {
     expect(find.text('£50 left'), findsOneWidget);
     expect(find.text('£150 left'), findsOneWidget);
     expect(find.text(demoSara.name), findsNothing);
+    expect(
+      find.descendant(of: omar, matching: find.text('✓ Verified')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: you, matching: find.text('✓ Verified')),
+      findsNothing,
+    );
 
     await tester.tap(you);
     await tester.pumpAndSettle();

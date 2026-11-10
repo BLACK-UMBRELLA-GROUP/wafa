@@ -7,6 +7,7 @@ import 'ui/create_agreement.dart';
 import 'ui/agreement_detail.dart';
 import 'ui/demo_account.dart';
 import 'ui/dashboard.dart';
+import 'ui/verification_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,6 +83,7 @@ class WafaHome extends StatefulWidget {
 class _WafaHomeState extends State<WafaHome> {
   int tab = 0;
   AgreementStatus? dashboardSection;
+  bool verificationOpen = false;
   String filter = 'All';
   String query = '';
   final searchController = TextEditingController();
@@ -153,25 +155,36 @@ class _WafaHomeState extends State<WafaHome> {
     if (mounted) setState(() {});
   }
 
-  void selectTab(int value) => setState(() {
-    dashboardSection = null;
-    tab = value;
-  });
+  void selectTab(int value) {
+    if (verificationOpen) ScaffoldMessenger.of(context).clearSnackBars();
+    setState(() {
+      dashboardSection = null;
+      verificationOpen = false;
+      tab = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) => PopScope(
-    canPop: dashboardSection == null,
+    canPop: dashboardSection == null && !verificationOpen,
     onPopInvokedWithResult: (didPop, _) {
-      if (!didPop && dashboardSection != null) selectTab(0);
+      if (didPop) return;
+      if (verificationOpen) selectTab(3);
+      if (dashboardSection != null) selectTab(0);
     },
     child: Scaffold(
       body: SafeArea(
-        child: switch (tab) {
-          1 => agreementsPage(),
-          2 => trackerPage(),
-          3 => profilePage(),
-          _ => dashboard(),
-        },
+        child: verificationOpen
+            ? VerificationScreen(
+                connections: widget.connections,
+                onBack: () => selectTab(3),
+              )
+            : switch (tab) {
+                1 => agreementsPage(),
+                2 => trackerPage(),
+                3 => profilePage(),
+                _ => dashboard(),
+              },
       ),
       bottomNavigationBar: DecoratedBox(
         decoration: const BoxDecoration(
@@ -179,6 +192,7 @@ class _WafaHomeState extends State<WafaHome> {
         ),
         child: NavigationBar(
           selectedIndex: tab,
+          indicatorColor: verificationOpen ? Colors.transparent : null,
           onDestinationSelected: selectTab,
           destinations: const [
             NavigationDestination(
@@ -454,6 +468,8 @@ class _WafaHomeState extends State<WafaHome> {
             'Fictional examples only. Changes last for this session. No real AI, signatures or payments are connected.',
       ),
       const SizedBox(height: 24),
+      profileVerification(),
+      const SizedBox(height: 24),
       const PageHeading(
         'Your space',
         subtitle: 'Keep your agreements organised, your way.',
@@ -471,16 +487,6 @@ class _WafaHomeState extends State<WafaHome> {
         child: Text(
           'Demo profile',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-        ),
-      ),
-      const SizedBox(height: 6),
-      Center(
-        child: Text(
-          '${widget.connections.currentPerson!.name}\n'
-          '${widget.connections.currentPerson!.wafaId}\n'
-          '${widget.connections.loginMethod!.label} · simulated sign-in',
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: WafaColors.muted, height: 1.6),
         ),
       ),
       const SizedBox(height: 30),
@@ -558,6 +564,106 @@ class _WafaHomeState extends State<WafaHome> {
       ),
     ],
   );
+
+  Widget profileVerification() {
+    final person = widget.connections.currentPerson!;
+    final level = widget.connections.verificationLevelFor(person.id);
+    final status = switch (level) {
+      VerificationLevel.none => 'Not verified yet',
+      VerificationLevel.basic => 'Basic · add photo ID to be Verified',
+      VerificationLevel.verified => 'Verified',
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Surface(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Name',
+                      style: TextStyle(color: WafaColors.muted),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: VerificationName(
+                        person.name,
+                        level,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Wafa ID',
+                      style: TextStyle(color: WafaColors.muted),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      person.wafaId,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${widget.connections.loginMethod!.label} · simulated sign-in',
+                textAlign: TextAlign.right,
+                style: const TextStyle(color: WafaColors.muted, height: 1.6),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+        Material(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+            side: const BorderSide(color: WafaColors.line),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: WafaColors.mint,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.check_circle_outline,
+                color: WafaColors.green,
+              ),
+            ),
+            title: const Text(
+              'Verification',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              status,
+              style: const TextStyle(fontSize: 13, color: WafaColors.muted),
+            ),
+            trailing: const Icon(Icons.chevron_right, color: WafaColors.green),
+            onTap: () => setState(() => verificationOpen = true),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget settingsRow(
     IconData icon,

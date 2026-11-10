@@ -157,6 +157,9 @@ This copy contains only the fields currently held by the Wafa demo. It is not le
                             connections.person(participant.personId)?.name ??
                                 'Demo person',
                             '${connections.person(participant.personId)?.wafaId ?? ''} · ${participant.role.label} · Not signed',
+                            labelVerification: connections.verificationLevelFor(
+                              participant.personId,
+                            ),
                           ),
                       ],
                     ),

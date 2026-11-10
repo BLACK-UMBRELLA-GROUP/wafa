@@ -4,6 +4,8 @@
 /// legal signatures, network calls, or persistent accounts are involved.
 library;
 
+import 'demo_models.dart';
+
 enum DemoLoginMethod {
   apple('Apple'),
   google('Google');
@@ -73,6 +75,7 @@ class DemoInvite {
     required this.expiresAt,
     this.intendedPersonId,
     this.requestedPersonId,
+    this.agreementRole,
   });
 
   final String id;
@@ -85,23 +88,28 @@ class DemoInvite {
   final String? requestedPersonId;
   final DateTime createdAt;
   final DateTime expiresAt;
+  final AgreementRole? agreementRole;
 
   bool get isOpen =>
       status == InviteStatus.pending || status == InviteStatus.requested;
 
-  DemoInvite _copyWith({InviteStatus? status, String? requestedPersonId}) =>
-      DemoInvite(
-        id: id,
-        agreementId: agreementId,
-        creatorId: creatorId,
-        role: role,
-        status: status ?? this.status,
-        code: code,
-        intendedPersonId: intendedPersonId,
-        requestedPersonId: requestedPersonId ?? this.requestedPersonId,
-        createdAt: createdAt,
-        expiresAt: expiresAt,
-      );
+  DemoInvite _copyWith({
+    InviteStatus? status,
+    String? requestedPersonId,
+    AgreementRole? agreementRole,
+  }) => DemoInvite(
+    id: id,
+    agreementId: agreementId,
+    creatorId: creatorId,
+    role: role,
+    status: status ?? this.status,
+    code: code,
+    intendedPersonId: intendedPersonId,
+    requestedPersonId: requestedPersonId ?? this.requestedPersonId,
+    createdAt: createdAt,
+    expiresAt: expiresAt,
+    agreementRole: agreementRole ?? this.agreementRole,
+  );
 }
 
 class DemoParticipant {
@@ -120,6 +128,7 @@ class DemoConnectionsRepository {
   final Map<String, String> _owners = {};
   final Map<String, bool> _invitationCapabilities = {};
   final Map<String, List<DemoParticipant>> _participants = {};
+  final Map<String, Map<String, AgreementRole>> _draftRoles = {};
   final Map<String, Set<String>> _contacts = {};
   final List<DemoInvite> _invites = [];
   DemoPerson? _currentPerson;
@@ -182,6 +191,7 @@ class DemoConnectionsRepository {
     String agreementId, {
     String? ownerId,
     bool invitationsAllowed = true,
+    ParticipantRole ownerRole = ParticipantRole.party,
   }) {
     final current = _requireSignedIn();
     final cleanId = _agreementId(agreementId);
@@ -199,9 +209,79 @@ class DemoConnectionsRepository {
     _owners[cleanId] = owner.id;
     _invitationCapabilities[cleanId] = invitationsAllowed;
     _participants[cleanId] = [
-      DemoParticipant(personId: owner.id, role: ParticipantRole.party),
+      DemoParticipant(personId: owner.id, role: ownerRole),
     ];
   }
+
+  /// Saves a local draft and prepares its invitations as a single operation.
+  Agreement createAgreementDraft(
+    DemoAgreementRepository repository, {
+    required ContractKind kind,
+    required String title,
+    required DateTime dueDate,
+    required List<AgreementPerson> people,
+  }) {
+    final owner = _requireSignedIn();
+    final roles = <String, AgreementRole>{};
+    final draftPeople = people.map((person) {
+      final selected = _requiredPerson(person.id);
+      if (roles.containsKey(selected.id)) {
+        throw ArgumentError('Choose each person only once.');
+      }
+      roles[selected.id] = person.role;
+      return AgreementPerson(
+        id: selected.id,
+        name: selected.name,
+        role: person.role,
+        sharePence: person.sharePence,
+      );
+    }).toList();
+    final ownerRole = roles[owner.id];
+    final recipients = draftPeople.where((person) => person.id != owner.id);
+    if (ownerRole == null || recipients.isEmpty) {
+      throw ArgumentError('Include yourself and at least one other person.');
+    }
+
+    return repository.createDraft(
+      kind: kind,
+      title: title,
+      dueDate: dueDate,
+      counterparty: recipients.map((person) => person.name).join(', '),
+      amountPence: draftPeople.fold(
+        0,
+        (sum, person) => sum + person.sharePence,
+      ),
+      people: draftPeople,
+      prepareInvitations: (draft) {
+        if (_owners.containsKey(draft.id)) {
+          throw StateError('The demo agreement ID is already registered.');
+        }
+        final createdAt = _clock();
+        var number = _nextInviteNumber;
+        final invites = [
+          for (final person in recipients)
+            _newInvite(
+              number++,
+              draft.id,
+              owner.id,
+              _accessRole(person.role),
+              createdAt,
+              intendedPersonId: person.id,
+              agreementRole: person.role,
+            ),
+        ];
+        registerAgreement(draft.id, ownerRole: _accessRole(ownerRole));
+        _draftRoles[draft.id] = Map.unmodifiable(roles);
+        _invites.addAll(invites);
+        _nextInviteNumber = number;
+      },
+    );
+  }
+
+  static ParticipantRole _accessRole(AgreementRole role) =>
+      role == AgreementRole.witness
+      ? ParticipantRole.witness
+      : ParticipantRole.party;
 
   bool canManageParticipants(String agreementId) =>
       _isOwner(agreementId.trim()) &&
@@ -257,6 +337,10 @@ class DemoConnectionsRepository {
     _refreshExpiry();
     final cleanId = _agreementId(agreementId);
     final owner = _requireInvitationManager(cleanId);
+    final agreementRole = _draftRoles[cleanId]?[intendedPersonId];
+    if (agreementRole != null && role != _accessRole(agreementRole)) {
+      throw StateError('This person already has a role on this demo draft.');
+    }
     if (intendedPersonId != null) {
       final target = _requiredPerson(intendedPersonId);
       if (target.id == owner.id) {
@@ -278,22 +362,43 @@ class DemoConnectionsRepository {
       throw StateError('An open demo code for this role already exists.');
     }
 
-    final number = (_nextInviteNumber++).toString().padLeft(4, '0');
-    final createdAt = _clock();
-    final invite = DemoInvite(
-      id: 'demo-invite-$number',
-      agreementId: cleanId,
-      creatorId: owner.id,
+    final invite = _newInvite(
+      _nextInviteNumber,
+      cleanId,
+      owner.id,
+      role,
+      _clock(),
+      intendedPersonId: intendedPersonId,
+      agreementRole: agreementRole,
+    );
+    _nextInviteNumber++;
+    _invites.add(invite);
+    return invite;
+  }
+
+  DemoInvite _newInvite(
+    int number,
+    String agreementId,
+    String creatorId,
+    ParticipantRole role,
+    DateTime createdAt, {
+    String? intendedPersonId,
+    AgreementRole? agreementRole,
+  }) {
+    final suffix = number.toString().padLeft(4, '0');
+    return DemoInvite(
+      id: 'demo-invite-$suffix',
+      agreementId: agreementId,
+      creatorId: creatorId,
       role: role,
       status: InviteStatus.pending,
-      code: 'WAFA-$number',
+      code: 'WAFA-$suffix',
       intendedPersonId: intendedPersonId,
       createdAt: createdAt,
       // Seven days is a demo preset, not a production invitation policy.
       expiresAt: createdAt.add(const Duration(days: 7)),
+      agreementRole: agreementRole,
     );
-    _invites.add(invite);
-    return invite;
   }
 
   /// Finds code metadata only; possession never grants agreement access.
@@ -327,6 +432,10 @@ class DemoConnectionsRepository {
     if (_isParticipant(invite.agreementId, requester.id)) {
       throw StateError('This person is already a demo participant.');
     }
+    final agreementRole = _draftRoles[invite.agreementId]?[requester.id];
+    if (agreementRole != null && invite.role != _accessRole(agreementRole)) {
+      throw StateError('This invitation does not match your demo draft role.');
+    }
     if (_hasOpenInviteForPerson(
       invite.agreementId,
       requester.id,
@@ -339,6 +448,7 @@ class DemoConnectionsRepository {
       invite._copyWith(
         status: InviteStatus.requested,
         requestedPersonId: requester.id,
+        agreementRole: agreementRole,
       ),
     );
   }

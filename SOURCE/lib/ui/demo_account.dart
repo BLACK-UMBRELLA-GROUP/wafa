@@ -252,7 +252,9 @@ class _DemoInvitationsScreenState extends State<DemoInvitationsScreen> {
               style: const TextStyle(color: WafaColors.muted),
             ),
             const SizedBox(height: 14),
-            Text('Role: ${invite.role.label} · ${invite.status.label}'),
+            Text(
+              'Role: ${invite.agreementRole?.label ?? invite.role.label} · ${invite.status.label}',
+            ),
             const SizedBox(height: 8),
             Text('Demo code: ${invite.code}'),
             const SizedBox(height: 6),

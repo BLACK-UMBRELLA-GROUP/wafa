@@ -7,12 +7,39 @@ library;
 enum ContractKind {
   interestFreeLoan('Interest-free loan'),
   sale('Sale'),
-  rental('Rental'),
-  service('Service');
+  itemLending('Item lending'),
+  itemRental('Item rental'),
+  service('Service'),
+  familyAgreement('Family agreement'),
+  customAgreement('Custom agreement');
 
   const ContractKind(this.label);
 
   final String label;
+}
+
+enum AgreementRole {
+  owesShare('Owes a share'),
+  isOwed('Is owed'),
+  witness('Witness');
+
+  const AgreementRole(this.label);
+
+  final String label;
+}
+
+class AgreementPerson {
+  const AgreementPerson({
+    required this.id,
+    required this.name,
+    required this.role,
+    required this.sharePence,
+  });
+
+  final String id;
+  final String name;
+  final AgreementRole role;
+  final int sharePence;
 }
 
 enum AgreementStatus {
@@ -48,6 +75,7 @@ class DemoPayment {
     required this.recordedByPersonId,
     required this.note,
     required this.reference,
+    this.payerId,
   });
 
   final String id;
@@ -58,6 +86,7 @@ class DemoPayment {
   final String recordedByPersonId;
   final String note;
   final String reference;
+  final String? payerId;
 }
 
 /// An immutable snapshot. Repository methods validate changes to stored data.
@@ -71,6 +100,8 @@ class Agreement {
     required this.paidPence,
     required this.kind,
     required this.status,
+    this.people = const [],
+    this._paidByPerson = const {},
   });
 
   final String id;
@@ -81,6 +112,19 @@ class Agreement {
   final int paidPence;
   final ContractKind kind;
   final AgreementStatus status;
+  final List<AgreementPerson> people;
+  final Map<String, int> _paidByPerson;
+
+  int paidPenceFor(String personId) => _paidByPerson[personId] ?? 0;
+
+  /// Keeps existing counterparty displays relative to the viewer in a pair.
+  Agreement forViewer(String? viewerId) {
+    if (people.length != 2 || !people.any((person) => person.id == viewerId)) {
+      return this;
+    }
+    final other = people.firstWhere((person) => person.id != viewerId).name;
+    return other == counterparty ? this : _copyWith(counterparty: other);
+  }
 
   int get remainingPence {
     final remaining = amountPence - paidPence;
@@ -104,15 +148,22 @@ class Agreement {
   bool get _isOpen =>
       status == AgreementStatus.active || status == AgreementStatus.overdue;
 
-  Agreement _copyWith({int? paidPence, AgreementStatus? status}) => Agreement(
+  Agreement _copyWith({
+    String? counterparty,
+    int? paidPence,
+    AgreementStatus? status,
+    Map<String, int>? paidByPerson,
+  }) => Agreement(
     id: id,
-    counterparty: counterparty,
+    counterparty: counterparty ?? this.counterparty,
     title: title,
     amountPence: amountPence,
     dueDate: dueDate,
     paidPence: paidPence ?? this.paidPence,
     kind: kind,
     status: status ?? this.status,
+    people: people,
+    paidByPerson: paidByPerson ?? _paidByPerson,
   );
 }
 
@@ -168,6 +219,8 @@ class DemoAgreementRepository {
     required String title,
     required int amountPence,
     required DateTime dueDate,
+    List<AgreementPerson> people = const [],
+    void Function(Agreement draft)? prepareInvitations,
   }) {
     final cleanCounterparty = counterparty.trim();
     final cleanTitle = title.trim();
@@ -194,7 +247,27 @@ class DemoAgreementRepository {
       );
     }
 
-    final number = (_nextDraftNumber++).toString().padLeft(3, '0');
+    if (people.isNotEmpty) {
+      final owing = people.where(
+        (person) => person.role == AgreementRole.owesShare,
+      );
+      final validShares =
+          owing.isNotEmpty &&
+          people.any((person) => person.role == AgreementRole.isOwed) &&
+          people.every(
+            (person) => person.role == AgreementRole.owesShare
+                ? person.sharePence > 0
+                : person.sharePence == 0,
+          ) &&
+          owing.fold(0, (sum, person) => sum + person.sharePence) ==
+              amountPence;
+      if (!validShares ||
+          people.map((person) => person.id).toSet().length != people.length) {
+        throw ArgumentError('The people and shares do not match the draft.');
+      }
+    }
+
+    final number = _nextDraftNumber.toString().padLeft(3, '0');
     final draft = Agreement(
       id: 'demo-draft-$number',
       counterparty: cleanCounterparty,
@@ -204,7 +277,10 @@ class DemoAgreementRepository {
       paidPence: 0,
       kind: kind,
       status: AgreementStatus.draft,
+      people: List<AgreementPerson>.unmodifiable(people),
     );
+    prepareInvitations?.call(draft);
+    _nextDraftNumber++;
     _agreements.insert(0, draft);
     return draft;
   }
@@ -241,6 +317,7 @@ class DemoAgreementRepository {
     required String recordedByPersonId,
     String note = '',
     String reference = '',
+    String? payerId,
   }) {
     if (amountPence <= 0) {
       throw ArgumentError.value(
@@ -260,6 +337,26 @@ class DemoAgreementRepository {
         'amountPence',
         'The repayment cannot exceed the remaining amount.',
       );
+    }
+    var paidByPerson = agreement._paidByPerson;
+    if (agreement.people.isNotEmpty) {
+      final owing = agreement.people.where(
+        (person) => person.role == AgreementRole.owesShare,
+      );
+      final payer = payerId == null
+          ? owing.length == 1
+                ? owing.single
+                : null
+          : owing.where((person) => person.id == payerId).firstOrNull;
+      if (payer == null) {
+        throw ArgumentError('Choose someone who owes a share.');
+      }
+      final paid = agreement.paidPenceFor(payer.id) + amountPence;
+      if (paid > payer.sharePence) {
+        throw ArgumentError('The payment cannot exceed the remaining share.');
+      }
+      payerId = payer.id;
+      paidByPerson = Map.unmodifiable({...paidByPerson, payer.id: paid});
     }
 
     final cleanDate = _dateOnly(paidOn);
@@ -294,6 +391,7 @@ class DemoAgreementRepository {
     final paidPence = agreement.paidPence + amountPence;
     final updated = agreement._copyWith(
       paidPence: paidPence,
+      paidByPerson: paidByPerson,
       status: paidPence == agreement.amountPence
           ? AgreementStatus.completed
           : _openStatus(agreement.dueDate),
@@ -310,6 +408,7 @@ class DemoAgreementRepository {
         recordedByPersonId: cleanRecorder,
         note: cleanNote,
         reference: cleanReference,
+        payerId: payerId,
       ),
     );
     return updated;
@@ -327,6 +426,11 @@ class DemoAgreementRepository {
     final updated = agreement._copyWith(
       paidPence: agreement.amountPence,
       status: AgreementStatus.completed,
+      paidByPerson: Map.unmodifiable({
+        for (final person in agreement.people)
+          if (person.role == AgreementRole.owesShare)
+            person.id: person.sharePence,
+      }),
     );
     _agreements[index] = updated;
     return updated;
@@ -378,12 +482,43 @@ class DemoAgreementRepository {
     Agreement(
       id: 'demo-rental-001',
       counterparty: 'Maryam Saleh',
-      title: 'Studio rental',
+      title: 'Van hire',
       amountPence: 85000,
       dueDate: DateTime(2026, 10, 31),
       paidPence: 0,
-      kind: ContractKind.rental,
+      kind: ContractKind.itemRental,
       status: AgreementStatus.active,
+    ),
+    Agreement(
+      id: 'demo-family-001',
+      counterparty: 'Sara Malik',
+      title: "Mum's care costs",
+      amountPence: 30000,
+      dueDate: DateTime(2026, 11, 30),
+      paidPence: 10000,
+      kind: ContractKind.familyAgreement,
+      status: AgreementStatus.active,
+      people: const [
+        AgreementPerson(
+          id: 'demo-amina',
+          name: 'Amina Noor',
+          role: AgreementRole.owesShare,
+          sharePence: 15000,
+        ),
+        AgreementPerson(
+          id: 'demo-omar',
+          name: 'Omar Farooq',
+          role: AgreementRole.owesShare,
+          sharePence: 15000,
+        ),
+        AgreementPerson(
+          id: 'demo-sara',
+          name: 'Sara Malik',
+          role: AgreementRole.isOwed,
+          sharePence: 0,
+        ),
+      ],
+      paidByPerson: const {'demo-amina': 10000},
     ),
     Agreement(
       id: 'demo-sale-001',
@@ -427,6 +562,17 @@ class DemoAgreementRepository {
       recordedByPersonId: 'demo-amina',
       note: 'Example family-support repayment.',
       reference: 'DEMO-001',
+    ),
+    DemoPayment(
+      id: 'demo-payment-seed-003',
+      agreementId: 'demo-family-001',
+      amountPence: 10000,
+      paidOn: DateTime(2026, 10, 13),
+      method: PaymentMethod.bankTransfer,
+      recordedByPersonId: 'demo-amina',
+      payerId: 'demo-amina',
+      note: '',
+      reference: '',
     ),
     DemoPayment(
       id: 'demo-payment-seed-002',

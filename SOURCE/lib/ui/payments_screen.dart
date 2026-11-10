@@ -11,12 +11,14 @@ class PaymentsScreen extends StatefulWidget {
     required this.connections,
     required this.agreementId,
     required this.onChanged,
+    this.choosePayer = false,
   });
 
   final DemoAgreementRepository repository;
   final DemoConnectionsRepository connections;
   final String agreementId;
   final VoidCallback onChanged;
+  final bool choosePayer;
 
   @override
   State<PaymentsScreen> createState() => _PaymentsScreenState();
@@ -35,14 +37,39 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             );
   }
 
-  Future<void> _addPayment(Agreement agreement) async {
+  Future<void> _openPayers() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PaymentsScreen(
+          repository: widget.repository,
+          connections: widget.connections,
+          agreementId: widget.agreementId,
+          onChanged: widget.onChanged,
+          choosePayer: true,
+        ),
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _addPayment(
+    Agreement agreement, {
+    AgreementPerson? payer,
+  }) async {
     final actingPersonId = widget.connections.currentPerson?.id;
-    if (actingPersonId == null || !_currentPersonIsParty) return;
+    if (actingPersonId == null ||
+        !_currentPersonIsParty ||
+        !widget.connections.canViewAgreement(widget.agreementId)) {
+      _showUnavailable();
+      return;
+    }
     final draft = await showDialog<_PaymentDraft>(
       context: context,
       builder: (_) => _PaymentDialog(
         today: widget.repository.today,
-        remainingPence: agreement.remainingPence,
+        remainingPence: payer == null
+            ? agreement.remainingPence
+            : payer.sharePence - agreement.paidPenceFor(payer.id),
       ),
     );
     if (!mounted || draft == null) return;
@@ -59,13 +86,16 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         paidOn: draft.paidOn,
         method: draft.method,
         recordedByPersonId: actingPersonId,
+        payerId: payer?.id,
         note: draft.note,
         reference: draft.reference,
       );
       setState(() {});
       widget.onChanged();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+      final messenger = ScaffoldMessenger.of(context);
+      if (widget.choosePayer) Navigator.pop(context);
+      messenger.showSnackBar(
         SnackBar(
           content: Text('${money(draft.amountPence)} demo payment recorded.'),
         ),
@@ -114,8 +144,11 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         body: const Center(child: Text('This demo agreement is unavailable.')),
       );
     }
-    final payments = widget.repository.paymentsFor(agreement.id);
     final canAdd = _currentPersonIsParty && agreement.canRecordPayment;
+    if (widget.choosePayer) {
+      return _buildPayerSelection(agreement, canAdd: canAdd);
+    }
+    final payments = widget.repository.paymentsFor(agreement.id);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Payments'),
@@ -173,7 +206,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           if (canAdd) ...[
             FilledButton.icon(
               key: const ValueKey('add-payment'),
-              onPressed: () => _addPayment(agreement),
+              onPressed: agreement.people.isEmpty
+                  ? () => _addPayment(agreement)
+                  : _openPayers,
               icon: const Icon(Icons.add_card_outlined),
               label: const Text('Record a demo payment'),
             ),
@@ -238,6 +273,107 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       ),
     );
   }
+
+  Widget _buildPayerSelection(Agreement agreement, {required bool canAdd}) {
+    final currentId = widget.connections.currentPerson?.id;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Who paid?')),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        children: [
+          Text(
+            '${agreement.title} · choose who this payment is from.',
+            style: const TextStyle(color: WafaColors.muted, fontSize: 15),
+          ),
+          const SizedBox(height: 18),
+          AgreementPeopleCard(
+            rows: [
+              for (final person in agreement.people)
+                if (person.role == AgreementRole.owesShare)
+                  _payerRow(agreement, person, currentId, canAdd: canAdd),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _payerRow(
+    Agreement agreement,
+    AgreementPerson person,
+    String? currentId, {
+    required bool canAdd,
+  }) {
+    final paid = agreement.paidPenceFor(person.id);
+    final left = person.sharePence - paid;
+    return ListTile(
+      key: ValueKey('payer-${person.id}'),
+      leading: AgreementPersonAvatar(person.name),
+      title: Text(person.id == currentId ? 'You' : person.name),
+      subtitle: Text(
+        '${money(paid)} of ${money(person.sharePence)} paid',
+        style: const TextStyle(color: WafaColors.muted),
+      ),
+      trailing: Text(
+        left > 0 ? '${money(left)} left' : 'Paid',
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+      enabled: canAdd && left > 0,
+      onTap: canAdd && left > 0
+          ? () => _addPayment(agreement, payer: person)
+          : null,
+    );
+  }
+}
+
+class AgreementPeopleCard extends StatelessWidget {
+  const AgreementPeopleCard({super.key, required this.rows});
+
+  final List<Widget> rows;
+
+  @override
+  Widget build(BuildContext context) => Material(
+    color: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18),
+      side: const BorderSide(color: WafaColors.line),
+    ),
+    clipBehavior: Clip.antiAlias,
+    child: ListTileTheme(
+      data: const ListTileThemeData(
+        minTileHeight: 56,
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        titleTextStyle: TextStyle(
+          color: WafaColors.ink,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      child: Column(
+        children: ListTile.divideTiles(
+          color: WafaColors.line,
+          tiles: rows,
+        ).toList(),
+      ),
+    ),
+  );
+}
+
+class AgreementPersonAvatar extends StatelessWidget {
+  const AgreementPersonAvatar(this.name, {super.key});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) => CircleAvatar(
+    radius: 17,
+    backgroundColor: WafaColors.mint,
+    foregroundColor: WafaColors.green,
+    child: Text(
+      (name.characters.firstOrNull ?? '?').toUpperCase(),
+      style: const TextStyle(fontWeight: FontWeight.w700),
+    ),
+  );
 }
 
 class _LightRow extends StatelessWidget {

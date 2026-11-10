@@ -87,6 +87,10 @@ class _WafaHomeState extends State<WafaHome> {
   final searchController = TextEditingController();
   List<Agreement> get visibleAgreements => widget.repository.agreements
       .where((agreement) => widget.connections.canViewAgreement(agreement.id))
+      .map(
+        (agreement) =>
+            agreement.forViewer(widget.connections.currentPerson?.id),
+      )
       .toList(growable: false);
   @override
   void dispose() {
@@ -113,11 +117,13 @@ class _WafaHomeState extends State<WafaHome> {
   Future<void> createAgreement() async {
     final draft = await Navigator.of(context).push<Agreement>(
       MaterialPageRoute(
-        builder: (_) => CreateAgreement(repository: widget.repository),
+        builder: (_) => CreateAgreement(
+          repository: widget.repository,
+          connections: widget.connections,
+        ),
       ),
     );
     if (!mounted || draft == null) return;
-    widget.connections.registerAgreement(draft.id);
     setState(() {
       tab = 1;
       filter = 'Drafts';

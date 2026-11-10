@@ -102,23 +102,31 @@ String dateLabel(DateTime date, {bool includeYear = true}) =>
     '${date.day} ${const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.month - 1]}${includeYear ? ' ${date.year}' : ''}';
 
 String kindLabel(ContractKind kind) => switch (kind) {
-  ContractKind.interestFreeLoan => 'Interest-free loan',
   ContractKind.sale => 'Sale agreement',
-  ContractKind.rental => 'Rental agreement',
   ContractKind.service => 'Service agreement',
+  _ => kind.label,
 };
 String kindDescription(ContractKind kind) => switch (kind) {
   ContractKind.interestFreeLoan =>
     'Qard Hasan · Record what is lent and repaid',
   ContractKind.sale => 'Make the item, price and handover clear',
-  ContractKind.rental => 'Outline the use, dates and agreed amount',
+  ContractKind.itemLending =>
+    'Lend something for free and agree when it comes back',
+  ContractKind.itemRental =>
+    'Hire out a car, tools or equipment. Not homes or rooms',
   ContractKind.service => 'Set out the work, timing and agreed value',
+  ContractKind.familyAgreement =>
+    'Record what family members agree between them',
+  ContractKind.customAgreement => 'Write your own terms',
 };
 IconData kindIcon(ContractKind kind) => switch (kind) {
   ContractKind.interestFreeLoan => Icons.handshake_outlined,
   ContractKind.sale => Icons.shopping_bag_outlined,
-  ContractKind.rental => Icons.key_outlined,
+  ContractKind.itemLending => Icons.inventory_2_outlined,
+  ContractKind.itemRental => Icons.key_outlined,
   ContractKind.service => Icons.work_outline_rounded,
+  ContractKind.familyAgreement => Icons.groups_outlined,
+  ContractKind.customAgreement => Icons.edit_note_rounded,
 };
 
 class BrandMark extends StatelessWidget {

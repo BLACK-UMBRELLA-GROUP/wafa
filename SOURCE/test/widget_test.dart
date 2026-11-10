@@ -188,7 +188,7 @@ void main() {
       expect(find.text('12 days overdue · £120 left'), findsOneWidget);
       expect(find.text('Waiting for your signature'), findsOneWidget);
       expect(find.text('Due in 7 days · £320 left'), findsOneWidget);
-      expect(find.text('Studio rental · Maryam Saleh'), findsNothing);
+      expect(find.text('Van hire · Maryam Saleh'), findsNothing);
       expect(find.text('Next payment'), findsNothing);
 
       await _tapVisible(tester, find.byKey(const Key('open-invitations')));
@@ -243,7 +243,7 @@ void main() {
     await tester.pumpAndSettle();
 
     const expectedTiles = {
-      AgreementStatus.active: ('Active', '2'),
+      AgreementStatus.active: ('Active', '3'),
       AgreementStatus.draft: ('Drafts', '0'),
       AgreementStatus.awaitingSignatures: ('Awaiting signatures', '1'),
       AgreementStatus.completed: ('Completed', '1'),
@@ -409,22 +409,45 @@ void main() {
       await _tapVisible(tester, find.byKey(const Key('create-agreement')));
       await tester.tap(find.byKey(const Key('create-next')));
       await tester.pumpAndSettle();
-      await tester.enterText(
-        find.byKey(const Key('counterparty')),
-        'Demo Person',
+      await _tapVisible(tester, find.byKey(const Key('draft-choose-person')));
+      await _tapVisible(
+        tester,
+        find.byKey(const Key('participant-method-wafaId')),
       );
+      await tester.enterText(
+        find.byKey(const Key('participant-wafa-id')),
+        demoOmar.wafaId,
+      );
+      await _tapVisible(tester, find.byKey(const Key('participant-find-id')));
+      await _tapVisible(tester, find.byKey(const Key('draft-select-person')));
       await tester.enterText(find.byKey(const Key('amount')), '250.50');
       await tester.enterText(
         find.byKey(const Key('draft-title')),
         'Demo test agreement',
       );
-      await tester.tap(find.byKey(const Key('create-next')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('create-next')));
-      await tester.pumpAndSettle();
+      await _tapVisible(tester, find.byKey(const Key('create-next')));
+      await _tapVisible(tester, find.byKey(const Key('create-next')));
       expect(repository.agreements.length, before + 1);
+      expect(repository.agreements.first.counterparty, demoOmar.name);
       expect(find.text('Demo test agreement'), findsOneWidget);
       expect(tester.takeException(), isNull);
+
+      final home = tester.widget<WafaHome>(find.byType(WafaHome));
+      final connections = home.connections;
+      final draft = repository.agreements.first;
+      final invitation = connections.invitesForAgreement(draft.id).single;
+      connections.signIn(DemoLoginMethod.google, demoOmar.id);
+      connections.requestJoin(invitation.code);
+      connections.signIn(DemoLoginMethod.apple, demoAmina.id);
+      connections.confirmRequest(invitation.id);
+      connections.signIn(DemoLoginMethod.google, demoOmar.id);
+      await tester.pumpWidget(
+        WafaApp(repository: repository, connections: connections),
+      );
+      await tester.pumpAndSettle();
+      await _tapVisible(tester, find.text('Agreements').last);
+      await _tapVisible(tester, find.text('Demo test agreement'));
+      expect(find.text('Draft label: ${demoAmina.name}'), findsOneWidget);
     },
   );
   testWidgets('compact phone layout is overflow-free across main tabs', (

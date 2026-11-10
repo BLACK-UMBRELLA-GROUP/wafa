@@ -80,7 +80,9 @@ This copy contains only the fields currently held by the Wafa demo. It is not le
         ),
       );
     }
-    final agreement = repository.findById(agreementId);
+    final agreement = repository
+        .findById(agreementId)
+        ?.forViewer(connections.currentPerson?.id);
     if (agreement == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Agreement copy')),

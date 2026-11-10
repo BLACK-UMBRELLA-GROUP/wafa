@@ -13,7 +13,7 @@ These estimates make the remaining work visible. They are not delivery promises 
 | Check domain availability | 1 hour | Available names and unresolved choices for the Founder |
 | Prepare a trademark-review brief | 2 hours | Questions and evidence for qualified review; no registration or clearance claim |
 | Check App Store name availability | 1 hour | Current availability and naming constraints |
-| Define MVP contract types | 4 hours | A bounded launch proposal distinguishing preview behaviour from real contract requirements |
+| Define MVP contract types | 4 hours | A bounded launch proposal distinguishing preview behaviour from real contract requirements - **Done 8 Nov 2026** (LOCK 2, Agreements. Built 10 Nov 2026 in queue line 4.) |
 | WAFA design chat specifies the dashboard | 5 hours | Real-size pictures, navigation, empty/loading/error states and numbered specifications for Founder review |
 | Define verification tiers | 4 hours | Proposed tiers, required evidence and open privacy questions |
 | Define the Track record (formerly Amanah Score) and fairness review | 4 hours | Behaviour-based facts, private by default, and review requirements before development (LOCK 4, 8 Nov 2026) |

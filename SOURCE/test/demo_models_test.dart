@@ -355,7 +355,53 @@ void main() {
     test('the returned list cannot add or remove repository records', () {
       final repository = DemoAgreementRepository();
       expect(() => repository.agreements.clear(), throwsUnsupportedError);
-      expect(repository.agreements, hasLength(5));
+      expect(repository.agreements, hasLength(6));
+    });
+
+    test('the Van hire example replaces Rental with Item rental', () {
+      final repository = DemoAgreementRepository();
+      final rental = repository.findById('demo-rental-001')!;
+      expect(rental.title, 'Van hire');
+      expect(rental.kind, ContractKind.itemRental);
+      expect(rental.counterparty, 'Maryam Saleh');
+      expect(rental.amountPence, 85000);
+      expect(rental.dueDate, DateTime(2026, 10, 31));
+    });
+
+    test('payment limits apply to the payer and preserve the other shares', () {
+      final repository = DemoAgreementRepository();
+      const id = 'demo-family-001';
+      final original = repository.findById(id)!;
+      Agreement pay(int amountPence, String? payerId) =>
+          repository.recordPayment(
+            id,
+            amountPence: amountPence,
+            paidOn: repository.today,
+            method: PaymentMethod.bankTransfer,
+            recordedByPersonId: 'demo-amina',
+            payerId: payerId,
+          );
+
+      expect(() => pay(5001, 'demo-amina'), throwsArgumentError);
+      expect(() => pay(100, 'demo-sara'), throwsArgumentError);
+      expect(() => pay(100, null), throwsArgumentError);
+      expect(repository.findById(id), same(original));
+      final updated = pay(5000, 'demo-amina');
+      expect(updated.paidPence, 15000);
+      expect(updated.paidPenceFor('demo-amina'), 15000);
+      expect(updated.paidPenceFor('demo-omar'), 0);
+      expect(original.paidPenceFor('demo-amina'), 10000);
+      expect(
+        repository
+            .paymentsFor(id)
+            .singleWhere((record) => record.amountPence == 5000)
+            .payerId,
+        'demo-amina',
+      );
+      expect(() => pay(1, 'demo-amina'), throwsArgumentError);
+      final completed = pay(15000, 'demo-omar');
+      expect(completed.status, AgreementStatus.completed);
+      expect(completed.paidPenceFor('demo-omar'), 15000);
     });
 
     test(

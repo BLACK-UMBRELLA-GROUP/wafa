@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
 
+import '../domain/demo_connections.dart';
 import '../domain/demo_models.dart';
+import 'participants_screen.dart';
 import 'wafa_ui.dart';
 
 class CreateAgreement extends StatefulWidget {
-  const CreateAgreement({super.key, required this.repository});
+  const CreateAgreement({
+    super.key,
+    required this.repository,
+    required this.connections,
+  });
 
   final DemoAgreementRepository repository;
+  final DemoConnectionsRepository connections;
 
   @override
   State<CreateAgreement> createState() => _CreateAgreementState();
 }
 
+class _DraftPerson {
+  _DraftPerson(this.role, [this.person]);
+
+  AgreementRole role;
+  DemoPerson? person;
+  String amount = '';
+}
+
 class _CreateAgreementState extends State<CreateAgreement> {
-  final _detailsFormKey = GlobalKey<FormState>();
-  final _counterparty = TextEditingController();
   final _title = TextEditingController();
   final _amount = TextEditingController();
+  final _scroll = ScrollController();
+  late final List<_DraftPerson> _people;
+  bool _setEach = false;
   ContractKind _kind = ContractKind.interestFreeLoan;
   int _step = 0;
   late DateTime _dueDate;
@@ -25,15 +41,19 @@ class _CreateAgreementState extends State<CreateAgreement> {
   @override
   void initState() {
     super.initState();
+    _people = [
+      _DraftPerson(AgreementRole.owesShare, widget.connections.currentPerson!),
+      _DraftPerson(AgreementRole.isOwed),
+    ];
     final today = widget.repository.today;
     _dueDate = DateTime(today.year, today.month, today.day + 14);
   }
 
   @override
   void dispose() {
-    _counterparty.dispose();
     _title.dispose();
     _amount.dispose();
+    _scroll.dispose();
     super.dispose();
   }
 
@@ -43,62 +63,128 @@ class _CreateAgreementState extends State<CreateAgreement> {
       Navigator.of(context).pop();
       return;
     }
-    setState(() {
-      _step--;
-      _saveError = null;
-    });
+    _scroll.jumpTo(0);
+    _change(() => _step--);
   }
 
-  void _advance() {
-    if (_step == 1) {
-      if (!(_detailsFormKey.currentState?.validate() ?? false)) return;
-      if (_dueDate.isBefore(widget.repository.today)) {
-        setState(() => _saveError = 'Choose today or a later due date.');
-        return;
-      }
+  void _change(VoidCallback update) => setState(() {
+    update();
+    _saveError = null;
+  });
+
+  String get _draftTitle =>
+      _title.text.trim().isEmpty ? _kind.label : _title.text.trim();
+
+  int get _equalTotal => parsePence(_amount.text) ?? 0;
+
+  List<AgreementPerson> _shares() {
+    final selected = _people.where((row) => row.person != null);
+    final debtors = selected
+        .where((row) => row.role == AgreementRole.owesShare)
+        .length;
+    final base = debtors == 0 ? 0 : _equalTotal ~/ debtors;
+    final extra = debtors == 0 ? 0 : _equalTotal % debtors;
+    var debtorIndex = 0;
+    return [
+      for (final row in selected)
+        AgreementPerson(
+          id: row.person!.id,
+          name: row.person!.name,
+          role: row.role,
+          sharePence: switch (row.role) {
+            AgreementRole.owesShare when _setEach =>
+              parsePence(row.amount) ?? 0,
+            AgreementRole.owesShare => base + (debtorIndex++ < extra ? 1 : 0),
+            _ => 0,
+          },
+        ),
+    ];
+  }
+
+  String? _detailsError(List<AgreementPerson> people) {
+    final debtors = people.where(
+      (person) => person.role == AgreementRole.owesShare,
+    );
+    if (debtors.isEmpty) return 'Someone needs to owe a share.';
+    if (!people.any((person) => person.role == AgreementRole.isOwed)) {
+      return 'Someone needs to be owed.';
     }
+    if ((_setEach ? _total(people) : _equalTotal) <= 0) {
+      return 'Enter an amount above £0.';
+    }
+    if (debtors.any((person) => person.sharePence <= 0)) {
+      return 'Give everyone who owes a share an amount above £0.';
+    }
+    if (_dueDate.isBefore(widget.repository.today)) {
+      return 'Choose today or a later due date.';
+    }
+    return null;
+  }
+
+  int _total(List<AgreementPerson> people) =>
+      people.fold(0, (total, person) => total + person.sharePence);
+
+  void _advance() {
     FocusScope.of(context).unfocus();
-    if (_step < 2) {
+    if (_step == 0) {
+      _scroll.jumpTo(0);
+      _change(() => _step++);
+      return;
+    }
+    final people = _shares();
+    final error = _detailsError(people);
+    if (error != null) {
       setState(() {
-        _step++;
-        _saveError = null;
+        _step = 1;
+        _saveError = error;
       });
       return;
     }
-    _saveDraft();
-  }
-
-  String get _draftTitle {
-    final title = _title.text.trim();
-    return title.isEmpty
-        ? '${kindLabel(_kind)} with ${_counterparty.text.trim()}'
-        : title;
-  }
-
-  void _saveDraft() {
-    final amountPence = parsePence(_amount.text);
-    if (amountPence == null || amountPence <= 0) {
-      setState(() {
-        _step = 1;
-        _saveError = 'Enter a valid amount before saving.';
-      });
+    if (_step == 1) {
+      _scroll.jumpTo(0);
+      _change(() => _step++);
       return;
     }
     try {
-      final draft = widget.repository.createDraft(
+      final draft = widget.connections.createAgreementDraft(
+        widget.repository,
         kind: _kind,
-        counterparty: _counterparty.text,
         title: _draftTitle,
-        amountPence: amountPence,
         dueDate: _dueDate,
+        people: people,
       );
       Navigator.of(context).pop(draft);
     } on ArgumentError {
-      setState(() {
-        _step = 1;
-        _saveError = 'Check your details and choose today or a later due date.';
-      });
+      _showSaveError();
+    } on StateError {
+      _showSaveError();
     }
+  }
+
+  void _showSaveError() => setState(() {
+    _step = 1;
+    _saveError = 'Check your details and try again.';
+  });
+
+  Future<void> _addPerson() async {
+    FocusScope.of(context).unfocus();
+    final person = await showAgreementPersonPicker(
+      context,
+      widget.connections,
+      excludedPersonIds: {
+        for (final row in _people)
+          if (row.person case final person?) person.id,
+      },
+    );
+    if (!mounted || person == null) return;
+    _change(() {
+      final slot = _people.where((row) => row.person == null).firstOrNull;
+      if (slot != null) {
+        slot.person = person;
+      } else {
+        _people.add(_DraftPerson(AgreementRole.owesShare, person));
+      }
+    });
   }
 
   Future<void> _chooseDate() async {
@@ -114,10 +200,7 @@ class _CreateAgreementState extends State<CreateAgreement> {
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked == null || !mounted) return;
-    setState(() {
-      _dueDate = picked;
-      _saveError = null;
-    });
+    _change(() => _dueDate = picked);
   }
 
   @override
@@ -158,6 +241,7 @@ class _CreateAgreementState extends State<CreateAgreement> {
           top: false,
           bottom: false,
           child: SingleChildScrollView(
+            controller: _scroll,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 28),
             child: Column(
@@ -170,13 +254,6 @@ class _CreateAgreementState extends State<CreateAgreement> {
                   1 => _detailsStep(),
                   _ => _reviewStep(),
                 },
-                if (_saveError != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    _saveError!,
-                    style: const TextStyle(color: Color(0xFFAD3737)),
-                  ),
-                ],
               ],
             ),
           ),
@@ -189,46 +266,50 @@ class _CreateAgreementState extends State<CreateAgreement> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
-              child: FilledButton(
-                key: const Key('create-next'),
-                onPressed: _advance,
-                style: FilledButton.styleFrom(
-                  backgroundColor: WafaColors.green,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size.fromHeight(54),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 20,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        switch (_step) {
-                          0 => 'Continue',
-                          1 => 'Review draft',
-                          _ => 'Save demo draft',
-                        },
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (_saveError case final error?) ...[
+                    Semantics(
+                      liveRegion: true,
+                      child: _message(
+                        error,
+                        background: const Color(0xfffaebe8),
+                        foreground: const Color(0xffa93229),
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Icon(
-                      _step == 2
-                          ? Icons.check_rounded
-                          : Icons.arrow_forward_rounded,
-                      size: 20,
-                    ),
+                    const SizedBox(height: 12),
                   ],
-                ),
+                  FilledButton(
+                    key: const Key('create-next'),
+                    onPressed: _advance,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: WafaColors.green,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size.fromHeight(54),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      switch (_step) {
+                        0 => 'Continue',
+                        1 => 'Review draft',
+                        _ => 'Save draft',
+                      },
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -310,11 +391,9 @@ class _CreateAgreementState extends State<CreateAgreement> {
         _kindCard(kind),
         const SizedBox(height: 12),
       ],
-      const SizedBox(height: 8),
-      _note(
-        icon: Icons.info_outline_rounded,
-        title: 'Try it with fictional details',
-        body: 'This prototype keeps drafts in this demo session only.',
+      const Text(
+        'Later, after review: business partnership, charity pledge, employment.',
+        style: TextStyle(color: WafaColors.muted, fontSize: 13, height: 1.5),
       ),
     ],
   );
@@ -362,7 +441,7 @@ class _CreateAgreementState extends State<CreateAgreement> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        kindLabel(kind),
+                        kind.label,
                         style: const TextStyle(
                           color: WafaColors.ink,
                           fontWeight: FontWeight.w600,
@@ -397,28 +476,25 @@ class _CreateAgreementState extends State<CreateAgreement> {
     );
   }
 
-  Widget _detailsStep() => Form(
-    key: _detailsFormKey,
-    child: Column(
+  Widget _detailsStep() {
+    final shares = _shares();
+    final byId = {for (final person in shares) person.id: person};
+    final debtors = shares
+        .where((person) => person.role == AgreementRole.owesShare)
+        .length;
+    final splitDescription = switch (debtors) {
+      0 => 'Nobody owes a share yet',
+      1 => '1 person owes ${money(_equalTotal)} each',
+      _ => '$debtors people owe ${money(_equalTotal ~/ debtors)} each',
+    };
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _heading(
           'Make the details clear.',
-          'A few simple details help everyone understand the promise.',
+          '${_kind.label} · add everyone who is part of it.',
         ),
-        const SizedBox(height: 26),
-        _fieldLabel('Who is this with?'),
-        TextFormField(
-          key: const Key('counterparty'),
-          controller: _counterparty,
-          textCapitalization: TextCapitalization.words,
-          textInputAction: TextInputAction.next,
-          decoration: _inputDecoration('Fictional name, e.g. Amina Noor'),
-          validator: (value) => (value?.trim().isEmpty ?? true)
-              ? 'Enter a fictional counterparty name.'
-              : null,
-        ),
-        const SizedBox(height: 22),
+        const SizedBox(height: 18),
         _fieldLabel('Agreement title', optional: true),
         TextFormField(
           key: const Key('draft-title'),
@@ -426,31 +502,98 @@ class _CreateAgreementState extends State<CreateAgreement> {
           textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.next,
           decoration: _inputDecoration('Give this promise a name'),
+          onChanged: (_) => _change(() {}),
         ),
-        const SizedBox(height: 22),
-        _fieldLabel(
-          _kind == ContractKind.interestFreeLoan
-              ? 'Loan amount'
-              : 'Agreement amount',
+        const SizedBox(height: 18),
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                "Who's in it",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+              ),
+            ),
+            Text(
+              '${_people.length} people',
+              style: const TextStyle(color: WafaColors.muted),
+            ),
+          ],
         ),
-        TextFormField(
-          key: const Key('amount'),
-          controller: _amount,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          textInputAction: TextInputAction.done,
-          decoration: _inputDecoration(
-            '0.00',
-          ).copyWith(prefixText: '£  ', suffixText: 'GBP'),
-          validator: (value) {
-            final amountPence = parsePence(value ?? '');
-            if (amountPence == null || amountPence <= 0) {
-              return 'Enter an amount above £0 with up to 2 decimal places.';
-            }
-            return null;
-          },
-          onFieldSubmitted: (_) => _advance(),
+        const SizedBox(height: 14),
+        _peopleCard([
+          for (final (index, row) in _people.indexed) ...[
+            _personRow(
+              name: row.person?.name ?? 'Choose a person',
+              isMember: index == 0,
+              role: row.role,
+              sharePence: byId[row.person?.id]?.sharePence ?? 0,
+              onChoose: row.person == null ? _addPerson : null,
+              onCycle: row.person == null
+                  ? null
+                  : () => _change(() {
+                      row.role =
+                          AgreementRole.values[(row.role.index + 1) %
+                              AgreementRole.values.length];
+                    }),
+              onRemove: index == 0
+                  ? null
+                  : () => _change(() => _people.remove(row)),
+              roleKey: Key('draft-role-${row.person?.id ?? 'unassigned'}'),
+              amountField: _setEach && row.role == AgreementRole.owesShare
+                  ? TextFormField(
+                      key: Key('draft-share-${row.person!.id}'),
+                      initialValue: row.amount,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: _inputDecoration('0').copyWith(
+                        prefixText: '£ ',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 8,
+                        ),
+                        isDense: true,
+                      ),
+                      onChanged: (value) => _change(() => row.amount = value),
+                    )
+                  : null,
+            ),
+            const Divider(height: 1),
+          ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              key: const Key('draft-add-person'),
+              onPressed: _addPerson,
+              icon: const Icon(Icons.add),
+              label: const Text('Add a person'),
+            ),
+          ),
+        ]),
+        const SizedBox(height: 14),
+        _splitSelector(),
+        const SizedBox(height: 14),
+        if (!_setEach) ...[
+          _fieldLabel('Total amount'),
+          TextFormField(
+            key: const Key('amount'),
+            controller: _amount,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.done,
+            decoration: _inputDecoration('0.00').copyWith(prefixText: '£  '),
+            onChanged: (_) => _change(() {}),
+          ),
+          const SizedBox(height: 12),
+        ],
+        Text(
+          _setEach ? 'Total: ${money(_total(shares))}' : splitDescription,
+          style: const TextStyle(color: WafaColors.muted, fontSize: 13),
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: 18),
         _fieldLabel('Due date'),
         Material(
           color: Colors.white,
@@ -491,113 +634,247 @@ class _CreateAgreementState extends State<CreateAgreement> {
             ),
           ),
         ),
-        const SizedBox(height: 22),
-        _note(
-          icon: Icons.edit_note_rounded,
-          title: 'Your draft, at your pace',
-          body: 'You can go back and change these details before saving.',
-        ),
+        if (_kind == ContractKind.customAgreement) ...[
+          const SizedBox(height: 14),
+          _message(
+            'Your own terms must not include interest or anything prohibited. If you are unsure, ask a scholar before you sign.',
+            background: const Color(0xfff9f0e5),
+            foreground: const Color(0xff9d5318),
+          ),
+        ],
       ],
+    );
+  }
+
+  Widget _splitSelector() => Material(
+    color: const Color(0xfff5f7f5),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+      side: const BorderSide(color: WafaColors.line),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(4),
+      child: Row(
+        children: [
+          for (final (setEach, label) in const [
+            (false, 'Split equally'),
+            (true, 'Set each amount'),
+          ])
+            Expanded(
+              child: Semantics(
+                selected: setEach == _setEach,
+                child: TextButton(
+                  onPressed: () => _change(() => _setEach = setEach),
+                  style: TextButton.styleFrom(
+                    backgroundColor: setEach == _setEach ? Colors.white : null,
+                    foregroundColor: setEach == _setEach
+                        ? WafaColors.green
+                        : WafaColors.muted,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(9),
+                    ),
+                  ),
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     ),
   );
 
+  Widget _message(
+    String text, {
+    required Color background,
+    required Color foreground,
+  }) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      color: background,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text(text, style: TextStyle(color: foreground, height: 1.4)),
+  );
+
   Widget _reviewStep() {
-    final amountPence = parsePence(_amount.text) ?? 0;
+    final people = _shares();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _heading(
-          'A promise, put into words.',
+          _draftTitle,
           'Take a moment to check your draft. Nothing is signed or sent.',
         ),
         const SizedBox(height: 26),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: WafaColors.line),
+        _peopleCard([
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                _reviewRow('Type', _kind.label),
+                const SizedBox(height: 8),
+                _reviewRow('Total', money(_total(people))),
+                const SizedBox(height: 8),
+                _reviewRow('People', '${people.length}'),
+                const SizedBox(height: 8),
+                _reviewRow('Currency', 'British pound (GBP)'),
+              ],
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(kindIcon(_kind), color: WafaColors.green, size: 23),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      kindLabel(_kind),
-                      style: const TextStyle(
-                        color: WafaColors.green,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'DRAFT',
-                    style: TextStyle(
-                      color: WafaColors.muted,
-                      fontSize: 10,
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Text(
-                _draftTitle,
-                style: const TextStyle(
-                  color: WafaColors.ink,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  height: 1.3,
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    money(amountPence),
-                    style: const TextStyle(
-                      color: WafaColors.green,
-                      fontSize: 35,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -1.2,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Divider(color: WafaColors.line, height: 1),
-              const SizedBox(height: 20),
-              _reviewRow('With', _counterparty.text.trim()),
-              const SizedBox(height: 16),
-              _reviewRow('Due date', dateLabel(_dueDate)),
-              const SizedBox(height: 16),
-              _reviewRow('Currency', 'British pound (GBP)'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        _note(
-          icon: Icons.info_outline_rounded,
-          title: 'Demo draft only',
-          body:
-              'This is fictional, local demo data. Saving does not create a binding agreement, collect signatures or move money.',
-        ),
-        const SizedBox(height: 18),
+        ]),
+        const SizedBox(height: 24),
+        _peopleCard([
+          for (final (index, person) in people.indexed) ...[
+            if (index > 0) const Divider(height: 1),
+            _personRow(
+              name: person.name,
+              isMember: index == 0,
+              role: person.role,
+              sharePence: person.sharePence,
+            ),
+          ],
+        ]),
+        const SizedBox(height: 12),
         const Text(
-          'Drafts reset when this demo session ends.',
-          style: TextStyle(color: WafaColors.muted, fontSize: 12, height: 1.5),
+          'Each person gets an invitation and signs the same agreement. It becomes active when everyone has signed, witnesses too.',
+          style: TextStyle(color: WafaColors.muted, fontSize: 13, height: 1.5),
         ),
       ],
+    );
+  }
+
+  Widget _peopleCard(List<Widget> children) => Material(
+    color: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+      side: const BorderSide(color: WafaColors.line),
+    ),
+    clipBehavior: Clip.antiAlias,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: children,
+    ),
+  );
+
+  Widget _personRow({
+    required String name,
+    required bool isMember,
+    required AgreementRole role,
+    required int sharePence,
+    VoidCallback? onChoose,
+    VoidCallback? onCycle,
+    VoidCallback? onRemove,
+    Key? roleKey,
+    Widget? amountField,
+  }) {
+    final canEdit = roleKey != null;
+    final (background, foreground) = switch (role) {
+      AgreementRole.owesShare => (
+        const Color(0xfff9f0e5),
+        const Color(0xff9d5318),
+      ),
+      AgreementRole.isOwed => (WafaColors.mint, WafaColors.green),
+      AgreementRole.witness => (
+        const Color(0xffebeef4),
+        const Color(0xff3b4a65),
+      ),
+    };
+    final showShare = role == AgreementRole.owesShare;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 10, 8),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 16,
+            backgroundColor: WafaColors.mint,
+            foregroundColor: WafaColors.green,
+            child: Text(
+              onChoose == null ? name.characters.first.toUpperCase() : '?',
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (onChoose == null)
+                  Text(
+                    isMember ? 'You' : name,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                else
+                  TextButton(
+                    key: const Key('draft-choose-person'),
+                    onPressed: onChoose,
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    child: Text(name, textAlign: TextAlign.left),
+                  ),
+                if (canEdit)
+                  ActionChip(
+                    key: roleKey,
+                    label: Text('${role.label} ▾'),
+                    labelStyle: TextStyle(
+                      color: foreground,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    backgroundColor: background,
+                    disabledColor: background,
+                    side: BorderSide.none,
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    onPressed: onCycle,
+                  )
+                else
+                  Text(
+                    role.label,
+                    style: const TextStyle(
+                      color: WafaColors.muted,
+                      fontSize: 13,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            flex: 2,
+            child:
+                amountField ??
+                Text(
+                  showShare ? money(sharePence) : '—',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: showShare ? WafaColors.ink : WafaColors.muted,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+          ),
+          if (onRemove != null)
+            IconButton(
+              tooltip: 'Remove $name',
+              visualDensity: VisualDensity.compact,
+              color: WafaColors.muted,
+              iconSize: 18,
+              onPressed: onRemove,
+              icon: const Icon(Icons.close_rounded),
+            ),
+        ],
+      ),
     );
   }
 
@@ -606,7 +883,7 @@ class _CreateAgreementState extends State<CreateAgreement> {
     hintStyle: const TextStyle(color: WafaColors.muted, fontSize: 14),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
     filled: true,
-    fillColor: Colors.white,
+    fillColor: const Color(0xfff5f7f5),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
       borderSide: const BorderSide(color: WafaColors.line),
@@ -637,7 +914,7 @@ class _CreateAgreementState extends State<CreateAgreement> {
         ),
         if (optional)
           const Text(
-            '(optional)',
+            'optional',
             style: TextStyle(color: WafaColors.muted, fontSize: 13),
           ),
       ],
@@ -669,10 +946,4 @@ class _CreateAgreementState extends State<CreateAgreement> {
       ),
     ],
   );
-
-  Widget _note({
-    required IconData icon,
-    required String title,
-    required String body,
-  }) => SoftNote(icon: icon, title: title, body: body);
 }

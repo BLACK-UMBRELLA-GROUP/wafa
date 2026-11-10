@@ -89,13 +89,14 @@ class _AgreementDetailState extends State<AgreementDetail> {
     if (mounted) setState(() {});
   }
 
-  Future<void> _openPayments() async {
+  Future<void> _openPayments({bool choosePayer = false}) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => PaymentsScreen(
           repository: widget.repository,
           connections: widget.connections,
           agreementId: widget.id,
+          choosePayer: choosePayer,
           onChanged: () {
             if (mounted) setState(() {});
             widget.onChanged();
@@ -137,7 +138,9 @@ class _AgreementDetailState extends State<AgreementDetail> {
         ),
       );
     }
-    final agreement = widget.repository.findById(widget.id);
+    final agreement = widget.repository
+        .findById(widget.id)
+        ?.forViewer(widget.connections.currentPerson?.id);
     if (agreement == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Agreement')),
@@ -145,10 +148,12 @@ class _AgreementDetailState extends State<AgreementDetail> {
       );
     }
 
+    final canManagePeople = widget.connections.canManageParticipants(widget.id);
+    if (agreement.people.length >= 3) {
+      return _buildGroupDetail(agreement, canManagePeople: canManagePeople);
+    }
     final theme = Theme.of(context);
     final participants = widget.connections.participantsForAgreement(widget.id);
-    final canManagePeople = widget.connections.canManageParticipants(widget.id);
-    final canAct = _currentPersonCanAct();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agreement'),
@@ -283,18 +288,7 @@ class _AgreementDetailState extends State<AgreementDetail> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    key: const ValueKey('open-payments'),
-                    onPressed: _openPayments,
-                    icon: const Icon(Icons.payments_outlined),
-                    label: Text(
-                      'Payments & dates · '
-                      '${widget.repository.paymentsFor(agreement.id).length}',
-                    ),
-                  ),
-                ),
+                _paymentHistoryButton(agreement),
               ],
             ),
           ),
@@ -340,25 +334,12 @@ class _AgreementDetailState extends State<AgreementDetail> {
                   if (participant != participants.last) const Divider(),
                 ],
                 const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    key: const ValueKey('open-participants'),
-                    onPressed: _openPeople,
-                    icon: Icon(
-                      canManagePeople
-                          ? Icons.person_add_alt_1_outlined
-                          : Icons.people_outline_rounded,
-                    ),
-                    label: Text(
-                      canManagePeople ? 'Add or manage people' : 'View people',
-                    ),
-                  ),
-                ),
+                _managePeopleButton(canManagePeople),
               ],
             ),
           ),
-          if (agreement.status == AgreementStatus.draft) ...[
+          if (agreement.status == AgreementStatus.draft &&
+              agreement.people.isEmpty) ...[
             const SizedBox(height: 12),
             const SoftNote(
               icon: Icons.link_off_outlined,
@@ -443,41 +424,183 @@ class _AgreementDetailState extends State<AgreementDetail> {
           ),
         ],
       ),
-      bottomNavigationBar:
-          canAct &&
-              (agreement.canRecordPayment || agreement.canCompleteObligation)
-          ? SafeArea(
-              minimum: const EdgeInsets.fromLTRB(22, 12, 22, 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (agreement.canRecordPayment)
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        key: ValueKey(
-                          agreement.isLoan
-                              ? 'record-repayment'
-                              : 'record-payment',
-                        ),
-                        onPressed: _openPayments,
-                        icon: const Icon(Icons.add_card_outlined),
-                        label: const Text('Open payment record'),
-                      ),
-                    ),
-                  if (agreement.canCompleteObligation) ...[
-                    const SizedBox(height: 6),
-                    TextButton.icon(
-                      key: const ValueKey('complete-obligation'),
-                      onPressed: _completeObligation,
-                      icon: const Icon(Icons.check_rounded),
-                      label: const Text('Mark demo obligation complete'),
-                    ),
-                  ],
-                ],
+      bottomNavigationBar: _actions(agreement),
+    );
+  }
+
+  Widget _buildGroupDetail(
+    Agreement agreement, {
+    required bool canManagePeople,
+  }) {
+    final currentId = widget.connections.currentPerson?.id;
+    return Scaffold(
+      appBar: AppBar(title: Text(agreement.title)),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: StatusBadge(agreement.status),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              const Expanded(child: SectionTitle("Who's in it")),
+              Text(
+                '${agreement.people.length} people',
+                style: const TextStyle(color: WafaColors.muted),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          AgreementPeopleCard(
+            rows: [
+              for (final person in agreement.people)
+                _groupPersonRow(agreement, person, currentId),
+            ],
+          ),
+          const SizedBox(height: 28),
+          Surface(
+            child: Column(
+              children: [
+                DetailRow('Type', kindLabel(agreement.kind)),
+                DetailRow('Amount', money(agreement.amountPence)),
+                DetailRow('Paid', money(agreement.paidPence)),
+                DetailRow(
+                  'Due',
+                  dateLabel(agreement.dueDate, includeYear: false),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 28),
+          LinearProgressIndicator(
+            value: agreement.progress,
+            minHeight: 8,
+            color: WafaColors.green,
+            backgroundColor: WafaColors.line,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            '${(agreement.progress * 100).round()}% paid · '
+            '${money(agreement.remainingPence)} left',
+            style: const TextStyle(color: WafaColors.muted, fontSize: 15),
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton.icon(
+            key: const ValueKey('open-agreement-document'),
+            onPressed: _openDocument,
+            icon: const Icon(Icons.description_outlined),
+            label: const Text('View the agreement copy'),
+          ),
+          const SizedBox(height: 10),
+          _paymentHistoryButton(agreement),
+          const SizedBox(height: 10),
+          _managePeopleButton(canManagePeople),
+        ],
+      ),
+      bottomNavigationBar: _actions(agreement),
+    );
+  }
+
+  Widget _groupPersonRow(
+    Agreement agreement,
+    AgreementPerson person,
+    String? currentId,
+  ) {
+    final owes = person.role == AgreementRole.owesShare;
+    final paid = agreement.paidPenceFor(person.id);
+    return ListTile(
+      leading: AgreementPersonAvatar(person.name),
+      title: Text(person.id == currentId ? 'You' : person.name),
+      subtitle: Text(
+        owes
+            ? '${person.role.label} · ${money(paid)} of '
+                  '${money(person.sharePence)} paid'
+            : person.role.label,
+        style: const TextStyle(color: WafaColors.muted),
+      ),
+      trailing: owes
+          ? SizedBox(
+              width: 54,
+              child: LinearProgressIndicator(
+                value: person.sharePence <= 0
+                    ? 0
+                    : (paid / person.sharePence).clamp(0.0, 1.0),
+                minHeight: 6,
+                color: WafaColors.green,
+                backgroundColor: WafaColors.line,
+                borderRadius: BorderRadius.circular(4),
               ),
             )
           : null,
+    );
+  }
+
+  Widget _paymentHistoryButton(Agreement agreement) => SizedBox(
+    width: double.infinity,
+    child: OutlinedButton.icon(
+      key: const ValueKey('open-payments'),
+      onPressed: _openPayments,
+      icon: const Icon(Icons.payments_outlined),
+      label: Text(
+        'Payments & dates · '
+        '${widget.repository.paymentsFor(agreement.id).length}',
+      ),
+    ),
+  );
+
+  Widget _managePeopleButton(bool canManagePeople) => SizedBox(
+    width: double.infinity,
+    child: OutlinedButton.icon(
+      key: const ValueKey('open-participants'),
+      onPressed: _openPeople,
+      icon: Icon(
+        canManagePeople
+            ? Icons.person_add_alt_1_outlined
+            : Icons.people_outline_rounded,
+      ),
+      label: Text(canManagePeople ? 'Add or manage people' : 'View people'),
+    ),
+  );
+
+  Widget? _actions(Agreement agreement) {
+    if (!_currentPersonCanAct() ||
+        !(agreement.canRecordPayment || agreement.canCompleteObligation)) {
+      return null;
+    }
+    final choosePayer = agreement.people.isNotEmpty;
+    return SafeArea(
+      minimum: const EdgeInsets.fromLTRB(22, 12, 22, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (agreement.canRecordPayment)
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                key: ValueKey(
+                  agreement.isLoan ? 'record-repayment' : 'record-payment',
+                ),
+                onPressed: () => _openPayments(choosePayer: choosePayer),
+                icon: const Icon(Icons.add_card_outlined),
+                label: Text(
+                  choosePayer ? 'Record a payment' : 'Open payment record',
+                ),
+              ),
+            ),
+          if (agreement.canCompleteObligation) ...[
+            const SizedBox(height: 6),
+            TextButton.icon(
+              key: const ValueKey('complete-obligation'),
+              onPressed: _completeObligation,
+              icon: const Icon(Icons.check_rounded),
+              label: const Text('Mark demo obligation complete'),
+            ),
+          ],
+        ],
+      ),
     );
   }
 

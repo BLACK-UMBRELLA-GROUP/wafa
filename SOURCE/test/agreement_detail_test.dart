@@ -131,6 +131,77 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('group detail records payments against the selected share', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    const agreementId = 'demo-family-001';
+    final repository = DemoAgreementRepository();
+    await mountDetail(tester, repository, id: agreementId);
+
+    expect(find.text("Who's in it"), findsOneWidget);
+    expect(find.text('3 people'), findsOneWidget);
+    expect(find.text('Owes a share · £100 of £150 paid'), findsOneWidget);
+    expect(find.text('Is owed'), findsOneWidget);
+    expect(find.text('With'), findsNothing);
+
+    final you = find.byKey(ValueKey('payer-${demoAmina.id}'));
+    final omar = find.byKey(ValueKey('payer-${demoOmar.id}'));
+    final record = find.byKey(const ValueKey('record-payment'));
+    await tester.tap(record);
+    await tester.pumpAndSettle();
+    expect(find.text('Who paid?'), findsOneWidget);
+    expect(find.text('£50 left'), findsOneWidget);
+    expect(find.text('£150 left'), findsOneWidget);
+    expect(find.text(demoSara.name), findsNothing);
+
+    await tester.tap(you);
+    await tester.pumpAndSettle();
+    final amount = find.byKey(const ValueKey('payment-amount'));
+    final save = find.byKey(const ValueKey('payment-save'));
+    expect(find.text('Up to £50'), findsOneWidget);
+    await tester.enterText(amount, '50.01');
+    await tester.tap(save);
+    await tester.pumpAndSettle();
+    expect(find.text('Enter no more than £50.'), findsOneWidget);
+    expect(repository.findById(agreementId)!.paidPence, 10000);
+
+    await tester.enterText(amount, '50');
+    await tester.tap(save);
+    await tester.pumpAndSettle();
+    expect(find.text('Who paid?'), findsNothing);
+    final agreement = repository.findById(agreementId)!;
+    expect(agreement.paidPence, 15000);
+    expect(agreement.paidPenceFor(demoAmina.id), 15000);
+    expect(agreement.paidPenceFor(demoOmar.id), 0);
+
+    await tester.tap(record);
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: you, matching: find.text('Paid')),
+      findsOneWidget,
+    );
+    expect(tester.widget<ListTile>(you).enabled, isFalse);
+    expect(tester.widget<ListTile>(omar).enabled, isTrue);
+    await tester.tap(omar);
+    await tester.pumpAndSettle();
+    expect(find.text('Up to £150'), findsOneWidget);
+    await tester.enterText(amount, '25');
+    await tester.tap(save);
+    await tester.pumpAndSettle();
+
+    final recorded = repository
+        .paymentsFor(agreementId)
+        .singleWhere((payment) => payment.payerId == demoOmar.id);
+    expect(recorded.amountPence, 2500);
+    expect(recorded.recordedByPersonId, demoAmina.id);
+    expect(repository.findById(agreementId)!.paidPence, 17500);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('draft, awaiting and completed records offer no live action', (
     tester,
   ) async {

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wafa/domain/demo_connections.dart';
+import 'package:wafa/domain/demo_models.dart';
 
 void main() {
   const agreement = 'demo-agreement-001';
@@ -12,6 +13,123 @@ void main() {
     repository.registerAgreement(otherAgreement);
     return repository;
   }
+
+  group('prepared draft invitations', () {
+    AgreementPerson person(DemoPerson member, AgreementRole role, int share) =>
+        AgreementPerson(
+          id: member.id,
+          name: member.name,
+          role: role,
+          sharePence: share,
+        );
+
+    Agreement save(
+      DemoConnectionsRepository connections,
+      DemoAgreementRepository agreements,
+      List<AgreementPerson> people,
+    ) => connections.createAgreementDraft(
+      agreements,
+      kind: ContractKind.familyAgreement,
+      title: 'Shared draft',
+      dueDate: agreements.today,
+      people: people,
+    );
+
+    test(
+      'targets distinct recipients and admits each only after confirmation',
+      () {
+        final connections = ownedRepository();
+        final agreements = DemoAgreementRepository(seedSamples: false);
+        final draft = save(connections, agreements, [
+          person(demoAmina, AgreementRole.witness, 0),
+          person(demoOmar, AgreementRole.owesShare, 251),
+          person(demoSara, AgreementRole.isOwed, 0),
+        ]);
+        expect(draft.status, AgreementStatus.draft);
+        expect(draft.people.map((member) => member.sharePence), [0, 251, 0]);
+        expect(
+          connections.participantsForAgreement(draft.id).single.role,
+          ParticipantRole.witness,
+        );
+        final invites = connections.invitesForAgreement(draft.id);
+        expect(invites.map((invite) => invite.intendedPersonId), [
+          demoOmar.id,
+          demoSara.id,
+        ]);
+        expect(invites.map((invite) => invite.role), [
+          ParticipantRole.party,
+          ParticipantRole.party,
+        ]);
+        expect(invites.map((invite) => invite.agreementRole), [
+          AgreementRole.owesShare,
+          AgreementRole.isOwed,
+        ]);
+        expect(invites.map((invite) => invite.code).toSet(), hasLength(2));
+
+        connections.signIn(DemoLoginMethod.apple, demoOmar.id);
+        expect(connections.incomingInvites.single.id, invites.first.id);
+        expect(
+          () => connections.requestJoin(invites.last.code),
+          throwsStateError,
+        );
+        expect(connections.canViewAgreement(draft.id), isFalse);
+        expect(
+          connections.requestJoin(invites.first.code).agreementRole,
+          AgreementRole.owesShare,
+        );
+        expect(connections.canViewAgreement(draft.id), isFalse);
+        connections.signIn(DemoLoginMethod.apple, demoAmina.id);
+        expect(
+          connections.confirmRequest(invites.first.id).agreementRole,
+          AgreementRole.owesShare,
+        );
+        connections.signIn(DemoLoginMethod.apple, demoOmar.id);
+        expect(connections.canViewAgreement(draft.id), isTrue);
+        expect(
+          connections
+              .participantsForAgreement(draft.id)
+              .map((member) => member.personId),
+          [demoAmina.id, demoOmar.id],
+        );
+        expect(agreements.findById(draft.id)!.status, AgreementStatus.draft);
+      },
+    );
+
+    test('keeps the planned witness role when an invitation is reissued', () {
+      final connections = ownedRepository();
+      final agreements = DemoAgreementRepository(seedSamples: false);
+      final draft = save(connections, agreements, [
+        person(demoAmina, AgreementRole.owesShare, 100),
+        person(demoOmar, AgreementRole.isOwed, 0),
+        person(demoSara, AgreementRole.witness, 0),
+      ]);
+      final witness = connections.invitesForAgreement(draft.id).last;
+      expect(witness.role, ParticipantRole.witness);
+      connections.revokeInvite(witness.id);
+      expect(
+        () => connections.createInvite(
+          draft.id,
+          ParticipantRole.party,
+          intendedPersonId: demoSara.id,
+        ),
+        throwsStateError,
+      );
+      final replacement = connections.createInvite(
+        draft.id,
+        ParticipantRole.witness,
+        intendedPersonId: demoSara.id,
+      );
+      expect(replacement.agreementRole, AgreementRole.witness);
+      connections.signIn(DemoLoginMethod.apple, demoSara.id);
+      connections.requestJoin(replacement.code);
+      connections.signIn(DemoLoginMethod.apple, demoAmina.id);
+      connections.confirmRequest(replacement.id);
+      expect(
+        connections.participantsForAgreement(draft.id).last.role,
+        ParticipantRole.witness,
+      );
+    });
+  });
 
   group('fictional identity and ownership', () {
     test(

@@ -3,6 +3,22 @@ import 'package:flutter/material.dart';
 import '../domain/demo_connections.dart';
 import 'wafa_ui.dart';
 
+Future<DemoPerson?> showAgreementPersonPicker(
+  BuildContext context,
+  DemoConnectionsRepository connections, {
+  required Set<String> excludedPersonIds,
+}) async {
+  final selection = await showDialog<_InvitationDraft>(
+    context: context,
+    builder: (_) => _AddPersonDialog(
+      connections: connections,
+      excludedPersonIds: excludedPersonIds,
+    ),
+  );
+  final personId = selection?.personId;
+  return personId == null ? null : connections.person(personId);
+}
+
 /// A local, fictional invitation rehearsal. It sends nothing off this device.
 class ParticipantsScreen extends StatefulWidget {
   const ParticipantsScreen({
@@ -74,7 +90,7 @@ class _ParticipantsScreenState extends State<ParticipantsScreen> {
             const SizedBox(height: 8),
             Text('Wafa ID: ${requester.wafaId}'),
             const SizedBox(height: 8),
-            Text('Role: ${_roleLabel(invitation.role)}'),
+            Text('Role: ${_invitationRoleLabel(invitation)}'),
             const SizedBox(height: 16),
             Text('Demo pairing code: ${invitation.code}'),
             const SizedBox(height: 8),
@@ -371,7 +387,7 @@ class _InvitationCard extends StatelessWidget {
             spacing: 12,
             runSpacing: 8,
             children: [
-              Text(_roleLabel(invitation.role)),
+              Text(_invitationRoleLabel(invitation)),
               Text(
                 _statusLabel(invitation.status),
                 style: const TextStyle(
@@ -429,8 +445,10 @@ class _InvitationDraft {
 }
 
 class _AddPersonDialog extends StatefulWidget {
-  const _AddPersonDialog({required this.connections});
+  const _AddPersonDialog({required this.connections, this.excludedPersonIds});
+
   final DemoConnectionsRepository connections;
+  final Set<String>? excludedPersonIds;
 
   @override
   State<_AddPersonDialog> createState() => _AddPersonDialogState();
@@ -442,6 +460,8 @@ class _AddPersonDialogState extends State<_AddPersonDialog> {
   ParticipantRole _role = ParticipantRole.party;
   DemoPerson? _person;
   String? _error;
+
+  bool get _findOnly => widget.excludedPersonIds != null;
 
   @override
   void dispose() {
@@ -457,6 +477,8 @@ class _AddPersonDialogState extends State<_AddPersonDialog> {
           ? 'No matching demo Wafa ID. Use the exact ID shown in the demo profile.'
           : found.id == widget.connections.currentPerson?.id
           ? 'You are already on your own agreement. Choose another person.'
+          : (widget.excludedPersonIds?.contains(found.id) ?? false)
+          ? 'This person is already on the agreement.'
           : null;
       if (_error != null) _person = null;
     });
@@ -481,7 +503,9 @@ class _AddPersonDialogState extends State<_AddPersonDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final contacts = widget.connections.contactsForCurrentPerson;
+    final contacts = widget.connections.contactsForCurrentPerson.where(
+      (contact) => !(widget.excludedPersonIds?.contains(contact.id) ?? false),
+    );
     return AlertDialog(
       scrollable: true,
       title: const Text('Add a person'),
@@ -503,16 +527,19 @@ class _AddPersonDialogState extends State<_AddPersonDialog> {
                 _FindMethod.invitation: 'Invitation preview',
                 _FindMethod.qr: 'QR preview',
               }.entries)
-                ChoiceChip(
-                  key: ValueKey('participant-method-${entry.key.name}'),
-                  label: Text(entry.value),
-                  selected: _method == entry.key,
-                  onSelected: (_) => setState(() {
-                    _method = entry.key;
-                    _person = null;
-                    _error = null;
-                  }),
-                ),
+                if (!_findOnly ||
+                    entry.key == _FindMethod.contacts ||
+                    entry.key == _FindMethod.wafaId)
+                  ChoiceChip(
+                    key: ValueKey('participant-method-${entry.key.name}'),
+                    label: Text(entry.value),
+                    selected: _method == entry.key,
+                    onSelected: (_) => setState(() {
+                      _method = entry.key;
+                      _person = null;
+                      _error = null;
+                    }),
+                  ),
             ],
           ),
           const SizedBox(height: 20),
@@ -524,9 +551,11 @@ class _AddPersonDialogState extends State<_AddPersonDialog> {
             ),
             const SizedBox(height: 12),
             if (contacts.isEmpty)
-              const Text(
-                'No accepted Wafa connections yet. Try their Wafa ID or an '
-                'invitation preview. Phone contacts are not accessed.',
+              Text(
+                _findOnly
+                    ? 'Choose someone by their Wafa ID.'
+                    : 'No accepted Wafa connections yet. Try their Wafa ID or an '
+                          'invitation preview. Phone contacts are not accessed.',
               ),
             for (final contact in contacts)
               Padding(
@@ -587,28 +616,30 @@ class _AddPersonDialogState extends State<_AddPersonDialog> {
               'they see the agreement. No real link is created here.',
               style: TextStyle(height: 1.5),
             ),
-          const SizedBox(height: 20),
-          const FieldLabel('Their role'),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final role in ParticipantRole.values)
-                ChoiceChip(
-                  key: ValueKey('participant-role-${role.name}'),
-                  label: Text(_roleLabel(role)),
-                  selected: _role == role,
-                  onSelected: (_) => setState(() => _role = role),
-                ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'Roles are draft placeholders. Joining does not review terms '
-            'or sign a contract.',
-            style: TextStyle(color: WafaColors.muted, height: 1.5),
-          ),
+          if (!_findOnly) ...[
+            const SizedBox(height: 20),
+            const FieldLabel('Their role'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final role in ParticipantRole.values)
+                  ChoiceChip(
+                    key: ValueKey('participant-role-${role.name}'),
+                    label: Text(_roleLabel(role)),
+                    selected: _role == role,
+                    onSelected: (_) => setState(() => _role = role),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Roles are draft placeholders. Joining does not review terms '
+              'or sign a contract.',
+              style: TextStyle(color: WafaColors.muted, height: 1.5),
+            ),
+          ],
           if (_error != null) ...[
             const SizedBox(height: 12),
             Text(
@@ -625,10 +656,12 @@ class _AddPersonDialogState extends State<_AddPersonDialog> {
           child: const Text('Cancel'),
         ),
         FilledButton(
-          key: const ValueKey('participant-create-invite'),
+          key: ValueKey(
+            _findOnly ? 'draft-select-person' : 'participant-create-invite',
+          ),
           onPressed: _submit,
-          child: const Text(
-            'Create demo invitation',
+          child: Text(
+            _findOnly ? 'Add a person' : 'Create demo invitation',
             textAlign: TextAlign.center,
           ),
         ),
@@ -670,7 +703,7 @@ class _InvitationPreviewDialog extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Text('Role: ${_roleLabel(invitation.role)}'),
+        Text('Role: ${_invitationRoleLabel(invitation)}'),
         const SizedBox(height: 8),
         Text('Expires ${dateLabel(invitation.expiresAt)}'),
         const SizedBox(height: 16),
@@ -692,6 +725,9 @@ class _InvitationPreviewDialog extends StatelessWidget {
     ],
   );
 }
+
+String _invitationRoleLabel(DemoInvite invitation) =>
+    invitation.agreementRole?.label ?? _roleLabel(invitation.role);
 
 String _roleLabel(ParticipantRole role) => switch (role) {
   ParticipantRole.party => 'Agreement party',

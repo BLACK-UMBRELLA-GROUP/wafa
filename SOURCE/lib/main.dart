@@ -6,6 +6,7 @@ import 'ui/wafa_ui.dart';
 import 'ui/create_agreement.dart';
 import 'ui/agreement_detail.dart';
 import 'ui/demo_account.dart';
+import 'ui/dashboard.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,9 +15,10 @@ void main() {
 }
 
 class WafaApp extends StatefulWidget {
-  const WafaApp({super.key, this.repository, this.connections});
+  const WafaApp({super.key, this.repository, this.connections, this.clock});
   final DemoAgreementRepository? repository;
   final DemoConnectionsRepository? connections;
+  final DemoClock? clock;
   @override
   State<WafaApp> createState() => _WafaAppState();
 }
@@ -55,6 +57,7 @@ class _WafaAppState extends State<WafaApp> {
             key: ValueKey(connections.currentPerson!.id),
             repository: repository,
             connections: connections,
+            clock: widget.clock,
             onSignedOut: () => setState(connections.signOut),
           ),
   );
@@ -66,16 +69,19 @@ class WafaHome extends StatefulWidget {
     required this.repository,
     required this.connections,
     required this.onSignedOut,
+    this.clock,
   });
   final DemoAgreementRepository repository;
   final DemoConnectionsRepository connections;
   final VoidCallback onSignedOut;
+  final DemoClock? clock;
   @override
   State<WafaHome> createState() => _WafaHomeState();
 }
 
 class _WafaHomeState extends State<WafaHome> {
   int tab = 0;
+  AgreementStatus? dashboardSection;
   String filter = 'All';
   String query = '';
   final searchController = TextEditingController();
@@ -141,207 +147,77 @@ class _WafaHomeState extends State<WafaHome> {
     if (mounted) setState(() {});
   }
 
+  void selectTab(int value) => setState(() {
+    dashboardSection = null;
+    tab = value;
+  });
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: switch (tab) {
-        1 => agreementsPage(),
-        2 => trackerPage(),
-        3 => profilePage(),
-        _ => dashboard(),
-      },
-    ),
-    bottomNavigationBar: DecoratedBox(
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: WafaColors.line)),
+  Widget build(BuildContext context) => PopScope(
+    canPop: dashboardSection == null,
+    onPopInvokedWithResult: (didPop, _) {
+      if (!didPop && dashboardSection != null) selectTab(0);
+    },
+    child: Scaffold(
+      body: SafeArea(
+        child: switch (tab) {
+          1 => agreementsPage(),
+          2 => trackerPage(),
+          3 => profilePage(),
+          _ => dashboard(),
+        },
       ),
-      child: NavigationBar(
-        selectedIndex: tab,
-        onDestinationSelected: (value) => setState(() => tab = value),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.grid_view_rounded),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.description_outlined),
-            label: 'Agreements',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_balance_wallet_outlined),
-            label: 'Tracker',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: WafaColors.line)),
+        ),
+        child: NavigationBar(
+          selectedIndex: tab,
+          onDestinationSelected: selectTab,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.grid_view_rounded),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.description_outlined),
+              label: 'Agreements',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.account_balance_wallet_outlined),
+              label: 'Tracker',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline_rounded),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     ),
   );
 
   Widget dashboard() {
-    final all = visibleAgreements;
-    final live = all
-        .where(
-          (a) =>
-              a.status == AgreementStatus.active ||
-              a.status == AgreementStatus.overdue,
-        )
-        .length;
-    final waiting = all
-        .where((a) => a.status == AgreementStatus.awaitingSignatures)
-        .length;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 28),
-      children: [
-        Wrap(
-          spacing: 12,
-          runSpacing: 10,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            const BrandMark(),
-            const DemoBadge(),
-            IconButton.filledTonal(
-              tooltip: 'Your profile',
-              onPressed: () => setState(() => tab = 3),
-              icon: const Icon(Icons.person_outline_rounded),
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
-        const Eyebrow('A LITTLE CLARITY. A LOT OF TRUST.'),
-        const SizedBox(height: 10),
-        const Text(
-          'Good agreements.\nBetter peace of mind.',
-          style: TextStyle(
-            fontSize: 32,
-            height: 1.15,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -1.2,
-          ),
-        ),
-        const SizedBox(height: 12),
-        const Text(
-          'Create, understand and keep track of the agreements that matter.',
-          style: TextStyle(fontSize: 15, height: 1.5, color: WafaColors.muted),
-        ),
-        const SizedBox(height: 24),
-        OutlinedButton.icon(
-          key: const Key('open-invitations'),
-          onPressed: openInvitations,
-          icon: const Icon(Icons.mail_outline),
-          label: Text(
-            'Invitations · '
-            '${widget.connections.incomingInvites.where((i) => i.isOpen).length} waiting',
-          ),
-        ),
-        const SizedBox(height: 24),
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: WafaColors.green,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Row(
-                children: [
-                  Icon(
-                    Icons.description_outlined,
-                    color: Color(0xffbddccc),
-                    size: 22,
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'YOUR AGREEMENTS',
-                      style: TextStyle(
-                        color: Color(0xffc8dfd3),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.6,
-                      ),
-                    ),
-                  ),
-                  Icon(Icons.spa_outlined, color: Color(0xffbddccc), size: 30),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Text(
-                '$live active',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 36,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -1.3,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '$waiting awaiting signatures · Example records',
-                style: const TextStyle(color: Color(0xffc8dfd3), fontSize: 13),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  key: const Key('create-agreement'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: WafaColors.green,
-                  ),
-                  onPressed: createAgreement,
-                  icon: const Icon(Icons.add, size: 20),
-                  label: const Text('Create an agreement'),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SmallMetric(
-                label: 'Awaiting signatures',
-                value: '$waiting',
-                icon: Icons.draw_outlined,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: SmallMetric(
-                label: 'Your drafts',
-                value:
-                    '${all.where((a) => a.status == AgreementStatus.draft).length}',
-                icon: Icons.edit_note_rounded,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
-        SectionTitle(
-          'Recent agreements',
-          action: 'View all',
-          onAction: () => setState(() => tab = 1),
-        ),
-        const SizedBox(height: 8),
-        ...all
-            .take(3)
-            .map(
-              (a) => AgreementTile(agreement: a, onTap: () => openAgreement(a)),
-            ),
-        const SizedBox(height: 20),
-        const SoftNote(
-          icon: Icons.info_outline,
-          title: 'A first look at Wafa',
-          body:
-              'Fictional examples only. Changes last for this session. No real AI, signatures or payments are connected.',
-        ),
-      ],
+    final section = dashboardSection;
+    if (section != null) {
+      return DashboardSection(
+        status: section,
+        agreements: visibleAgreements,
+        onBack: () => selectTab(0),
+        onAgreement: openAgreement,
+      );
+    }
+    return Dashboard(
+      agreements: visibleAgreements,
+      connections: widget.connections,
+      today: widget.repository.today,
+      hour: (widget.clock ?? DateTime.now)().hour,
+      onProfile: () => selectTab(3),
+      onAll: () => selectTab(1),
+      onInvitations: openInvitations,
+      onCreate: createAgreement,
+      onAgreement: openAgreement,
+      onSection: (status) => setState(() => dashboardSection = status),
     );
   }
 
@@ -565,6 +441,13 @@ class _WafaHomeState extends State<WafaHome> {
   Widget profilePage() => ListView(
     padding: const EdgeInsets.all(24),
     children: [
+      const SoftNote(
+        icon: Icons.info_outline,
+        title: 'A first look at Wafa',
+        body:
+            'Fictional examples only. Changes last for this session. No real AI, signatures or payments are connected.',
+      ),
+      const SizedBox(height: 24),
       const PageHeading(
         'Your space',
         subtitle: 'Keep your agreements organised, your way.',

@@ -69,12 +69,13 @@ void main() {
       find.byKey(const ValueKey('demo-sign-in-google')),
     );
 
-    expect(
-      find.text('Good agreements.\nBetter peace of mind.'),
-      findsOneWidget,
-    );
+    expect(find.text('Welcome, Omar'), findsOneWidget);
+    expect(find.text('No agreements yet'), findsOneWidget);
+    expect(tester.takeException(), isNull, reason: 'New member Home layout');
     await _tapVisible(tester, find.text('Profile').last);
-    expect(find.textContaining(demoOmar.wafaId), findsOneWidget);
+    final profileId = find.textContaining(demoOmar.wafaId);
+    await _scrollVisible(tester, profileId);
+    expect(profileId, findsOneWidget);
     expect(find.textContaining('Google · simulated sign-in'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
@@ -120,9 +121,12 @@ void main() {
     );
     await tester.pageBack();
     await tester.pumpAndSettle();
+    await _tapVisible(tester, find.text('Agreements').last);
     expect(find.text(draft.title), findsNothing);
+    expect(connections.canViewAgreement(draft.id), isFalse);
 
     await _switchPerson(tester, demoAmina, 'demo-sign-in-apple');
+    await _tapVisible(tester, find.text('Agreements').last);
     await _tapVisible(tester, find.text(draft.title));
     await _tapVisible(tester, find.byKey(const ValueKey('open-participants')));
     await _tapVisible(
@@ -143,6 +147,7 @@ void main() {
     await tester.pumpAndSettle();
     await _switchPerson(tester, demoOmar, 'demo-sign-in-google');
     expect(connections.canViewAgreement(draft.id), isTrue);
+    await _tapVisible(tester, find.text('Agreements').last);
     await _tapVisible(tester, find.text(draft.title));
     expect(find.text(draft.title), findsWidgets);
     expect(connections.contactsForCurrentPerson.single.id, demoAmina.id);
@@ -172,7 +177,8 @@ void main() {
       intendedPersonId: demoOmar.id,
     );
     await _switchPerson(tester, demoSara, 'demo-sign-in-google');
-    await _tapVisible(tester, find.byKey(const ValueKey('open-invitations')));
+    await _tapVisible(tester, find.text('Profile').last);
+    await _tapVisible(tester, find.text('Invitations'));
     await tester.enterText(
       find.byKey(const ValueKey('invitation-code')),
       invitation.code,

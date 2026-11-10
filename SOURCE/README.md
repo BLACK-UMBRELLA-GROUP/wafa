@@ -35,7 +35,11 @@ visual acceptance remain distinct.
 
 ## Actual screens and navigation
 
-- Home: example status counts, recent agreements and creation entry.
+- Home: puts open invitations, overdue agreements, signatures and payments
+  due within seven days first. Five tiles open lists by status. When nothing
+  needs attention, Home shows the next active payment if there is one. Members
+  with no visible agreements can start their first one or open waiting
+  invitations.
 - Sign-in preview: select Amina, Omar or Sara and simulate Apple or Google
   sign-in without opening a provider or collecting credentials.
 - Agreements: name/title search, status filters and detail navigation.

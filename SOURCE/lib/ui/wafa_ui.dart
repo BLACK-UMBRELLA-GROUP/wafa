@@ -98,8 +98,8 @@ int? parsePence(String value) {
       (parts.length == 2 ? int.parse(parts[1].padRight(2, '0')) : 0);
 }
 
-String dateLabel(DateTime date) =>
-    '${date.day} ${const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.month - 1]} ${date.year}';
+String dateLabel(DateTime date, {bool includeYear = true}) =>
+    '${date.day} ${const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.month - 1]}${includeYear ? ' ${date.year}' : ''}';
 
 String kindLabel(ContractKind kind) => switch (kind) {
   ContractKind.interestFreeLoan => 'Interest-free loan',
@@ -191,44 +191,6 @@ class Surface extends StatelessWidget {
       border: Border.all(color: WafaColors.line),
     ),
     child: child,
-  );
-}
-
-class SmallMetric extends StatelessWidget {
-  const SmallMetric({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.icon,
-  });
-  final String label, value;
-  final IconData icon;
-  @override
-  Widget build(BuildContext context) => Surface(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: WafaColors.green, size: 21),
-        const SizedBox(height: 14),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            color: WafaColors.green,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 11,
-            height: 1.4,
-            color: WafaColors.muted,
-          ),
-        ),
-      ],
-    ),
   );
 }
 

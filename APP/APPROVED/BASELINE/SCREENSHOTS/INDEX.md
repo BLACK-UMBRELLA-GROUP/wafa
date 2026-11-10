@@ -1,7 +1,7 @@
 ---
 id: EVID-WAFA-BASELINE-2026-11-08
-type: EVIDENCE
-status: FAILED
+type: REPORT
+status: CURRENT
 feature: BASELINE
 purpose: Real app capture outcome for build queue line 2
 owner: Codex

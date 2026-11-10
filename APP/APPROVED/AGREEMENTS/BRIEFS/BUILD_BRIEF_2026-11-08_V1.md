@@ -1,6 +1,6 @@
 ---
 id: DOC-WAFA-0014
-type: BRIEF
+type: PLAN
 status: CURRENT
 feature: APP: AGREEMENTS
 purpose: Build brief for queue line 4 - LOCK 2 launch types and many people on one agreement

@@ -1,6 +1,6 @@
 ---
 id: DOC-WAFA-0017
-type: BRIEF
+type: PLAN
 status: CURRENT
 feature: APP: VERIFICATION
 purpose: Build brief for queue line 5 - LOCK 3 optional verification, two badges

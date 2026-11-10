@@ -28,7 +28,15 @@ re-run the tool.
 
 _Stop here unless you need to look up another ID._
 
-## Documents (7 live)
+## Documents (20 live)
+
+### APP: AGREEMENTS
+
+| ID | File | Type | Purpose | Links | KB |
+|---|---|---|---|---|---|
+| DOC-WAFA-0012 | `APP/APPROVED/AGREEMENTS/RECORD/AGREEMENTS_SPEC_CURRENT_VERSION_V1.md` | SPEC | LOCK 2 - seven launch agreement types and many people on one agreement (create flow, agreement page, who paid) | DOC-WAFA-0002, DOC-WAFA-0009, DOC-WAFA-0013, DOC-WAFA-0014 | 7 |
+| DOC-WAFA-0013 | `APP/APPROVED/AGREEMENTS/RECORD/LOCK_RECORD.md` | REGISTER | Agreements LOCK record - every LOCK with the Founder's exact words (core rule 11) | DOC-WAFA-0012 | 1 |
+| DOC-WAFA-0014 | `APP/APPROVED/AGREEMENTS/BRIEFS/BUILD_BRIEF_2026-11-08_V1.md` | PLAN | Build brief for queue line 4 - LOCK 2 launch types and many people on one agreement | DOC-WAFA-0012, DOC-WAFA-0013 | 2 |
 
 ### APP: AI FEATURES
 
@@ -42,6 +50,14 @@ _Stop here unless you need to look up another ID._
 |---|---|---|---|---|
 | DOC-WAFA-0002 | `APP/CONTRACTS/Summary.md` | SPEC | Contracts — summary of this part of the app | 7 |
 
+### APP: DASHBOARD
+
+| ID | File | Type | Purpose | Links | KB |
+|---|---|---|---|---|---|
+| DOC-WAFA-0009 | `APP/APPROVED/DASHBOARD/RECORD/DASHBOARD_SPEC_CURRENT_VERSION_V1.md` | SPEC | Home dashboard - LOCK 1 - "Needs you first" layout with five sections; words, rules, states and masters | DOC-WAFA-0004, DOC-WAFA-0010, DOC-WAFA-0011 | 6 |
+| DOC-WAFA-0010 | `APP/APPROVED/DASHBOARD/RECORD/LOCK_RECORD.md` | REGISTER | Dashboard LOCK record - every LOCK with the Founder's exact words (core rule 11) | DOC-WAFA-0009 | 1 |
+| DOC-WAFA-0011 | `APP/APPROVED/DASHBOARD/BRIEFS/BUILD_BRIEF_2026-11-08_V1.md` | PLAN | Build brief for queue line 3 - Home dashboard LOCK 1 | DOC-WAFA-0009, DOC-WAFA-0010 | 2 |
+
 ### APP: FUTURE FEATURES
 
 | ID | File | Type | Purpose | KB |
@@ -54,6 +70,28 @@ _Stop here unless you need to look up another ID._
 |---|---|---|---|---|
 | DOC-WAFA-0004 | `APP/OVERVIEW/Summary.md` | SPEC | Overview — summary of this part of the app | 10 |
 
+### APP: TRACK RECORD
+
+| ID | File | Type | Purpose | Links | KB |
+|---|---|---|---|---|---|
+| DOC-WAFA-0018 | `APP/APPROVED/TRACK_RECORD/RECORD/TRACK_RECORD_SPEC_CURRENT_VERSION_V1.md` | SPEC | LOCK 4 - Track record (was "Amanah Score"): facts, never a score; private until the person shares it | DOC-WAFA-0003, DOC-WAFA-0015, DOC-WAFA-0019, DOC-WAFA-0020 | 3 |
+| DOC-WAFA-0019 | `APP/APPROVED/TRACK_RECORD/RECORD/LOCK_RECORD.md` | REGISTER | Track record LOCK record - every LOCK with the Founder's exact words (core rule 11) | DOC-WAFA-0018 | 1 |
+| DOC-WAFA-0020 | `APP/APPROVED/TRACK_RECORD/BRIEFS/BUILD_BRIEF_2026-11-08_V1.md` | PLAN | Build brief for queue line 6 - LOCK 4 Track record | DOC-WAFA-0018, DOC-WAFA-0019 | 1 |
+
+### APP: VERIFICATION
+
+| ID | File | Type | Purpose | Links | KB |
+|---|---|---|---|---|---|
+| DOC-WAFA-0015 | `APP/APPROVED/VERIFICATION/RECORD/VERIFICATION_SPEC_CURRENT_VERSION_V1.md` | SPEC | LOCK 3 - optional verification with two badges (Basic, Verified); Profile row, Verification page, badges… | DOC-WAFA-0002, DOC-WAFA-0012, DOC-WAFA-0016, DOC-WAFA-0017 | 3 |
+| DOC-WAFA-0016 | `APP/APPROVED/VERIFICATION/RECORD/LOCK_RECORD.md` | REGISTER | Verification LOCK record - every LOCK with the Founder's exact words (core rule 11) | DOC-WAFA-0015 | 1 |
+| DOC-WAFA-0017 | `APP/APPROVED/VERIFICATION/BRIEFS/BUILD_BRIEF_2026-11-08_V1.md` | PLAN | Build brief for queue line 5 - LOCK 3 optional verification, two badges | DOC-WAFA-0015, DOC-WAFA-0016 | 1 |
+
+### BASELINE
+
+| ID | File | Type | Purpose | KB |
+|---|---|---|---|---|
+| EVID-WAFA-BASELINE-2026-11-08 | `APP/APPROVED/BASELINE/SCREENSHOTS/INDEX.md` | REPORT | Real app capture outcome for build queue line 2 | 1 |
+
 ### CODE AND RUNNING
 
 | ID | File | Type | Purpose | KB |
@@ -64,7 +102,7 @@ _Stop here unless you need to look up another ID._
 
 | ID | File | Type | Purpose | Links | KB |
 |---|---|---|---|---|---|
-| DOC-WAFA-0007 | `APP/APPROVED/BUILD_QUEUE.md` | REGISTER | Build queue - every LOCKed brief waits here; Codex builds WAITING lines at 01:00 or on GO (charters rule 9) | AD-AIOS-115 | 1 |
+| DOC-WAFA-0007 | `APP/APPROVED/BUILD_QUEUE.md` | REGISTER | Build queue - every LOCKed brief waits here; Codex builds WAITING lines at 01:00 or on GO (charters rule 9) | AD-AIOS-115 | 5 |
 | DOC-WAFA-0008 | `APP/APPROVED/QUESTIONS.md` | REGISTER | Codex's questions for the WAFA chat - Codex never asks Shakeel in chat; he files the question here, marks… | AD-AIOS-116 | 1 |
 
 ## Needs attention

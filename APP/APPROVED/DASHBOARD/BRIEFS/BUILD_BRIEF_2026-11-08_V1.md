@@ -1,6 +1,6 @@
 ---
 id: DOC-WAFA-0011
-type: BRIEF
+type: PLAN
 status: CURRENT
 feature: APP: DASHBOARD
 purpose: Build brief for queue line 3 - Home dashboard LOCK 1

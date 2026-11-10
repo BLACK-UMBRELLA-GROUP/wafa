@@ -1,6 +1,6 @@
 ---
 id: DOC-WAFA-0020
-type: BRIEF
+type: PLAN
 status: CURRENT
 feature: APP: TRACK RECORD
 purpose: Build brief for queue line 6 - LOCK 4 Track record

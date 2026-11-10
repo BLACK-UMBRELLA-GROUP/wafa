@@ -8,6 +8,8 @@ Profile offers optional, simulated verification. Confirming email and phone show
 
 Profile also shows a fictional Track record with agreement facts. Sharing is optional and lasts for the current session. Shared records open from the people section of a group agreement.
 
+Every agreement has a free Evidence Vault for up to 25 files of 10 MB each. In the preview, choosing a file adds a fictional entry. Everyone on the agreement can see it, and only the person who added it can remove it while the agreement is a draft.
+
 People, agreements and payments in this preview are fictional. Records stay in memory and reset when the process restarts. Authentication and invitations are simulations. Agreement copies remain unsigned, no signatures are collected, and payment records are fictional. The app does not create binding contracts, move money or claim religious certification.
 
 ## Status

@@ -65,6 +65,36 @@ enum PaymentMethod {
   final String label;
 }
 
+enum EvidenceType {
+  photo('Photo', 'Laptop photo', 1.6),
+  receipt('Receipt', 'Sample receipt', 0.3),
+  bankConfirmation('Bank confirmation', 'Sample bank confirmation', 0.2),
+  document('Document', 'Sample document', 0.5),
+  voiceNote('Voice note', 'Sample voice note', 0.8);
+
+  const EvidenceType(this.label, this._sampleName, this._sampleSizeMb);
+
+  final String label;
+  final String _sampleName;
+  final double _sampleSizeMb;
+}
+
+class DemoEvidence {
+  const DemoEvidence._({
+    required this.type,
+    required this.name,
+    required this.sizeMb,
+    required this.addedOn,
+    required this.addedByPersonId,
+  });
+
+  final EvidenceType type;
+  final String name;
+  final double sizeMb;
+  final DateTime addedOn;
+  final String addedByPersonId;
+}
+
 class DemoPayment {
   const DemoPayment({
     required this.id,
@@ -176,6 +206,7 @@ class DemoAgreementRepository {
     if (seedSamples) {
       _agreements.addAll(_sampleAgreements());
       _payments.addAll(_samplePayments());
+      _evidence.addAll(_sampleEvidence());
     }
     _refreshOpenStatuses();
   }
@@ -183,8 +214,12 @@ class DemoAgreementRepository {
   final DemoClock _clock;
   final List<Agreement> _agreements = [];
   final List<DemoPayment> _payments = [];
+  final Map<String, List<DemoEvidence>> _evidence = {};
   int _nextDraftNumber = 1;
   int _nextPaymentNumber = 1;
+
+  static const evidenceFileLimit = 25;
+  static const evidenceSizeLimitMb = 10;
 
   /// The fixed default keeps the October 2026 example dates reproducible.
   static DateTime _defaultDemoClock() => DateTime(2026, 10, 13);
@@ -210,6 +245,47 @@ class DemoAgreementRepository {
             .toList(growable: false)
           ..sort((a, b) => b.paidOn.compareTo(a.paidOn));
     return List<DemoPayment>.unmodifiable(records);
+  }
+
+  List<DemoEvidence> evidenceFor(String agreementId) {
+    _requiredIndex(agreementId);
+    return List<DemoEvidence>.unmodifiable(_evidence[agreementId] ?? const []);
+  }
+
+  DemoEvidence addEvidence(
+    String agreementId, {
+    required EvidenceType type,
+    required String addedByPersonId,
+  }) {
+    _requiredIndex(agreementId);
+    final records = _evidence.putIfAbsent(agreementId, () => []);
+    if (records.length >= evidenceFileLimit) {
+      throw StateError(
+        'This agreement already holds $evidenceFileLimit files.',
+      );
+    }
+    // A choice creates a bounded fictional record. No file is read.
+    final record = DemoEvidence._(
+      type: type,
+      name: type._sampleName,
+      sizeMb: type._sampleSizeMb,
+      addedOn: today,
+      addedByPersonId: addedByPersonId,
+    );
+    records.add(record);
+    return record;
+  }
+
+  bool removeEvidence(
+    String agreementId,
+    DemoEvidence file, {
+    required String personId,
+  }) {
+    if (findById(agreementId)?.status != AgreementStatus.draft ||
+        file.addedByPersonId != personId) {
+      return false;
+    }
+    return _evidence[agreementId]?.remove(file) ?? false;
   }
 
   /// Creates an unsigned, local draft from the prototype form.
@@ -551,6 +627,34 @@ class DemoAgreementRepository {
       status: AgreementStatus.completed,
     ),
   ];
+
+  static Map<String, List<DemoEvidence>> _sampleEvidence() => {
+    'demo-service-001': [
+      DemoEvidence._(
+        type: EvidenceType.photo,
+        name: 'Garden before the work',
+        sizeMb: 2.4,
+        addedOn: DateTime(2026, 10, 2),
+        addedByPersonId: 'demo-amina',
+      ),
+      DemoEvidence._(
+        type: EvidenceType.receipt,
+        name: 'Plants receipt',
+        sizeMb: 0.3,
+        addedOn: DateTime(2026, 10, 5),
+        addedByPersonId: 'demo-amina',
+      ),
+    ],
+    'demo-family-001': [
+      DemoEvidence._(
+        type: EvidenceType.bankConfirmation,
+        name: 'Transfer to Sara · £100',
+        sizeMb: 0.2,
+        addedOn: DateTime(2026, 11, 1),
+        addedByPersonId: 'demo-amina',
+      ),
+    ],
+  };
 
   static List<DemoPayment> _samplePayments() => [
     DemoPayment(

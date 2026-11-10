@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../domain/demo_connections.dart';
 import '../domain/demo_models.dart';
 import 'agreement_document.dart';
+import 'evidence_vault.dart';
 import 'participants_screen.dart';
 import 'payments_screen.dart';
 import 'track_record_screen.dart';
@@ -89,6 +90,48 @@ class _AgreementDetailState extends State<AgreementDetail> {
     );
     if (mounted) setState(() {});
   }
+
+  Future<void> _openEvidence() async {
+    final destination = await Navigator.of(context).push<int>(
+      MaterialPageRoute<int>(
+        builder: (_) => AddEvidenceScreen(
+          repository: widget.repository,
+          connections: widget.connections,
+          agreementId: widget.id,
+          onAdded: widget.onChanged,
+        ),
+      ),
+    );
+    if (!mounted) return;
+    if (destination != null) {
+      Navigator.of(context).pop(destination);
+    } else {
+      setState(() {});
+    }
+  }
+
+  Widget _evidenceSection(Agreement agreement) => EvidenceSection(
+    files: widget.repository.evidenceFor(agreement.id),
+    removableBy: agreement.status == AgreementStatus.draft
+        ? widget.connections.currentPerson?.id
+        : null,
+    onAdd: _openEvidence,
+    onRemove: (file) {
+      final personId = widget.connections.currentPerson?.id;
+      if (personId != null &&
+          widget.connections.canViewAgreement(agreement.id) &&
+          widget.repository.removeEvidence(
+            agreement.id,
+            file,
+            personId: personId,
+          )) {
+        setState(() {});
+        widget.onChanged();
+      } else {
+        _showChangedRecordMessage();
+      }
+    },
+  );
 
   Future<void> _openPayments({bool choosePayer = false}) async {
     await Navigator.of(context).push(
@@ -319,6 +362,8 @@ class _AgreementDetailState extends State<AgreementDetail> {
             ),
           ),
           const SizedBox(height: 28),
+          _evidenceSection(agreement),
+          const SizedBox(height: 16),
           const SectionTitle('Agreement record'),
           const SizedBox(height: 12),
           Surface(
@@ -544,6 +589,8 @@ class _AgreementDetailState extends State<AgreementDetail> {
             '${money(agreement.remainingPence)} left',
             style: const TextStyle(color: WafaColors.muted, fontSize: 15),
           ),
+          const SizedBox(height: 16),
+          _evidenceSection(agreement),
           const SizedBox(height: 16),
           OutlinedButton.icon(
             key: const ValueKey('open-agreement-document'),

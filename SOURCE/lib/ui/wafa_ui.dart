@@ -84,6 +84,49 @@ final wafaTheme = ThemeData(
   ),
 );
 
+class WafaNavigationBar extends StatelessWidget {
+  const WafaNavigationBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onSelected,
+    this.hideIndicator = false,
+  });
+
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+  final bool hideIndicator;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: const BoxDecoration(
+      border: Border(top: BorderSide(color: WafaColors.line)),
+    ),
+    child: NavigationBar(
+      selectedIndex: selectedIndex,
+      indicatorColor: hideIndicator ? Colors.transparent : null,
+      onDestinationSelected: onSelected,
+      destinations: const [
+        NavigationDestination(
+          icon: Icon(Icons.grid_view_rounded),
+          label: 'Home',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.description_outlined),
+          label: 'Agreements',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.account_balance_wallet_outlined),
+          label: 'Tracker',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.person_outline_rounded),
+          label: 'Profile',
+        ),
+      ],
+    ),
+  );
+}
+
 String money(int pence) {
   final whole = (pence ~/ 100).toString().replaceAllMapped(
     RegExp(r'(\d)(?=(\d{3})+$)'),

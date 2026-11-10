@@ -123,6 +123,23 @@ class DemoParticipant {
   final ParticipantRole role;
 }
 
+class DemoTrackRecord {
+  const DemoTrackRecord({
+    required this.completed,
+    required this.onTime,
+    required this.extensions,
+    required this.open,
+    required this.since,
+  });
+
+  final int completed, onTime, extensions, open;
+  final String since;
+
+  String get paidOnTimeLabel => completed == 0
+      ? '—'
+      : '$onTime of $completed (${(onTime * 100 / completed).round()}%)';
+}
+
 /// Every repository is a separate in-memory session with fixed fictional people.
 class DemoConnectionsRepository {
   DemoConnectionsRepository({DateTime Function()? clock})
@@ -142,6 +159,48 @@ class DemoConnectionsRepository {
     'demo-yusuf': {DemoVerificationCheck.email},
     'demo-maryam': DemoVerificationCheck.values.toSet(),
   };
+  static const _trackRecords = {
+    'demo-amina': DemoTrackRecord(
+      completed: 6,
+      onTime: 5,
+      extensions: 1,
+      open: 3,
+      since: 'Mar 2026',
+    ),
+    'demo-omar': DemoTrackRecord(
+      completed: 14,
+      onTime: 14,
+      extensions: 2,
+      open: 2,
+      since: 'Jan 2025',
+    ),
+    'demo-sara': DemoTrackRecord(
+      completed: 2,
+      onTime: 1,
+      extensions: 0,
+      open: 1,
+      since: 'Aug 2026',
+    ),
+    'demo-yusuf': DemoTrackRecord(
+      completed: 0,
+      onTime: 0,
+      extensions: 0,
+      open: 1,
+      since: 'Oct 2026',
+    ),
+    'demo-maryam': DemoTrackRecord(
+      completed: 9,
+      onTime: 8,
+      extensions: 0,
+      open: 1,
+      since: 'Jun 2025',
+    ),
+  };
+  final Set<String> _sharedTrackRecordIds = {
+    demoAmina.id,
+    demoOmar.id,
+    'demo-maryam',
+  };
   final List<DemoInvite> _invites = [];
   DemoPerson? _currentPerson;
   DemoLoginMethod? _loginMethod;
@@ -152,6 +211,39 @@ class DemoConnectionsRepository {
   List<DemoPerson> get persons => demoPeople;
   DemoPerson? get currentPerson => _currentPerson;
   DemoLoginMethod? get loginMethod => _loginMethod;
+
+  DemoTrackRecord? get ownTrackRecord => _trackRecords[_currentPerson?.id];
+
+  bool get isOwnTrackRecordShared =>
+      _sharedTrackRecordIds.contains(_currentPerson?.id);
+
+  void setOwnTrackRecordShared(bool shared) {
+    final id = _requireSignedIn().id;
+    if (shared) {
+      _sharedTrackRecordIds.add(id);
+    } else {
+      _sharedTrackRecordIds.remove(id);
+    }
+  }
+
+  bool canRequestTrackRecord(Agreement agreement, String personId) {
+    if (!canViewAgreement(agreement.id) ||
+        personId == _currentPerson?.id ||
+        !_trackRecords.containsKey(personId)) {
+      return false;
+    }
+    // Open fixtures already name their participants. Drafts can also list
+    // intended invitees, so use the confirmed membership for those.
+    return agreement.status == AgreementStatus.draft
+        ? _isParticipant(agreement.id, personId)
+        : agreement.people.any((person) => person.id == personId);
+  }
+
+  DemoTrackRecord? sharedTrackRecordFor(Agreement agreement, String personId) =>
+      canRequestTrackRecord(agreement, personId) &&
+          _sharedTrackRecordIds.contains(personId)
+      ? _trackRecords[personId]
+      : null;
 
   VerificationLevel verificationLevelFor(String? personId) {
     final checks = _verification[personId] ?? const <DemoVerificationCheck>{};

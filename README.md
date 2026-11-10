@@ -6,6 +6,8 @@ The preview has seven agreement types. Drafts can include several people, with a
 
 Profile offers optional, simulated verification. Confirming email and phone shows a Basic badge. Simulating a photo ID and selfie check shows a Verified badge. Badges appear next to people on agreements, including on the **Who paid?** screen. The preview sends no codes and collects no photos.
 
+Profile also shows a fictional Track record with agreement facts. Sharing is optional and lasts for the current session. Shared records open from the people section of a group agreement.
+
 People, agreements and payments in this preview are fictional. Records stay in memory and reset when the process restarts. Authentication and invitations are simulations. Agreement copies remain unsigned, no signatures are collected, and payment records are fictional. The app does not create binding contracts, move money or claim religious certification.
 
 ## Status

@@ -145,7 +145,11 @@ void main() {
     expect(find.text("Who's in it"), findsOneWidget);
     expect(find.text('3 people'), findsOneWidget);
     expect(find.text('Owes a share · £100 of £150 paid'), findsOneWidget);
-    expect(find.text('Is owed'), findsOneWidget);
+    expect(find.textContaining('Is owed', findRichText: true), findsOneWidget);
+    expect(
+      find.textContaining('£0 of £150 paid', findRichText: true),
+      findsOneWidget,
+    );
     expect(find.text('✓ Verified'), findsOneWidget);
     expect(find.text('Basic'), findsOneWidget);
     expect(find.text('With'), findsNothing);

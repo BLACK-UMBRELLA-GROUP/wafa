@@ -16,7 +16,7 @@ These estimates make the remaining work visible. They are not delivery promises 
 | Define MVP contract types | 4 hours | A bounded launch proposal distinguishing preview behaviour from real contract requirements - **Done 8 Nov 2026** (LOCK 2, Agreements. Built 10 Nov 2026 in queue line 4.) |
 | WAFA design chat specifies the dashboard | 5 hours | Real-size pictures, navigation, empty/loading/error states and numbered specifications for Founder review |
 | Define verification tiers | 4 hours | Proposed tiers, required evidence and open privacy questions - **done 8 Nov 2026** (LOCK 3, Verification. Built 10 Nov 2026 in queue line 5.) |
-| Define the Track record (formerly Amanah Score) and fairness review | 4 hours | Behaviour-based facts, private by default, and review requirements before development (LOCK 4, 8 Nov 2026) |
+| Define the Track record (formerly Amanah Score) and fairness review | 4 hours | Behaviour-based facts, private by default, and review requirements before development - **done 8 Nov 2026** (LOCK 4, Track record. Built 10 Nov 2026 in queue line 6.) |
 | Define Evidence Vault limits and pricing | 3 hours | Storage/retention assumptions and a pricing proposal for review |
 | Define scholar vetting and approval | 3 hours | Proposed eligibility and approval process |
 

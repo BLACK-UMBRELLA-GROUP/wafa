@@ -5,6 +5,7 @@ import '../domain/demo_models.dart';
 import 'agreement_document.dart';
 import 'participants_screen.dart';
 import 'payments_screen.dart';
+import 'track_record_screen.dart';
 import 'wafa_ui.dart';
 
 class AgreementDetail extends StatefulWidget {
@@ -105,6 +106,57 @@ class _AgreementDetailState extends State<AgreementDetail> {
       ),
     );
     if (mounted) setState(() {});
+  }
+
+  Future<void> _openTrackRecord(AgreementPerson person) async {
+    final connections = widget.connections;
+    final agreement = widget.repository.findById(widget.id);
+    if (agreement == null ||
+        !connections.canRequestTrackRecord(agreement, person.id)) {
+      return;
+    }
+    final name = connections.person(person.id)?.name ?? person.name;
+    final privateMessage =
+        "${name.split(' ').first} hasn't shared a track record.";
+    if (connections.sharedTrackRecordFor(agreement, person.id) == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(privateMessage)));
+      return;
+    }
+    final destination = await Navigator.of(context).push<int>(
+      MaterialPageRoute<int>(
+        builder: (context) {
+          final latest = widget.repository.findById(widget.id);
+          final record = latest == null
+              ? null
+              : connections.sharedTrackRecordFor(latest, person.id);
+          return Scaffold(
+            appBar: record == null ? AppBar() : null,
+            body: SafeArea(
+              child: record == null
+                  ? Center(child: Text(privateMessage))
+                  : TrackRecordScreen(
+                      record: record,
+                      personName: name,
+                      onBack: () => Navigator.of(context).pop(),
+                    ),
+            ),
+            bottomNavigationBar: WafaNavigationBar(
+              selectedIndex: 1,
+              hideIndicator: true,
+              onSelected: (index) => Navigator.of(context).pop(index),
+            ),
+          );
+        },
+      ),
+    );
+    if (!mounted) return;
+    if (destination != null) {
+      Navigator.of(context).pop(destination);
+    } else {
+      setState(() {});
+    }
   }
 
   void _showChangedRecordMessage() {
@@ -516,19 +568,52 @@ class _AgreementDetailState extends State<AgreementDetail> {
   ) {
     final owes = person.role == AgreementRole.owesShare;
     final paid = agreement.paidPenceFor(person.id);
+    final payment = owes
+        ? ' · ${money(paid)} of ${money(person.sharePence)} paid'
+        : '';
+    final role = person.role.label;
+    final connections = widget.connections;
+    const subtitleStyle = TextStyle(color: WafaColors.muted);
     return ListTile(
       leading: AgreementPersonAvatar(person.name),
       title: VerificationName(
         person.id == currentId ? 'You' : person.name,
         widget.connections.verificationLevelFor(person.id),
       ),
-      subtitle: Text(
-        owes
-            ? '${person.role.label} · ${money(paid)} of '
-                  '${money(person.sharePence)} paid'
-            : person.role.label,
-        style: const TextStyle(color: WafaColors.muted),
-      ),
+      subtitle: connections.canRequestTrackRecord(agreement, person.id)
+          ? Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: '$role · '),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: Semantics(
+                      link: true,
+                      child: InkWell(
+                        onTap: () => _openTrackRecord(person),
+                        child: Text(
+                          connections.sharedTrackRecordFor(
+                                    agreement,
+                                    person.id,
+                                  ) ==
+                                  null
+                              ? 'No shared record'
+                              : 'Record ›',
+                          style: const TextStyle(
+                            color: WafaColors.green,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextSpan(text: payment),
+                ],
+              ),
+              style: subtitleStyle,
+            )
+          : Text('$role$payment', style: subtitleStyle),
       trailing: owes
           ? SizedBox(
               width: 54,

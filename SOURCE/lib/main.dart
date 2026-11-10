@@ -7,6 +7,7 @@ import 'ui/create_agreement.dart';
 import 'ui/agreement_detail.dart';
 import 'ui/demo_account.dart';
 import 'ui/dashboard.dart';
+import 'ui/track_record_screen.dart';
 import 'ui/verification_screen.dart';
 
 void main() {
@@ -80,10 +81,12 @@ class WafaHome extends StatefulWidget {
   State<WafaHome> createState() => _WafaHomeState();
 }
 
+enum _ProfilePage { verification, trackRecord }
+
 class _WafaHomeState extends State<WafaHome> {
   int tab = 0;
   AgreementStatus? dashboardSection;
-  bool verificationOpen = false;
+  _ProfilePage? profilePageOpen;
   String filter = 'All';
   String query = '';
   final searchController = TextEditingController();
@@ -101,8 +104,8 @@ class _WafaHomeState extends State<WafaHome> {
   }
 
   Future<void> openAgreement(Agreement agreement) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
+    final destination = await Navigator.of(context).push<int>(
+      MaterialPageRoute<int>(
         builder: (_) => AgreementDetail(
           repository: widget.repository,
           connections: widget.connections,
@@ -113,7 +116,12 @@ class _WafaHomeState extends State<WafaHome> {
         ),
       ),
     );
-    if (mounted) setState(() {});
+    if (!mounted) return;
+    if (destination != null) {
+      selectTab(destination);
+    } else {
+      setState(() {});
+    }
   }
 
   Future<void> createAgreement() async {
@@ -156,63 +164,64 @@ class _WafaHomeState extends State<WafaHome> {
   }
 
   void selectTab(int value) {
-    if (verificationOpen) ScaffoldMessenger.of(context).clearSnackBars();
+    if (profilePageOpen != null) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+    }
     setState(() {
       dashboardSection = null;
-      verificationOpen = false;
+      profilePageOpen = null;
       tab = value;
     });
   }
 
+  void _setTrackRecordShared(bool shared) {
+    setState(() => widget.connections.setOwnTrackRecordShared(shared));
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            shared
+                ? 'People on your agreements can now see your track record.'
+                : 'Your track record is private again.',
+          ),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) => PopScope(
-    canPop: dashboardSection == null && !verificationOpen,
+    canPop: dashboardSection == null && profilePageOpen == null,
     onPopInvokedWithResult: (didPop, _) {
       if (didPop) return;
-      if (verificationOpen) selectTab(3);
+      if (profilePageOpen != null) selectTab(3);
       if (dashboardSection != null) selectTab(0);
     },
     child: Scaffold(
       body: SafeArea(
-        child: verificationOpen
-            ? VerificationScreen(
-                connections: widget.connections,
-                onBack: () => selectTab(3),
-              )
-            : switch (tab) {
-                1 => agreementsPage(),
-                2 => trackerPage(),
-                3 => profilePage(),
-                _ => dashboard(),
-              },
+        child: switch (profilePageOpen) {
+          _ProfilePage.verification => VerificationScreen(
+            connections: widget.connections,
+            onBack: () => selectTab(3),
+          ),
+          _ProfilePage.trackRecord => TrackRecordScreen(
+            record: widget.connections.ownTrackRecord!,
+            onBack: () => selectTab(3),
+            isShared: widget.connections.isOwnTrackRecordShared,
+            onSharingChanged: _setTrackRecordShared,
+          ),
+          null => switch (tab) {
+            1 => agreementsPage(),
+            2 => trackerPage(),
+            3 => profilePage(),
+            _ => dashboard(),
+          },
+        },
       ),
-      bottomNavigationBar: DecoratedBox(
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: WafaColors.line)),
-        ),
-        child: NavigationBar(
-          selectedIndex: tab,
-          indicatorColor: verificationOpen ? Colors.transparent : null,
-          onDestinationSelected: selectTab,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.grid_view_rounded),
-              label: 'Home',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.description_outlined),
-              label: 'Agreements',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.account_balance_wallet_outlined),
-              label: 'Tracker',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline_rounded),
-              label: 'Profile',
-            ),
-          ],
-        ),
+      bottomNavigationBar: WafaNavigationBar(
+        selectedIndex: tab,
+        hideIndicator: profilePageOpen != null,
+        onSelected: selectTab,
       ),
     ),
   );
@@ -630,40 +639,55 @@ class _WafaHomeState extends State<WafaHome> {
           ),
         ),
         const SizedBox(height: 24),
-        Material(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-            side: const BorderSide(color: WafaColors.line),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: ListTile(
-            leading: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: WafaColors.mint,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.check_circle_outline,
-                color: WafaColors.green,
-              ),
-            ),
-            title: const Text(
-              'Verification',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            subtitle: Text(
-              status,
-              style: const TextStyle(fontSize: 13, color: WafaColors.muted),
-            ),
-            trailing: const Icon(Icons.chevron_right, color: WafaColors.green),
-            onTap: () => setState(() => verificationOpen = true),
-          ),
+        _profilePageRow(
+          Icons.check_circle_outline,
+          'Verification',
+          status,
+          _ProfilePage.verification,
+        ),
+        const SizedBox(height: 14),
+        _profilePageRow(
+          Icons.bar_chart_rounded,
+          'Your track record',
+          widget.connections.isOwnTrackRecordShared
+              ? 'Shared on your agreements'
+              : 'Only you can see it',
+          _ProfilePage.trackRecord,
         ),
       ],
     );
   }
+
+  Widget _profilePageRow(
+    IconData icon,
+    String title,
+    String status,
+    _ProfilePage page,
+  ) => Material(
+    color: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18),
+      side: const BorderSide(color: WafaColors.line),
+    ),
+    clipBehavior: Clip.antiAlias,
+    child: ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: WafaColors.mint,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: WafaColors.green),
+      ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+      subtitle: Text(
+        status,
+        style: const TextStyle(fontSize: 13, color: WafaColors.muted),
+      ),
+      trailing: const Icon(Icons.chevron_right, color: WafaColors.green),
+      onTap: () => setState(() => profilePageOpen = page),
+    ),
+  );
 
   Widget settingsRow(
     IconData icon,

@@ -138,7 +138,25 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(WafaApp(connections: signedInConnections()));
-    expect(find.text('wafa'), findsOneWidget);
+    final brand = find.byType(BrandMark);
+    final icon = find.descendant(of: brand, matching: find.byType(CustomPaint));
+    final wordmark = find.descendant(of: brand, matching: find.text('wafa'));
+    expect(tester.getSize(icon), const Size.square(30));
+    expect(
+      icon,
+      paints
+        ..rrect(
+          rrect: RRect.fromRectAndRadius(
+            const Rect.fromLTWH(0, 0, 30, 30),
+            const Radius.circular(6.75),
+          ),
+          color: WafaColors.green,
+        )
+        ..path(color: Colors.white, strokeWidth: 7, style: PaintingStyle.stroke)
+        ..circle(x: 70, y: 24, radius: 4, color: const Color(0xffbddccc)),
+    );
+    expect(tester.widget<Text>(wordmark).style?.fontSize, 30);
+    expect(find.byIcon(Icons.spa_outlined), findsNothing);
     expect(find.text('PREVIEW'), findsOneWidget);
     expect(find.text('A first look at Wafa'), findsNothing);
     expect(wafaTheme.scaffoldBackgroundColor, Colors.white);

@@ -122,6 +122,13 @@ prototype presets, not approved production identity or security policy. The
 preview does not read phone contacts, phone numbers, camera data or the network.
 Accepted fictional connections are saved only in the current in-memory session.
 
+## App icon and launch screen
+
+The iOS icon and launch screen use the white Wafa mark and mint dot on deep
+green. The app header pairs the same mark with the existing Wafa wordmark.
+From this directory, run `swift tooling/generate_icon.swift` to regenerate
+the iOS AppIcon PNGs.
+
 ## Toolchain and device boundary
 
 Flutter 3.44.2 and Dart 3.12.2 are the installed pinned caches. Ordinary Flutter

@@ -179,7 +179,7 @@ class BrandMark extends StatelessWidget {
   Widget build(BuildContext context) => const Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Icon(Icons.spa_outlined, color: WafaColors.green, size: 29),
+      CustomPaint(size: Size.square(30), painter: _WafaIconPainter()),
       SizedBox(width: 8),
       Text(
         'wafa',
@@ -192,6 +192,44 @@ class BrandMark extends StatelessWidget {
       ),
     ],
   );
+}
+
+class _WafaIconPainter extends CustomPainter {
+  const _WafaIconPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(6.75)),
+      Paint()..color = WafaColors.green,
+    );
+
+    // Draw the same 100 × 100 paths as the LOCK 6 icon SVG.
+    canvas.save();
+    canvas.scale(size.width / 100);
+    final waw = Path()
+      ..moveTo(58, 52)
+      ..cubicTo(47, 54, 43, 45, 47, 38)
+      ..cubicTo(51, 31, 63, 32, 64, 42)
+      ..cubicTo(66, 58, 52, 72, 33, 76);
+    canvas.drawPath(
+      waw,
+      Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 7
+        ..strokeCap = StrokeCap.round,
+    );
+    canvas.drawCircle(
+      const Offset(70, 24),
+      4,
+      Paint()..color = const Color(0xffbddccc),
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant _WafaIconPainter oldDelegate) => false;
 }
 
 class DemoBadge extends StatelessWidget {

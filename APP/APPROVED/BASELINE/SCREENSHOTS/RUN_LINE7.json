@@ -1,0 +1,159 @@
+{
+  "id": "EVID-WAFA-BASELINE-2026-11-10-LINE7-ROW5",
+  "brief": "DOC-WAFA-0022 V2, both clarifications and QUESTIONS row 5",
+  "queue_line": 7,
+  "recorded_at_utc": "2026-11-10T12:06:51+00:00",
+  "result": "FAILED",
+  "source_commit": "5315573a5be88802313e97a59b527d8279f7bbde",
+  "local_changes": [
+    "simulator runner option",
+    "run documentation",
+    "SDK integration test and offline lock additions"
+  ],
+  "flutter_version": "3.44.2",
+  "xcode_version": "27.2 (27B52)",
+  "first_launch_check_exit": 0,
+  "swift_package_url_scan_exit": 1,
+  "pub_get": "Skipped because the existing package configuration included the cached SDK integration_test.",
+  "build_mode": "Debug simulator build",
+  "build_exit": 0,
+  "guards": [
+    "--no-pub",
+    "-disableAutomaticPackageResolution",
+    "-skipPackageUpdates"
+  ],
+  "bundle": {
+    "identifier": "app.wafa.preview",
+    "version": "0.1.0",
+    "build": "3",
+    "layout": "old baseline layout",
+    "platform": "iphonesimulator",
+    "architecture": "arm64"
+  },
+  "shutdown_all_exit": 0,
+  "simulator_service_restart_count": 1,
+  "simulator_service_killall_exit": 0,
+  "routes": [
+    {
+      "runtime": "iOS 27.2",
+      "name": "iPhone 18 Pro Max",
+      "udid": "5DD1AB8F-C0A2-4B1E-9B47-A4535BDE7740",
+      "boot_exit": 0,
+      "bootstatus_exit": 0,
+      "bootstatus_elapsed_seconds": 29,
+      "install_result": "simctl install timed out after 45s (timeout wrapper exit 124, no simctl diagnostic).",
+      "launch_reached": false,
+      "shutdown_exit": 0,
+      "final_state": "Shutdown"
+    },
+    {
+      "runtime": "iOS 27.0",
+      "name": "iPhone 18 Pro Max",
+      "udid": "4630CD9A-431C-4968-9C55-5DED8B2FF1BB",
+      "native_display": {
+        "pixels": [
+          1320,
+          2868
+        ],
+        "points": [
+          440,
+          956
+        ],
+        "scale": 3,
+        "measured_by": "simctl io enumerate, primary integrated display"
+      },
+      "boot_exit": 0,
+      "bootstatus_results": [
+        {
+          "timeout_seconds": 95,
+          "timeout_wrapper_exit": 124,
+          "last_status": "Waiting on Data Migration",
+          "last_plugin": "com.apple.securityd.KeychainMigrator (KeychainMigrator.migrator, user-agnostic)"
+        },
+        {
+          "timeout_seconds": 90,
+          "timeout_wrapper_exit": 124,
+          "last_status": "Waiting on Data Migration",
+          "last_plugin": "com.apple.dataaccess.migrator (DAAccount.migrator)",
+          "last_boot_elapsed": "03:12"
+        }
+      ],
+      "install_reached": false,
+      "launch_reached": false,
+      "shutdown_exit": 0,
+      "final_state": "Shutdown"
+    }
+  ],
+  "validation": {
+    "bash_syntax_help_and_refusals": "PASS",
+    "cli_tests_passed": 11,
+    "cached_version_tests_passed": 8,
+    "analyzer": "PASS",
+    "flutter_tests_passed": 88
+  },
+  "integration_runner_reached": false,
+  "captures_expected": 9,
+  "screenshots": [],
+  "approval_waits": [],
+  "historical_run": "RUN.json",
+  "previous_line7_attempt": {
+    "id": "EVID-WAFA-ROW7-2026-11-10-CLARIFICATION2",
+    "brief": "DOC-WAFA-0022 V2 Clarification 2",
+    "queue_line": 7,
+    "recorded_at_utc": "2026-11-10T11:38:16+00:00",
+    "result": "QUESTION",
+    "question_row": 5,
+    "source_commit": "5315573a5be88802313e97a59b527d8279f7bbde",
+    "local_changes": [
+      "simulator runner option",
+      "run documentation",
+      "SDK integration test and offline lock additions"
+    ],
+    "flutter_version": "3.44.2",
+    "xcode_version": "27.2 (27B52)",
+    "first_launch_check_exit": 0,
+    "offline_pub_get_exit": 0,
+    "swift_package_url_scan_exit": 1,
+    "build_mode": "Debug simulator build",
+    "build_exit": 0,
+    "bundle": {
+      "identifier": "app.wafa.preview",
+      "version": "0.1.0",
+      "build": "3",
+      "layout": "old baseline layout",
+      "platform": "iphonesimulator",
+      "architecture": "arm64"
+    },
+    "simulator": {
+      "name": "iPhone 18 Pro Max",
+      "runtime": "iOS 27.2",
+      "udid": "5DD1AB8F-C0A2-4B1E-9B47-A4535BDE7740",
+      "initial_state": "Shutdown",
+      "final_state": "Shutdown",
+      "final_shutdown_exit": 0,
+      "attempts": [
+        {
+          "boot_exit": 0,
+          "bootstatus_finished": true,
+          "install_exit": 204,
+          "install_error": "NSMachErrorDomain code -308: The operation couldn’t be completed. (Mach error -308 - (ipc/mig) server died)",
+          "note": "Install stayed pending about 90s; error returned during shutdown.",
+          "appinfo_timeout_seconds": 8,
+          "listapps_timeout_seconds": 8
+        },
+        {
+          "boot_exit": 0,
+          "bootstatus_finished": true,
+          "install_path": "absolute path to the verified Debug simulator bundle",
+          "install_timeout_seconds": 45
+        }
+      ]
+    },
+    "launch_reached": false,
+    "integration_runner_reached": false,
+    "captures_expected": 9,
+    "screenshots": [],
+    "approval_waits": [],
+    "historical_run": "RUN.json"
+  }
+}

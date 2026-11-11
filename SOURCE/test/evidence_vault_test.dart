@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wafa/domain/demo_connections.dart';
 import 'package:wafa/domain/demo_models.dart';
 import 'package:wafa/ui/agreement_detail.dart';
+import 'package:wafa/ui/evidence_vault.dart';
 import 'package:wafa/ui/wafa_ui.dart';
 
 import 'demo_test_helpers.dart';
@@ -255,6 +256,75 @@ void main() {
       );
     },
   );
+
+  testWidgets('a witness gains evidence access only after confirmation', (
+    tester,
+  ) async {
+    final repository = DemoAgreementRepository();
+    final draft = _createDraft(repository);
+    final connections = connectionsFor(repository);
+    final ownerEvidence = repository.addEvidence(
+      draft.id,
+      type: EvidenceType.receipt,
+      addedByPersonId: demoAmina.id,
+    );
+    final invite = connections.createInvite(
+      draft.id,
+      ParticipantRole.witness,
+      intendedPersonId: demoSara.id,
+    );
+    connections.signIn(DemoLoginMethod.google, demoSara.id);
+    expect(connections.requestJoin(invite.code).status, InviteStatus.requested);
+
+    await _showDetail(tester, repository, draft.id, connections: connections);
+    expect(find.text('This agreement is private'), findsOneWidget);
+    expect(find.byType(EvidenceSection), findsNothing);
+    expect(find.text(ownerEvidence.name), findsNothing);
+    expect(_meter(1), findsNothing);
+    expect(_addEvidence, findsNothing);
+    expect(_removeEvidence, findsNothing);
+
+    var additions = 0;
+    tester.state<NavigatorState>(find.byType(Navigator)).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => AddEvidenceScreen(
+          repository: repository,
+          connections: connections,
+          agreementId: draft.id,
+          onAdded: () => additions++,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Add evidence'), findsOneWidget);
+    expect(find.textContaining(draft.title), findsNothing);
+    expect(find.text('Photo'), findsNothing);
+    expect(_meter(1), findsNothing);
+    expect(_chooseFile, findsNothing);
+    expect(additions, 0);
+    expect(repository.evidenceFor(draft.id), [ownerEvidence]);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    connections.signIn(DemoLoginMethod.apple, demoAmina.id);
+    connections.confirmRequest(invite.id);
+    connections.signIn(DemoLoginMethod.google, demoSara.id);
+
+    await _showDetail(tester, repository, draft.id, connections: connections);
+    await _reveal(tester, find.text(ownerEvidence.name));
+    expect(find.text(ownerEvidence.name), findsOneWidget);
+    expect(_meter(1), findsOneWidget);
+    await _openAdd(tester);
+    await _choosePhoto(tester);
+    expect(find.text(_demoAdded), findsOneWidget);
+
+    final files = repository.evidenceFor(draft.id);
+    expect(files, hasLength(2));
+    expect(files.first, ownerEvidence);
+    expect(files.last.name, 'Laptop photo');
+    expect(files.last.type, EvidenceType.photo);
+    expect(files.last.addedByPersonId, demoSara.id);
+  });
 
   testWidgets('a confirmed participant can only remove their own evidence', (
     tester,

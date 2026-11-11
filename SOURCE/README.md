@@ -3,12 +3,12 @@ id: DOC-WAFA-0006
 type: GUIDE
 status: CURRENT
 feature: CODE AND RUNNING
-purpose: Wafa First Phone Preview
+purpose: Wafa phone preview and developer guide
 links: []
 owner: WAFA chat
 ---
 
-# Wafa First Phone Preview
+# Wafa phone preview
 
 Wafa is a standalone Flutter visual prototype with a white
 background and dark-green accents. Records are fictional and session-local.
@@ -35,31 +35,53 @@ visual acceptance remain distinct.
 
 ## Actual screens and navigation
 
-- Home: puts open invitations, overdue agreements, signatures and payments
-  due within seven days first. Five tiles open lists by status. When nothing
-  needs attention, Home shows the next active payment if there is one. Members
-  with no visible agreements can start their first one or open waiting
-  invitations.
+- **Home.** The Needs you dashboard lists open invitations, overdue agreements,
+  agreements awaiting signatures and active payments due within seven days, in
+  that order. Tiles open dedicated lists for Active, Drafts, Awaiting signatures,
+  Completed and Overdue. When nothing needs attention, Home shows the next
+  active payment if there is one. Members with no visible agreements can start
+  their first one or open waiting invitations.
 - Sign-in preview: select Amina, Omar or Sara and simulate Apple or Google
   sign-in without opening a provider or collecting credentials.
 - Agreements: name/title search, status filters and detail navigation.
-- Creation: Type → Details → Review; four demo categories, validated fictional
-  counterparty, positive GBP value, agreed date and unsigned local draft.
-- Details: illustrative summary, participant roster, document-copy entry,
-  payment-timeline entry and completion for an eligible non-loan obligation.
+- **Creation.** Type → Details → Review supports interest-free loans, sales,
+  item lending, item rental, services, family agreements and custom agreements.
+  Select fictional people, assign who owes a share, who is owed and who is a
+  witness, then split a positive GBP total equally or set each amount. Review
+  the due date, people and shares before saving an unsigned local draft. Saving
+  prepares a separate demo invitation for each selected person other than you.
+- **Details.** View the summary, people, unsigned agreement copy, payment timeline
+  and Evidence Vault. Group agreements show payment progress for each person who
+  owes a share. Eligible non-loan obligations can be marked complete locally.
 - Agreement copy: a selectable, copyable document-style record generated only
   from stored demo fields, including people, roles, value, due date and status.
   Missing clauses are not invented and the copy is clearly unsigned.
 - Payments: overall due date, paid/remaining summary and itemised fictional
   payments with amount, date, method, recorder, optional reference and notes.
-  Party roles may add records; Witness roles are view-only.
+  On an eligible agreement with recorded shares, **Who paid?** selects the
+  person whose share the payment counts towards. Parties may add payment
+  records. Witnesses can view them.
 - People: add a fictional party or witness to an unsigned draft by Wafa ID,
   accepted Wafa contact, invitation preview or QR preview.
 - Invitations: request access under the intended fictional account. The
   agreement remains private until its creator confirms the requester.
 - Tracker: example loan totals and progress, retaining completed loan history.
-- Profile: simulated identity/provider, account switching, Wafa contacts,
-  preview scope, privacy explanation and planned language support.
+- **Profile.** View the current fictional account, switch accounts, manage Wafa
+  contacts and open Verification or Your track record.
+- **Verification.** Optional demo checks show a Basic badge for confirmed email
+  and phone, and a Verified badge after the simulated photo ID and selfie check.
+  Badges appear on Profile and alongside people in the draft, review, agreement
+  and Who paid? screens. The checks send no codes and collect no ID or photos.
+- **Track record.** Profile shows fixed fictional facts such as completed
+  agreements and on-time payments. Sharing is optional and can be turned off
+  during the session. A shared record opens from the people section of a group
+  agreement when the viewer has access. Drafts require confirmed membership.
+- **Evidence Vault.** Confirmed participants, including witnesses, can view and
+  add sample entries on the agreement. The preview caps the list at 25 entries
+  and displays a 10 MB limit per file. **Choose a file** adds metadata for a
+  fictional sample such as a receipt. The app reads and uploads no files and
+  keeps the metadata in memory. Only the person who added an entry can remove
+  it while the agreement is a draft.
 
 Every relevant screen labels the preview. No invitation, charge, notice or
 signature is sent. No religious certification or legal enforceability is claimed.
@@ -68,22 +90,26 @@ signature is sent. No religious certification or legal enforceability is claimed
 
 | File | Responsibility |
 | --- | --- |
-| lib/main.dart | Session-owned repository, four tabs, search and navigation |
-| lib/domain/demo_connections.dart | Fictional identities, access, contacts, roles and invitation state |
-| lib/domain/demo_models.dart | Immutable agreements/payments and validated in-memory mutations |
+| lib/main.dart | Session-owned repositories, four tabs, search and navigation |
+| lib/domain/demo_connections.dart | Fictional identities, access, roles, contacts, invitations, verification and Track record sharing |
+| lib/domain/demo_models.dart | Agreements, shares, payments and in-memory evidence metadata |
 | lib/ui/wafa_ui.dart | Theme, shared components and exact GBP parsing |
-| lib/ui/create_agreement.dart | Three-step unsigned demo creation |
-| lib/ui/agreement_detail.dart | Private detail view and entries to the document, payments and participant roster |
+| lib/ui/dashboard.dart | Home dashboard and agreement lists by status |
+| lib/ui/create_agreement.dart | Three-step unsigned draft creation and share allocation |
+| lib/ui/agreement_detail.dart | Agreement access, participant progress, document and payment links, Track record links and Evidence Vault |
 | lib/ui/agreement_document.dart | Generated unsigned document-style copy and guarded clipboard action |
-| lib/ui/payments_screen.dart | Payment summary, timeline and validated party-only entry form |
+| lib/ui/payments_screen.dart | Payment summary, timeline, payer selection and validated party-only entry form |
 | lib/ui/demo_account.dart | Simulated provider sign-in and incoming invitation flow |
 | lib/ui/participants_screen.dart | Creator-managed participant and invitation rehearsal |
+| lib/ui/verification_screen.dart | Optional simulated identity checks and badge display |
+| lib/ui/track_record_screen.dart | Fictional facts and session-local sharing controls |
+| lib/ui/evidence_vault.dart | Fictional evidence entries and add/remove controls |
 | tooling/flutter_cached.sh and flutter_env.sh | Restricted cached SDK commands |
 | tooling/cached_version.dart | Fail-closed SDK metadata validation |
 | tooling/xcode_backend.dart and xcode_backend.sh | Project-local generic Flutter backend adaptation |
 | tooling/generate_icon.swift | Original CoreGraphics app icon generator |
 | run.sh | Release build, local signing and explicit-device installation |
-| test/*.dart | Domain, creation, detail and app regressions |
+| test/*.dart | Domain and screen regressions for preview flows |
 
 The generic Flutter backend retains its BSD licence in tooling/LICENSE.
 Its launcher paths and cache checks are adapted locally and resolve relative to this folder.
@@ -95,6 +121,8 @@ Founder decision; no script hard-coded the old name).
 Form input is converted to integer pence and validated by the repository.
 Payment records cannot be zero, negative, greater than the remaining value,
 future-dated or applied to an ineligible state. Notes and references are bounded.
+On agreements with recorded shares, a payment also cannot exceed the selected
+person's remaining share.
 Each entry records a fictional amount, date, method and actor, but Wafa neither
 moves money nor verifies that it moved. The UI warns against entering bank
 account or card details. A default repository is created once for the app
@@ -114,8 +142,9 @@ unsigned draft. An invitation code permits a request only. The creator must
 confirm the exact fictional Wafa account before that person can see the shared
 draft. Opening, requesting or joining does not accept terms or sign anything.
 Each confirmed person has a bound Party or Witness role, and only confirmed
-people can see the roster. A name typed during draft creation remains a label;
-it does not identify or link another account.
+people can see the roster. Selecting a fictional account during creation
+records their intended role and share. Access for that account starts only
+after the creator confirms its join request.
 
 The three identities, seven-day expiry and sequential demo codes are fixed
 prototype presets, not approved production identity or security policy. The
@@ -124,8 +153,8 @@ Accepted fictional connections are saved only in the current in-memory session.
 
 ## App icon and launch screen
 
-The iOS icon and launch screen use the white Wafa mark and mint dot on deep
-green. The app header pairs the same mark with the existing Wafa wordmark.
+The iOS icon and green launch screen use the white waw mark and mint dot.
+The app header pairs the same mark with the Wafa wordmark.
 From this directory, run `swift tooling/generate_icon.swift` to regenerate
 the iOS AppIcon PNGs.
 Run `python3 tooling/test_ios_brand_assets.py` to check the iOS asset catalogs,
@@ -142,8 +171,8 @@ review; the scripts must fail rather than fall back to the ordinary wrappers.
 
 Runner uses app.wafa.preview, display name Wafa, and an iOS 15 minimum for this
 SDK. Source is prepared as version 0.1.0 build 3. The delivery results below
-record earlier local builds; they do not establish signing readiness for a new
-checkout or visual acceptance of build 3.
+record specific local builds. A new checkout requires its own signing setup
+for native delivery.
 
 ### Prepare a checkout for native delivery
 
@@ -266,14 +295,29 @@ Installed-build App.framework/App SHA-256:
 The local artifact remains
 build/wafa-ios-release/Build/Products/Release-iphoneos/Runner.app.
 
+## Phone delivery and source checks — 11 November 2026
+
+The signed Release preview installed and launched as Wafa `0.1.0` (build `3`).
+The installed-app query confirmed the version and build. Commit
+`9fa1c1bb6f97f89af9b2132e8861adb50b1b17fa` supplied the delivered source. Its
+six LOCKs cover the Home dashboard, seven agreement types and group agreements,
+optional verification, Track record, Evidence Vault and matching waw branding. Deep,
+strict signature verification passed. The delivery commit had clean cached
+Flutter analysis and 115 passing Flutter tests. Founder visual acceptance
+requires a separate review.
+
+During the 11 November documentation update, cached Flutter `analyze --no-pub`
+reported no issues and `test --no-pub` passed 116 tests. The offline run-command,
+cached-wrapper and iOS brand asset checks also passed.
+
 ## Remaining scope and action trace
 
-Real accounts, storage, AI, validated contract templates, identity verification,
-real witnesses, signatures, money movement, bank verification and translations
-are not implemented. Nor are PDF export, receipt evidence, reminders or agreed
-instalment schedules. Name, domain and trademark checks and qualified legal/
-scholarly validation remain pending in the product summaries. There are no
-database migrations.
+Real accounts, persistent storage, file uploads, AI, validated contract
+templates, identity checks, witness participation, signatures, money movement,
+bank verification and translations remain outside the preview. Other remaining
+scope includes PDF export, reminders, agreed instalment schedules and dispute
+handling. The [roadmap](../ROADMAP.md) tracks naming and qualified review work.
+There are no database migrations.
 
 No new shared OA is raised for these existing roadmap items in this bounded
 visual preview: it does not authorise their production implementation. Future

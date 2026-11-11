@@ -2,19 +2,21 @@
 
 WAFA (وفاء, "faithfulness") is a standalone Flutter prototype for a faith community exploring how to create and honour agreements. It rehearses agreement creation, participants, unsigned document copies and payment records in a local phone preview.
 
+The Home dashboard puts open invitations, overdue agreements, agreements awaiting signatures and payments due soon in **Needs you**. Five status tiles open dedicated agreement lists.
+
 The preview has seven agreement types. Drafts can include several people, with amounts split equally or entered per person. Saving prepares an individual demo invitation for each other person. Access starts after the owner confirms the join request. When an open agreement has recorded shares, choose who paid before entering a payment.
 
 Profile offers optional, simulated verification. Confirming email and phone shows a Basic badge. Simulating a photo ID and selfie check shows a Verified badge. Badges appear next to people on agreements, including on the **Who paid?** screen. The preview sends no codes and collects no photos.
 
 Profile also shows a fictional Track record with agreement facts. Sharing is optional and lasts for the current session. Shared records open from the people section of a group agreement.
 
-Every agreement has a free Evidence Vault for up to 25 files of 10 MB each. In the preview, choosing a file adds a fictional entry. Everyone on the agreement can see it, and only the person who added it can remove it while the agreement is a draft.
+Every agreement has an Evidence Vault with a 25-entry cap and a displayed 10 MB limit per file. **Choose a file** adds a fictional entry in memory without opening a file picker. Confirmed participants can see the entries. Only the person who added an entry can remove it while the agreement is a draft.
 
 People, agreements and payments in this preview are fictional. Records stay in memory and reset when the process restarts. Authentication and invitations are simulations. Agreement copies remain unsigned, no signatures are collected, and payment records are fictional. The app does not create binding contracts, move money or claim religious certification.
 
 ## Status
 
-Pre-launch visual demo, version `0.1.0+3`. A local iPhone preview has been delivered; the current source and its delivery limits are documented in [SOURCE/README.md](SOURCE/README.md). WAFA is active again (8 Nov 2026): design work goes ahead with the WAFA design chat, and features are built only from LOCKed briefs in `APP/APPROVED/BUILD_QUEUE.md`. No production backend or public app release yet.
+Pre-launch visual demo, version `0.1.0+3`. The iPhone preview delivered on 11 November 2026 included all six LOCKs and the matching waw app icon, green launch screen and in-app mark. Delivery details and checks are in [SOURCE/README.md](SOURCE/README.md). WAFA is active again (8 Nov 2026): design work goes ahead with the WAFA design chat, and features are built only from LOCKed briefs in `APP/APPROVED/BUILD_QUEUE.md`. No production backend or public app release yet.
 
 ## Built with
 

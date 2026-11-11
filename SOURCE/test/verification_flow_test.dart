@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wafa/domain/demo_connections.dart';
 import 'package:wafa/main.dart';
 import 'package:wafa/ui/wafa_ui.dart';
 
 import 'demo_test_helpers.dart';
 
 void main() {
-  testWidgets('Profile reflects each simulated verification level', (
+  testWidgets('Profile and the payer chooser reflect each verification level', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -17,6 +18,8 @@ void main() {
     await tester.pumpAndSettle();
 
     Future<void> tap(Finder finder) async {
+      await tester.ensureVisible(finder);
+      await tester.pumpAndSettle();
       await tester.tap(finder);
       await tester.pumpAndSettle();
     }
@@ -24,9 +27,47 @@ void main() {
     final verification = find.text('Verification');
     final back = find.byTooltip('Back');
     final badge = find.byType(VerificationBadge);
-    await tap(find.text('Profile'));
+    final profile = find.text('Profile');
+
+    Future<void> expectPayerBadge(String? label) async {
+      await tap(find.text('Agreements'));
+      final agreement = find.text("Mum's care costs");
+      await tester.scrollUntilVisible(
+        agreement,
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tap(agreement);
+      await tap(find.byKey(const ValueKey('record-payment')));
+      expect(find.text('Who paid?'), findsOneWidget);
+
+      final payer = find.byKey(ValueKey('payer-${demoAmina.id}'));
+      final payerBadge = find.descendant(of: payer, matching: badge);
+      expect(payer, findsOneWidget);
+      expect(payerBadge, label == null ? findsNothing : findsOneWidget);
+      if (label != null) {
+        expect(
+          find.descendant(of: payerBadge, matching: find.text(label)),
+          findsOneWidget,
+        );
+      }
+      expect(
+        find.descendant(
+          of: find.byKey(ValueKey('payer-${demoOmar.id}')),
+          matching: find.text('✓ Verified'),
+        ),
+        findsOneWidget,
+      );
+
+      await tap(back);
+      await tap(back);
+      await tap(profile);
+    }
+
+    await tap(profile);
     expect(find.text('Not verified yet'), findsOneWidget);
     expect(badge, findsNothing);
+    await expectPayerBadge(null);
     await tap(verification);
     expect(find.text('Done'), findsOneWidget);
     expect(find.text('Profile'), findsOneWidget);
@@ -51,6 +92,7 @@ void main() {
       findsOneWidget,
     );
 
+    await expectPayerBadge('Basic');
     await tap(verification);
     await tap(find.widgetWithText(OutlinedButton, 'Verify'));
     expect(find.text('Done'), findsNWidgets(3));
@@ -68,12 +110,14 @@ void main() {
       findsOneWidget,
     );
 
+    await expectPayerBadge('✓ Verified');
     await tap(verification);
     await tap(find.text('Demo: start again as email only'));
     expect(find.text('Done'), findsOneWidget);
     expect(badge, findsNothing);
     await tap(back);
     expect(find.text('Not verified yet'), findsOneWidget);
+    await expectPayerBadge(null);
     expect(tester.takeException(), isNull);
   });
 }

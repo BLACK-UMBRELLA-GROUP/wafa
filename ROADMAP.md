@@ -2,23 +2,23 @@
 
 **Overall:** roughly **150 hours** of work to a usable first version (real agreements, participants and records, a backend, document copies, tests). The table below is the first slice.
 
-WAFA is a local, fictional-data prototype. WAFA is active again (Founder, 8 Nov 2026). Work is built only from LOCKed briefs in `APP/APPROVED/BUILD_QUEUE.md`. The work below comes from the existing approved to-do lists in the [Overview](APP/OVERVIEW/Summary.md) and [Future Features](APP/FUTURE%20FEATURES/Summary.md) summaries. It is planning work awaiting scheduling, not a list of approved implementation briefs.
+WAFA is a local, fictional-data prototype. WAFA is active again (Founder, 8 Nov 2026). The planning milestones below come from the [Overview](APP/OVERVIEW/Summary.md) and [Future Features](APP/FUTURE%20FEATURES/Summary.md) summaries. The [build queue](APP/APPROVED/BUILD_QUEUE.md) tracks implementation from LOCKed briefs.
 
-## Next planning work — approximately 27 hours
+## Completed planning milestones — approximately 27 hours
 
-These estimates make the remaining work visible. They are not delivery promises or new approvals.
+The nine milestones were completed from 8 to 10 November 2026. The table retains the original estimates.
 
 | Work | Estimate | Result to review |
 | --- | ---: | --- |
-| Check domain availability | 1 hour | Available names and unresolved choices for the Founder |
-| Prepare a trademark-review brief | 2 hours | Questions and evidence for qualified review; no registration or clearance claim |
-| Check App Store name availability | 1 hour | Current availability and naming constraints |
+| Check domain availability | 1 hour | Available names and unresolved choices for the Founder - **Done 10 Nov 2026** (availability snapshot). The Founder chose “Decide later”. No domain was purchased or registered. |
+| Prepare a trademark-review brief | 2 hours | Questions and evidence for qualified review; no registration or clearance claim - **Done 10 Nov 2026**. No filing was made as part of this work. |
+| Check App Store name availability | 1 hour | Current availability and naming constraints - **Done 10 Nov 2026** (availability snapshot). |
 | Define MVP contract types | 4 hours | A bounded launch proposal distinguishing preview behaviour from real contract requirements - **Done 8 Nov 2026** (LOCK 2, Agreements. Built 10 Nov 2026 in queue line 4.) |
-| WAFA design chat specifies the dashboard | 5 hours | Real-size pictures, navigation, empty/loading/error states and numbered specifications for Founder review |
+| WAFA design chat specifies the dashboard | 5 hours | Real-size pictures, navigation, empty/loading/error states and numbered specifications for Founder review - **Done 8 Nov 2026** (LOCK 1, Home dashboard. Built 10 Nov 2026 in queue line 3.) |
 | Define verification tiers | 4 hours | Proposed tiers, required evidence and open privacy questions - **done 8 Nov 2026** (LOCK 3, Verification. Built 10 Nov 2026 in queue line 5.) |
 | Define the Track record (formerly Amanah Score) and fairness review | 4 hours | Behaviour-based facts, private by default, and review requirements before development - **done 8 Nov 2026** (LOCK 4, Track record. Built 10 Nov 2026 in queue line 6.) |
 | Define Evidence Vault limits and pricing | 3 hours | Storage/retention assumptions and a pricing proposal for review - **Done 10 Nov 2026** (LOCK 5, Evidence Vault. Built 10 Nov 2026 in queue line 8.) |
-| Define scholar vetting and approval | 3 hours | Proposed eligibility and approval process |
+| Define scholar vetting and approval | 3 hours | Proposed eligibility and approval process - **Done 10 Nov 2026** (process agreed for the future marketplace). |
 
 The Founder and the WAFA design chat decide scope and priorities. Codex does not implement these proposals as part of public-repository preparation.
 

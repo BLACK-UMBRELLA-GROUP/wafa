@@ -128,6 +128,8 @@ The iOS icon and launch screen use the white Wafa mark and mint dot on deep
 green. The app header pairs the same mark with the existing Wafa wordmark.
 From this directory, run `swift tooling/generate_icon.swift` to regenerate
 the iOS AppIcon PNGs.
+Run `python3 tooling/test_ios_brand_assets.py` to check the iOS asset catalogs,
+PNG dimensions and transparency metadata, and launch configuration offline.
 
 ## Toolchain and device boundary
 

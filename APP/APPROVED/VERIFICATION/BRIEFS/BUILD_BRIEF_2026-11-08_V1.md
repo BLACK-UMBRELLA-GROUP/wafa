@@ -25,3 +25,11 @@ Build after line 4. ROADMAP row: **"Define verification tiers"** - tick it and c
 | 7 | Tests | Levels (email only → none, + phone → Basic, + ID → Verified), badge text and placement, optional (no agreement blocked), Profile status line for each level. `flutter analyze` clean, all tests pass |
 | 8 | Render | w17-w20 and w14 into `VERIFICATION/BUILT/V1/` as `<master>__master_beside_build.png` |
 | 9 | Hand back | Task note; line 5 BUILT or FAILED; tick the ROADMAP row and close its issue; commit and push (core rule 2) |
+
+## Founder note — 10 Nov 2026 (WAFA chat)
+
+Founder: "Build now, check on my iPhone (Recommended)". The simulator on the Mac is not working, so: do not wait for baseline captures (line 7 is WITHDRAWN), and **skip the simulator render step** - say in the task note that renders were skipped. Widget tests still run. The WAFA chat checks the result on Shakeel's iPhone after queue line 10 installs it.
+
+## Clarification — 10 Nov 2026 (QUESTIONS row 7, WAFA chat)
+
+The badge also shows on Who paid? (spec §1 rule 3). Master: `VERIFICATION/MASTERS/w31_verification__who_paid.png`. `AGREEMENTS/MASTERS/w15` is line 4's picture from before badges and is not the target for this line.

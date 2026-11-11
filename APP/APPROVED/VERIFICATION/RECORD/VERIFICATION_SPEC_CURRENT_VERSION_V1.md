@@ -15,7 +15,7 @@ owner: WAFA chat
 | Status | CURRENT_VERSION — LOCK 3, 8 Nov 2026 |
 | Founder's words | "A · Two badges (Recommended)" · "No, always optional (Recommended)" · "LOCK it (Recommended)" |
 | ROADMAP row | "Define verification tiers" (4 h) - finished by this LOCK |
-| Masters | `MASTERS/w17`-`w20`, 1290 × 2796; badges also in `AGREEMENTS/MASTERS/w10`-`w15` (re-rendered). Prototype V10 |
+| Masters | `MASTERS/w17`-`w20` and `w31` (Who paid? with badges, added 10 Nov - QUESTIONS row 7), 1290 × 2796; badges also in `AGREEMENTS/MASTERS/w10`-`w14` (re-rendered). Prototype V10, Who paid? badge V20 |
 
 ## 1. Rules
 
@@ -74,3 +74,4 @@ LOCK 1 and LOCK 2 screens apart from the badge next to names · sign-in preview 
 | Date | Version | Change |
 |---|---|---|
 | 2026-11-08 | V1 | LOCK 3 - Founder words above |
+| 2026-11-10 | V1 | Master w31 added: the badge on Who paid? that rule 3 already required (QUESTIONS row 7) - no rule change |

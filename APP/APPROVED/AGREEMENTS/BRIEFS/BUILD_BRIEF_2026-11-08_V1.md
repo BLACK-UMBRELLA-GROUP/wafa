@@ -29,3 +29,7 @@ Build after line 3. ROADMAP row: **"Define MVP contract types"** - tick it and c
 | 11 | Tests | Types list (7, order), equal split with pennies, set amounts total, each error message and its order, Custom warning only for Custom, save creates people and invitations, Who paid? caps at the share, two-person agreement still shows the counterparty, Item rental replaces Rental in example records. `flutter analyze` clean, all tests pass |
 | 12 | Render | w08, w10, w11, w12, w13, w14, w15, w16 into `AGREEMENTS/BUILT/V1/` as `<master>__master_beside_build.png`; re-render LOCK 1 `DASHBOARD/BUILT/V1/w01` with the new records |
 | 13 | Hand back | Task note ("Built from", beside images, Disk); line 4 BUILT or FAILED; tick the ROADMAP row and close its issue; commit and push (core rule 2) |
+
+## Founder note — 10 Nov 2026 (WAFA chat)
+
+Founder: "Build now, check on my iPhone (Recommended)". The simulator on the Mac is not working, so: do not wait for baseline captures (line 7 is WITHDRAWN), and **skip the simulator render step** - say in the task note that renders were skipped. Widget tests still run. The WAFA chat checks the result on Shakeel's iPhone after queue line 10 installs it.

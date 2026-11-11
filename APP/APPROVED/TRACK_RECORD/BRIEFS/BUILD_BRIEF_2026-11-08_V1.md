@@ -24,3 +24,7 @@ Build after line 5. ROADMAP row: **"Define the Amanah Score proposal and fairnes
 | 6 | Tests | Private by default for Sara/Yusuf; share/stop sharing changes what others see; "No shared record" message; paid-on-time text incl. "—" for 0; no record outside agreements. `flutter analyze` clean, all tests pass |
 | 7 | Render | w21-w23, w17, w14 into `TRACK_RECORD/BUILT/V1/` as `<master>__master_beside_build.png` |
 | 8 | Hand back | Task note; line 6 BUILT or FAILED; tick the ROADMAP row and close its issue; commit and push (core rule 2) |
+
+## Founder note — 10 Nov 2026 (WAFA chat)
+
+Founder: "Build now, check on my iPhone (Recommended)". The simulator on the Mac is not working, so: do not wait for baseline captures (line 7 is WITHDRAWN), and **skip the simulator render step** - say in the task note that renders were skipped. Widget tests still run. The WAFA chat checks the result on Shakeel's iPhone after queue line 10 installs it.

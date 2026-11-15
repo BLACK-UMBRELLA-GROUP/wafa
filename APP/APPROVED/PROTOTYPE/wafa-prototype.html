@@ -13,23 +13,13 @@
 :root[data-theme="dark"]{--page:#0f1714;--panel:#17221e;--text:#e6eee9;--soft:#9fb1a7;--edge:#2a3a33;--pick:#bddccc;--pickText:#0f1714;color-scheme:dark}
 html,body{height:100%}
 body{background:var(--page);color:var(--text);font-family:var(--ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px;box-sizing:border-box}
-.wrap{display:flex;gap:24px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
-.rail{width:280px;max-width:100%;display:flex;flex-direction:column;gap:14px}
-.rail h1{font-size:18px;margin:0;letter-spacing:-.3px}
-.rail .ver{font-size:12px;color:var(--soft)}
-.box{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}
-.box h2{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--soft);margin:0}
-.pills{display:flex;flex-wrap:wrap;gap:6px}
-.pill{border:1px solid var(--edge);background:transparent;color:var(--text);border-radius:999px;padding:6px 10px;font:500 13px var(--ui);cursor:pointer}
-.pill[aria-pressed="true"]{background:var(--pick);color:var(--pickText);border-color:var(--pick)}
-.pill:focus-visible,.app button:focus-visible{outline:2px solid #2f7d62;outline-offset:2px}
-.demo{display:flex;flex-direction:column;gap:4px}
-.demo button{text-align:left;border:0;background:transparent;color:var(--text);font:14px var(--ui);padding:6px 8px;border-radius:8px;cursor:pointer}
-.demo button:hover{background:var(--page)}
-.demo button[aria-pressed="true"]{background:var(--pick);color:var(--pickText)}
-.hint{font-size:12.5px;line-height:1.45;color:var(--soft);margin:0}
-.stage{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
-.backout{align-self:flex-start;border:1px solid var(--edge);background:var(--panel);color:var(--text);border-radius:999px;padding:6px 12px;font:500 13px var(--ui);cursor:pointer}
+.bar{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:1100px;margin:0 auto 14px}
+.strip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center}
+.strip b{font-size:11px;font-weight:600;color:var(--soft);text-transform:uppercase;letter-spacing:.6px;margin-right:2px}
+.strip button,.pback{font:500 12.5px var(--ui);padding:6px 12px;border-radius:999px;border:1px solid var(--edge);background:var(--panel);color:var(--text);cursor:pointer}
+.strip button[aria-pressed="true"]{background:var(--pick);color:var(--pickText);border-color:var(--pick)}
+.strip button:focus-visible,.pback:focus-visible,.app button:focus-visible{outline:2px solid #2f7d62;outline-offset:2px}
+.stage{display:flex;justify-content:center;min-width:0}
 .fit{position:relative}
 #dev{width:430px;height:932px;border-radius:54px;background:#0b0f0d;padding:12px;box-sizing:content-box;transform-origin:top left;position:absolute;top:0;left:0}
 .app{width:430px;height:932px;border-radius:44px;overflow:hidden;background:#fff;color:var(--ink);font-family:var(--ui);position:relative;display:flex;flex-direction:column}
@@ -114,7 +104,9 @@ svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stro
 .ph h4{margin:0;font-size:20px}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;border:1px solid var(--line);border-radius:18px;padding:16px;font-size:14.5px}
 .kv dt{color:var(--muted)}.kv dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
-.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--green)}
+.prog{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.prog i{display:block;height:100%;background:var(--green)}
+.pend{display:flex;flex-direction:column;gap:8px;background:var(--warnBg);border-radius:16px;padding:12px 14px}.pend h5{margin:0;font-size:14px;color:var(--warn)}.pend .pr{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink)}.pend .pr span{flex:1}.pend .pr small{display:block;color:var(--muted);font-size:12px}
+.onlyline{margin:0;font-size:12.5px;color:var(--muted);text-align:center}
 .steps{display:flex;gap:8px}.steps span{flex:1;font-size:12px;font-weight:600;color:var(--muted);border-top:3px solid var(--line);padding-top:6px}.steps .on{color:var(--green);border-color:var(--green)}
 .kind{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:13px 14px;text-align:left;cursor:pointer;color:var(--ink);width:100%}
 .kind.on{background:var(--mint);border:1.4px solid var(--green)}
@@ -148,40 +140,41 @@ svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stro
 .chipbtn{border:1px solid var(--green);background:#fff;color:var(--green);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer}
 .trc{font-weight:600;color:var(--green)}
 .trlink{border:0;background:none;padding:0;font:inherit;color:var(--green);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.meter{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--muted)}.meter b{color:var(--ink)}.meter i{display:block;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.meter i b{display:block;height:100%;background:var(--green)}
+.evtypes{display:flex;flex-direction:column;gap:8px}.evtypes .kind{padding:9px 12px}.evtypes .kind .tic{width:34px;height:34px;flex-basis:34px}
 .mini{width:56px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.mini i{display:block;height:100%;background:var(--green)}
+.spring{flex:1;display:flex;flex-direction:column;background:linear-gradient(160deg,#dfe9e3,#c9d8d0 55%,#b7c9c0);padding:18px 22px 22px;gap:18px}
+.sbgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 14px;justify-items:center}
+.sbapp{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;padding:0;cursor:default}
+button.sbapp{cursor:pointer}
+.sbi{width:62px;height:62px;border-radius:14px;display:block}
+.sbl{font-size:11.5px;color:#1c2a24;font-weight:500;min-height:14px}
+.sbsmall{margin-top:auto;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.55);border-radius:16px;padding:10px 14px;font-size:12px;color:#33463d}
+.sbsmall div{display:flex;gap:12px;align-items:center}
+.sbdock{display:flex;justify-content:space-around;background:rgba(255,255,255,.45);border-radius:28px;padding:12px}
+.splash{flex:1;display:grid;place-items:center;margin-top:-54px}
 .toast{position:absolute;left:20px;right:20px;bottom:104px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.4;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}
 .toast.on{opacity:1;transform:none}
 .demoBtn{border:1px dashed #b7c7bd;background:#fbfdfb;color:var(--muted);border-radius:12px;padding:10px;font-size:13px;cursor:pointer}
-@media (max-width:760px){.rail{width:100%}}
 </style>
 
-<div class="wrap">
-  <div class="rail">
-    <div><h1>WAFA Prototype</h1><div class="ver" id="ver">V13 · LOCK 4 track record · 8 Nov 2026</div></div>
-    <div class="box"><h2>Home</h2><p class="hint">LOCK 1 · Needs you first (8 Nov). The agreement page, Tracker and Profile here are rough redraws, not part of the LOCK.</p></div>
-    <div class="box"><h2>Try a state</h2><div class="demo" id="demo"></div></div>
-    <div class="box"><h2>Launch types</h2><div class="pills" id="ts"></div><p class="hint" id="tsHint"></p></div>
-    <div class="box"><h2>Many people, one agreement</h2><p class="hint">LOCK 2 (8 Nov). Open “Mum’s care costs”, or Create an agreement → any type → Continue to add people and split the amount.</p><button class="pill" data-fam="1">Open Mum’s care costs</button></div>
-    <div class="box"><h2>Verification</h2><p class="hint">LOCK 3 (8 Nov): two badges, always optional.</p><button class="pill" data-vo="A">Open Verification</button></div>
-    <div class="box"><h2>Track record</h2><p class="hint">LOCK 4 (8 Nov): facts, not a score. Also open Mum’s care costs and tap the link by Omar.</p><button class="pill" data-ao="A">Open my track record</button></div>
-    <div class="box"><h2>Phone</h2><div class="pills" id="size"></div></div>
-    <p class="hint">Example records only. Tap anything inside the phone: sections open filtered lists, agreements open their details, and the tabs work.</p>
-  </div>
-  <div class="stage">
-    <button class="backout" id="backout" type="button">‹ Back</button>
-    <div class="fit" id="fit"><div id="dev"><div class="app" id="screen"></div></div></div>
-  </div>
+<div class="bar">
+  <div class="strip" id="flows" role="group" aria-label="What to show"></div>
+  <div class="strip" id="states" role="group" aria-label="Try a state"></div>
+  <div class="strip" id="uopt" role="group" aria-label="Open choice" hidden></div>
+  <button class="pback" id="backout" type="button" title="Prototype only - in the app, use the back arrow">‹ Back</button>
 </div>
+<div class="stage"><div class="fit" id="fit"><div id="dev"><div class="app" id="screen"></div></div></div></div>
 
 <script>
 /* ---------- icons ---------- */
-const P={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',pen:'<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',edit:'<path d="M4 6h10M4 10h10M4 14h6"/><path d="M14 20l1-4 5-5 3 3-5 5z"/>',check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',scale:'<path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/>',plus:'<path d="M12 5v14M5 12h14"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',back:'<path d="M15 5l-7 7 7 7"/>',leaf:'<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19l7-7"/>',bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',key:'<circle cx="8" cy="14" r="4"/><path d="M11 11l9-9M17 5l3 3"/>',case:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>',hand:'<path d="M3 14l4-4 4 2 3-3 7 7-4 4-6-2-4 1z"/>',box:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c1-4 4-6 7-6s6 2 7 6"/><circle cx="17" cy="7" r="2.5"/><path d="M17 12c2.5 0 4.5 2 5 5"/>',gift:'<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>',wifi:'<path d="M2 9a15 15 0 0 1 20 0M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0"/><path d="M12 20v.5"/>'};
+const P={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',pen:'<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',edit:'<path d="M4 6h10M4 10h10M4 14h6"/><path d="M14 20l1-4 5-5 3 3-5 5z"/>',check:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',scale:'<path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/>',plus:'<path d="M12 5v14M5 12h14"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',back:'<path d="M15 5l-7 7 7 7"/>',leaf:'<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19l7-7"/>',bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',key:'<circle cx="8" cy="14" r="4"/><path d="M11 11l9-9M17 5l3 3"/>',case:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>',hand:'<path d="M3 14l4-4 4 2 3-3 7 7-4 4-6-2-4 1z"/>',box:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c1-4 4-6 7-6s6 2 7 6"/><circle cx="17" cy="7" r="2.5"/><path d="M17 12c2.5 0 4.5 2 5 5"/>',gift:'<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>',cam:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l2-3h4l2 3"/><circle cx="12" cy="13" r="3.5"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',wifi:'<path d="M2 9a15 15 0 0 1 20 0M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0"/><path d="M12 20v.5"/>'};
 const ic=(n,s)=>`<svg class="i" viewBox="0 0 24 24" ${s?`style="width:${s}px;height:${s}px"`:''} aria-hidden="true">${P[n]}</svg>`;
 
 /* ---------- example data (fictional; today = 8 Nov 2026) ---------- */
 const TODAY=new Date(2026,10,8);
 const BASE=[
- {id:'a1',title:'Family support',who:'Yusuf Rahman',kind:'Interest-free loan',amt:480,paid:160,due:new Date(2026,10,28),status:'active'},
+ {id:'a1',title:'Family support',who:'Yusuf Rahman',kind:'Interest-free loan',amt:480,paid:160,due:new Date(2026,10,28),status:'active',owedByYou:true,pend:[{from:'Yusuf',amt:40,on:'7 Nov'}]},
  {id:'a2',title:'Van hire',who:'Maryam Saleh',kind:'Item rental',amt:850,paid:0,due:new Date(2026,10,12),status:'active'},
  {id:'a3',title:'Bicycle sale',who:'Adam Yusuf',kind:'Sale',amt:75,paid:0,due:new Date(2026,10,30),status:'awaiting'},
  {id:'a4',title:'Garden design',who:'Samira Khan',kind:'Service',amt:120,paid:0,due:new Date(2026,10,1),status:'overdue'},
@@ -199,7 +192,7 @@ const days=d=>Math.round((d-TODAY)/864e5);
 const fmt=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 
 /* ---------- state ---------- */
-const S={ver:{email:true,phone:false,id:false,selfie:false},d:null,ts:'A',kind:null,invite:true,scen:'normal',tab:0,pages:[],size:'pro',filt:'all',list:[]};
+const S={view:null,icon:'C',splash:'G',lt:0,ev:{},evt:null,ver:{email:true,phone:false,id:false,selfie:false},d:null,ts:'A',kind:null,invite:true,scen:'normal',tab:0,pages:[],size:'pro',filt:'all',list:[]};
 const page=()=>S.pages[S.pages.length-1];
 const open=p=>{S.pages.push(p);render()};
 const back=()=>{if(S.pages.length){S.pages.pop();render()}else say('You are on a main tab. Use the tabs below.')};
@@ -213,13 +206,15 @@ const count=k=>data().filter(a=>a.status===k).length;
 /* ---------- option strip ---------- */
 
 /* ---------- screen parts ---------- */
-const topBar=()=>`<div class="top"><div class="mark"><span class="dot">و</span>Wafa</div><span class="badge">PREVIEW</span><button class="av" data-act="profile" aria-label="Your profile">A</button></div>`;
+const topBar=()=>`<div class="top"><div class="mark">${iconSvg('C',30)}wafa</div><span class="badge">PREVIEW</span><button class="av" data-act="profile" aria-label="Your profile">A</button></div>`;
 const tile=a=>`<button class="tile" data-ag="${a.id}"><span class="tic">${ic(a.people?'users':a.kind==='Item rental'?'key':a.kind==='Sale'?'doc':a.kind==='Service'?'pen':'leaf')}</span><span class="tx"><span class="t1">${a.title}</span><span class="t2">${a.who} · ${a.kind}</span></span><span class="amt">${gbp(a.amt)}<span class="st ${a.status}">${LABEL[a.status]}</span></span></button>`;
 function needs(){
   const L=[];
   if(S.invite) L.push(['soon',null,'Invitation · Omar Farooq','Asks you to join an agreement','Open']);
   data().filter(a=>a.status==='overdue').forEach(a=>L.push(['overdue',a,`${a.title} · ${a.who}`,`${-days(a.due)} days overdue · ${gbp(a.amt-a.paid)} left`,'Open']));
   data().filter(a=>a.status==='awaiting').forEach(a=>L.push(['awaiting',a,`${a.title} · ${a.who}`,'Waiting for your signature','Open']));
+  /* LOCK 7 V1 · the person owed confirms each payment (Founder 13 Nov "Yes, they confirm (Recommended)") */
+  data().filter(a=>a.owedByYou&&a.pend&&a.pend.length).forEach(a=>a.pend.forEach(x=>L.push(['awaiting',a,`${a.title} · ${a.who}`,`${x.from} says they paid ${gbp(x.amt)} · confirm it`,'Open'])));
   data().filter(a=>a.status==='active'&&days(a.due)<=7).forEach(a=>L.push(['soon',a,`${a.title} · ${a.who}`,`Due in ${days(a.due)} days · ${gbp(a.amt-a.paid)} left`,'Open']));
   return L;
 }
@@ -287,22 +282,57 @@ function trBody(name,me){const t=TR[name];const pct=t.done?Math.round(t.ontime/t
  const facts=`<dl class="kv"><dt>Agreements completed</dt><dd>${t.done}</dd><dt>Paid on time</dt><dd>${t.done?`${t.ontime} of ${t.done} (${pct}%)`:'—'}</dd><dt>Extensions agreed</dt><dd>${t.ext}</dd><dt>Open now</dt><dd>${t.open}</dd><dt>On Wafa since</dt><dd>${t.since}</dd></dl>`;
  const head=`<div class="calm" style="align-items:flex-start">${ic('check',22)}<div><b>${me?'Your track record':'Track record'}</b><span>${me?'Only facts, never a score. You choose whether people on your agreements can see it.':'Shared by '+name.split(' ')[0]+'. Facts only, never a score.'}</span></div></div>`;
  return head+facts+`<p class="sub" style="font-size:12.5px">An extension both sides agreed is never counted as late. Wealth, amounts and income are never used.</p>`+(me?`<button class="btnO" data-act="trshare" style="justify-content:center">${TR['Amina Noor'].shared?'Stop sharing my record':'Share my record on my agreements'}</button>`:'')}
+/* LOCK 5 V1 · Evidence Vault - 25 files per agreement, 10 MB each, free at launch (Founder 10 Nov "A · Per agreement (Recommended)", "Free at launch (Recommended)", "LOCK it (Recommended)") */
+const EVT={photo:['Photo','cam'],receipt:['Receipt','doc'],bank:['Bank confirmation','check'],document:['Document','doc'],voice:['Voice note','mic']};
+const EV0={a4:[{t:'photo',name:'Garden before the work',mb:2.4,on:'2 Oct'},{t:'receipt',name:'Plants receipt',mb:0.3,on:'5 Oct'}],a7:[{t:'bank',name:'Transfer to Sara · £100',mb:0.2,on:'1 Nov'}]};
+const evOf=a=>S.ev[a.id]||(S.ev[a.id]=[]);
+const locked=a=>a.status!=='draft';
+function meter(a){const n=evOf(a).length;return `<div class="meter"><span><b>${n} of 25 files</b> on this agreement · up to 10 MB each</span><i><b style="width:${n/25*100}%"></b></i></div>`}
+function evBlock(a){const L=evOf(a);return `<div class="sec"><h4>Evidence</h4><button class="link" data-act="addev">+ Add</button></div>${L.length?`<div class="plist">${L.map((f,i)=>`<div class="prow"><span class="pav">${ic(EVT[f.t][1],16)}</span><span class="tx"><span class="t1">${f.name}</span><span class="t2">${EVT[f.t][0]} · ${f.mb} MB · added ${f.on}</span></span>${locked(a)?'':`<button class="rm" data-act="rmev" data-i="${i}" aria-label="Remove ${f.name}">×</button>`}</div>`).join('')}</div>`:`<p class="sub" style="font-size:13px">No evidence yet. Add receipts, photos or bank confirmations so everyone has the same record.</p>`}${meter(a)}`}
+/* LOCK 7 V1 · Agreement rules (Founder 13 Nov: "Yes, they confirm (Recommended)", "Only the person owed (Recommended)", "No, never (Recommended)", "A · Waiting box (Recommended)", "LOCK it (Recommended)") */
+const owedName=a=>{const o=a.people&&a.people.find(x=>x.role==='owed');return o?(o.you?'you':o.name.split(' ')[0]):a.owedByYou?'you':a.who.split(' ')[0]};
+function pendBlock(a){const L=a.pend||[];if(!L.length)return '';
+ const mine=a.owedByYou;
+ const btns=i=>mine?`<button class="chipbtn" data-act="pconf" data-i="${i}">Confirm</button><button class="chipbtn" data-act="prej" data-i="${i}">Not received</button>`:`<button class="link" data-act="pdemo" data-i="${i}">Demo: confirm as ${owedName(a)}</button>`;
+ return `<div class="pend"><h5>Waiting to be confirmed</h5>${L.map((x,i)=>`<div class="pr"><span>${gbp(x.amt)} from ${x.from}<small>Recorded ${x.on} · ${mine?'only you can confirm it':'counts once '+owedName(a)+' confirms'}</small></span>${btns(i)}</div>`).join('')}</div>`;
+}
+function closeRule(a){if(!['active','overdue'].includes(a.status))return '';
+ if(a.owedByYou)return `<button class="btnO" data-act="fullpaid" style="justify-content:center">Mark as paid in full</button><p class="onlyline">Only you can do this, because you are owed.</p>`;
+ if(a.people)return `<p class="onlyline">Only ${owedName(a)} can mark this as paid in full.</p>`;return ''}
 const PAGES={
+ addev:p=>{const a=S.list.find(x=>x.id===p.id);return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>Add evidence</h4></div><p class="sub">${a.title} · what are you adding?</p><div class="evtypes">${Object.entries(EVT).map(([k,[l,i]])=>`<button class="kind ${S.evt===k?'on':''}" data-evt="${k}"><span class="tic">${ic(i)}</span><span class="tx"><span class="t1">${l}</span></span><span class="rad">${S.evt===k?ic('check',22):''}</span></button>`).join('')}</div><p class="warnline" style="background:var(--mint);color:var(--green)">Everyone on this agreement can see it. Once everyone has signed, evidence can’t be removed - it stays with the agreement.</p>${meter(a)}<div class="spacer"></div><button class="btnG" data-act="pickev">Choose a file</button>`},
  record:p=>`<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>${p.me?'Your track record':p.name}</h4></div>${trBody(p.me?'Amina Noor':p.name,p.me)}<div class="spacer"></div>`,
  verify:()=>{const L=VER.A;return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>Verification</h4></div><div class="vhead"><span class="pav" style="width:48px;height:48px;flex-basis:48px;font-size:18px">A</span><div><b>Amina Noor</b> ${badge(S.ver)}<p class="sub" style="font-size:13px">Others see your badge next to your name on every agreement. Verification is optional.</p></div></div>${`<div class="lv"><span class="${['basic','verified'].includes(level(S.ver))?'on':''}">Basic<br><small>Email + phone</small></span><span class="${level(S.ver)==='verified'?'on':''}">Verified<br><small>+ photo ID and selfie</small></span></div>`}<div class="plist">${L.map(([k,t,d])=>`<div class="prow"><span class="pav">${S.ver[k]?ic('check',18):''}</span><span class="tx"><span class="t1">${t}</span><span class="t2">${d}</span></span>${S.ver[k]?'<span class="pamt" style="color:var(--green)">Done</span>':`<button class="chipbtn" data-act="vdo" data-k="${k}">${k==='id'||k==='selfie'?'Verify':'Add'}</button>`}</div>`).join('')}</div><p class="sub" style="font-size:12.5px">Photo ID is checked by a specialist ID company. Wafa keeps the result, not a copy of your ID.</p><div class="spacer"></div><button class="demoBtn" data-act="vreset">Demo: start again as email only</button>`},
  details:()=>{const total=shares();const nO=owers().length;return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>New agreement</h4></div><div class="steps"><span class="on">1  Type</span><span class="on">2  Details</span><span>3  Review</span></div><div><p class="hello" style="font-size:22px">Make the details clear.</p><p class="sub">${KINDS[S.d.kind][0]} · add everyone who is part of it.</p></div><label class="fld"><span>Agreement title <em>optional</em></span><input id="d-title" value="${S.d.title}" placeholder="Give this promise a name"></label><div class="sec"><h4>Who’s in it</h4><span class="sub" style="font-size:13px">${S.d.people.length} people</span></div><div class="plist">${S.d.people.map((x,i)=>personRow(x,i,true)).join('')}<button class="addp" data-act="addp">${ic('plus',18)} Add a person</button></div><div class="seg" role="group" aria-label="How is it split?"><button data-act="split" data-v="equal" aria-pressed="${S.d.split==='equal'}">Split equally</button><button data-act="split" data-v="set" aria-pressed="${S.d.split==='set'}">Set each amount</button></div>${S.d.split==='equal'?`<label class="fld"><span>Total amount</span><span class="amtIn big">£<input type="number" inputmode="numeric" min="0" id="d-total" value="${S.d.total||''}"></span></label><p class="sub" style="font-size:13px">${nO?`${nO} ${nO===1?'person owes':'people owe'} ${gbp(Math.floor(total/nO))} each`:'Nobody owes a share yet'}</p>`:`<p class="sub" style="font-size:13px">Total: <b>${gbp(total)}</b></p>`}<label class="fld"><span>Due date</span><button class="datebtn" data-act="date">15 Dec 2026</button></label>${S.d.kind==='custom'?`<p class="warnline">Your own terms must not include interest or anything prohibited. If you are unsure, ask a scholar before you sign.</p>`:''}<div class="spacer"></div>${S.d.err?`<p class="errline" role="alert">${S.d.err}</p>`:''}<button class="btnG" data-act="review">Review draft</button>`},
  review:()=>{const total=shares();return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>New agreement</h4></div><div class="steps"><span class="on">1  Type</span><span class="on">2  Details</span><span class="on">3  Review</span></div><div><p class="hello" style="font-size:22px">${S.d.title||KINDS[S.d.kind][0]}</p><p class="sub">Take a moment to check your draft. Nothing is signed or sent.</p></div><dl class="kv"><dt>Type</dt><dd>${KINDS[S.d.kind][0]}</dd><dt>Total</dt><dd>${gbp(total)}</dd><dt>People</dt><dd>${S.d.people.length}</dd><dt>Currency</dt><dd>British pound (GBP)</dd></dl><div class="plist">${S.d.people.map((x,i)=>personRow(x,i,false)).join('')}</div><p class="sub" style="font-size:13px">Each person gets an invitation and signs the same agreement. It becomes active when everyone has signed, witnesses too.</p><div class="spacer"></div><button class="btnG" data-act="save">Save draft</button>`},
- payby:p=>{const a=S.list.find(x=>x.id===p.id);return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>Who paid?</h4></div><p class="sub">${a.title} · choose who this payment is from. Demo: records £50.</p><div class="plist">${a.people.map((x,i)=>x.role!=='owes'?'':`<button class="prow tap" data-act="paid" data-i="${i}" ${x.paid>=x.share?'disabled':''}><span class="pav">${x.name[0]}</span><span class="tx"><span class="t1">${x.you?'You':x.name}</span><span class="t2">${gbp(x.paid)} of ${gbp(x.share)} paid</span></span><span class="pamt">${x.paid>=x.share?'Paid':gbp(x.share-x.paid)+' left'}</span></button>`).join('')}</div><div class="spacer"></div>`},
+ payby:p=>{const a=S.list.find(x=>x.id===p.id);return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>Who paid?</h4></div><p class="sub">${a.title} · choose who this payment is from. Demo: records £50. It counts once ${owedName(a)} confirms.</p><div class="plist">${a.people.map((x,i)=>x.role!=='owes'?'':`<button class="prow tap" data-act="paid" data-i="${i}" ${x.paid+(x.pending||0)>=x.share?'disabled':''}><span class="pav">${x.name[0]}</span><span class="tx"><span class="t1">${x.you?'You':x.name} ${badge(vOf(x.you?null:x.name))}</span><span class="t2">${gbp(x.paid)} of ${gbp(x.share)} paid${x.pending?` · ${gbp(x.pending)} waiting`:''}</span></span><span class="pamt">${x.paid>=x.share?'Paid':x.paid+(x.pending||0)>=x.share?'Waiting':gbp(x.share-x.paid-(x.pending||0))+' left'}</span></button>`).join('')}</div><div class="spacer"></div>`},
  create:()=>{const set=TYPESETS[S.ts];return `<div class="ph"><button class="bk" data-act="back" aria-label="Close">${ic('back',18)}</button><h4>New agreement</h4></div><div class="steps"><span class="on">1  Type</span><span>2  Details</span><span>3  Review</span></div><div><p class="hello" style="font-size:22px">Every promise starts here.</p><p class="sub">Choose what you would like to record. You can review everything before saving.</p></div>${set.map(k=>{const [l,d,i]=KINDS[k];const on=S.kind===k;return `<button class="kind ${on?'on':''}" data-kind="${k}"><span class="tic">${ic(i)}</span><span class="tx"><span class="t1">${l}</span><span class="t2">${d}</span></span><span class="rad">${on?ic('check',22):''}</span></button>`}).join('')}${LATER[S.ts]?`<p class="sub" style="font-size:13px">${LATER[S.ts]}</p>`:''}<div class="spacer"></div><button class="btnG" data-act="cont">Continue</button>`},
  section:p=>{const l=SECTIONS.find(s=>s[0]===p.k)[1];return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>${l}</h4></div>${listOf(data().filter(a=>a.status===p.k),p.k)}`},
  agreement:p=>{const a=data().find(x=>x.id===p.id)||BASE.find(x=>x.id===p.id);const pc=Math.round(a.paid/a.amt*100);
   const act={overdue:`<button class="btnG" data-act="remind">Send a reminder</button>`,awaiting:`<button class="btnG" data-act="sign">Sign this agreement</button>`,draft:`<button class="btnG" data-act="send">Send for signatures</button>`,active:`<button class="btnG" data-act="pay">Record a payment</button>`,completed:''}[a.status];
-  return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>${a.title}</h4></div><span class="st ${a.status}" style="align-self:flex-start">${LABEL[a.status]}</span>${a.people?`<div class="sec"><h4>Who’s in it</h4><span class="sub" style="font-size:13px">${a.people.length} people</span></div><div class="plist">${a.people.map(x=>`<div class="prow"><span class="pav">${x.name[0]}</span><span class="tx"><span class="t1">${x.you?'You':x.name} ${badge(vOf(x.you?null:x.name))}</span><span class="t2">${RLAB[x.role]}${!x.you&&TR[x.name]?` · <button class="trlink" data-act="other" data-n="${x.name}">${trChip(x.name)||'No shared record'}</button>`:''}${x.role==='owes'?` · ${gbp(x.paid)} of ${gbp(x.share)} paid`:''}</span></span>${x.role==='owes'?`<span class="mini"><i style="width:${x.share?Math.round(x.paid/x.share*100):0}%"></i></span>`:''}</div>`).join('')}</div>`:''}<dl class="kv">${a.people?'':`<dt>With</dt><dd>${a.who}</dd>`}<dt>Type</dt><dd>${a.kind}</dd><dt>Amount</dt><dd>${gbp(a.amt)}</dd><dt>Paid</dt><dd>${gbp(a.paid)}</dd><dt>Due</dt><dd>${fmt(a.due)}</dd></dl><div class="bar" aria-label="${pc}% paid"><i style="width:${pc}%"></i></div><p class="sub">${pc}% paid · ${gbp(a.amt-a.paid)} left</p><button class="btnO" data-act="docview">${ic('doc',18)} View the agreement copy</button><div class="spacer"></div>${act}`}
+  return `<div class="ph"><button class="bk" data-act="back" aria-label="Back">${ic('back',18)}</button><h4>${a.title}</h4></div><span class="st ${a.status}" style="align-self:flex-start">${LABEL[a.status]}</span>${a.people?`<div class="sec"><h4>Who’s in it</h4><span class="sub" style="font-size:13px">${a.people.length} people</span></div><div class="plist">${a.people.map(x=>`<div class="prow"><span class="pav">${x.name[0]}</span><span class="tx"><span class="t1">${x.you?'You':x.name} ${badge(vOf(x.you?null:x.name))}</span><span class="t2">${RLAB[x.role]}${!x.you&&TR[x.name]?` · <button class="trlink" data-act="other" data-n="${x.name}">${trChip(x.name)||'No shared record'}</button>`:''}${x.role==='owes'?` · ${gbp(x.paid)} of ${gbp(x.share)} paid`:''}</span></span>${x.role==='owes'?`<span class="mini"><i style="width:${x.share?Math.round(x.paid/x.share*100):0}%"></i></span>`:''}</div>`).join('')}</div>`:''}<dl class="kv">${a.people?'':`<dt>With</dt><dd>${a.who}</dd>`}<dt>Type</dt><dd>${a.kind}</dd><dt>Amount</dt><dd>${gbp(a.amt)}</dd><dt>Paid</dt><dd>${gbp(a.paid)}</dd><dt>Due</dt><dd>${fmt(a.due)}</dd></dl><div class="prog" aria-label="${pc}% paid"><i style="width:${pc}%"></i></div><p class="sub">${pc}% paid · ${gbp(a.amt-a.paid)} left</p>${pendBlock(a)}${evBlock(a)}<button class="btnO" data-act="docview">${ic('doc',18)} View the agreement copy</button><div class="spacer"></div>${act}${closeRule(a)}`}
 };
 
 /* ---------- render ---------- */
 const screen=document.getElementById('screen');
+/* LOCK 6 V1 · App icon + launch screen + in-app mark - waw letter, green launch (Founder 10 Nov "C · Waw letter", "Green with white mark", "Yes, match the icon (Recommended)", "LOCK it (Recommended)") */
+const ICONS={
+ C:{name:'Waw letter',svg:(fg,bg,ac)=>`<rect width="100" height="100" fill="${bg}"/><path d="M58 52 C47 54 43 45 47 38 C51 31 63 32 64 42 C66 58 52 72 33 76" fill="none" stroke="${fg}" stroke-width="7" stroke-linecap="round"/><circle cx="70" cy="24" r="4" fill="${ac}"/>`}};
+const GREEN='#123f32',MINT='#bddccc';
+const iconSvg=(k,px,rad=true)=>`<svg viewBox="0 0 100 100" width="${px}" height="${px}" style="border-radius:${rad?px*0.225:0}px;display:block" aria-label="Wafa app icon">${ICONS[k].svg('#ffffff',GREEN,MINT)}</svg>`;
+const markSvg=(k,px,fg,ac)=>`<svg viewBox="0 0 100 100" width="${px}" height="${px}" style="display:block" aria-hidden="true">${ICONS[k].svg(fg,'transparent',ac)}</svg>`;
+function springboard(){
+  const tile=i=>`<span class="sbapp"><span class="sbi" style="background:${['#d9dfdc','#cfd8e3','#e4dccf','#d6e1d4','#e1d6dc','#d4dbe4'][i%6]}"></span><span class="sbl">&nbsp;</span></span>`;
+  return `<div class="spring"><div class="sbgrid">${Array.from({length:11},(_,i)=>tile(i)).join('')}<button class="sbapp" data-act="launch" aria-label="Open Wafa">${iconSvg(S.icon,62)}<span class="sbl">Wafa</span></button>${Array.from({length:8},(_,i)=>tile(i+3)).join('')}</div>
+   <div class="sbsmall"><span>Small sizes</span><div>${[40,29,20].map(n=>iconSvg(S.icon,n)).join('')}</div></div>
+   <div class="sbdock">${[0,1,2,3].map(i=>`<span class="sbi" style="background:${['#cfd8e3','#d6e1d4','#e4dccf','#d9dfdc'][i]}"></span>`).join('')}</div></div>`;
+}
+function splash(){
+  const dark=S.splash==='G';
+  return `<div class="splash" style="background:${dark?GREEN:'#ffffff'}">${markSvg(S.icon,dark?132:120,dark?'#ffffff':GREEN,dark?MINT:'#5f8f7b')}</div>`;
+}
 function render(){
+  if(S.view){screen.className='app'+(S.size==='se'?' se':'');screen.innerHTML=`<div class="sb" style="${S.view==='splash'&&S.splash==='G'?'color:#fff':''}"><span>9:41</span><span class="island"></span><span>●●● ▮</span></div>${S.view==='spring'?springboard():splash()}<div class="toast" id="toast"></div>`;drawRail();fit();return}
   const pg=page();
   const inner=pg?PAGES[pg.t](pg):[home,agreementsTab,tracker,profile][S.tab]();
   screen.className='app'+(S.size==='se'?' se':'');
@@ -322,9 +352,11 @@ screen.addEventListener('click',e=>{
   if(b.dataset.sec) return open({t:'section',k:b.dataset.sec});
   if(b.dataset.ag) return open({t:'agreement',id:b.dataset.ag});
   if(b.dataset.kind){S.kind=b.dataset.kind;return render()}
+  if(b.dataset.evt){S.evt=b.dataset.evt;return render()}
   if(S.d&&['addp','rmp','role','split'].includes(b.dataset.act))S.d.err='';
   if(b.dataset.lf){S.filt=b.dataset.lf;return render()}
   const a=b.dataset.act;
+  if(a==='launch'){S.view='splash';render();clearTimeout(S.lt);S.lt=setTimeout(()=>{S.view=null;reset();render()},1600);return}
   switch(a){
     case 'back':return back();
     case 'profile':S.tab=3;S.pages=[];return render();
@@ -333,9 +365,14 @@ screen.addEventListener('click',e=>{
     case 'cont':if(!S.kind)return say('Choose a type first.');newDraft();return open({t:'details'});
     case 'addp':{const next=PEOPLE.find(n=>!S.d.people.some(x=>x.name===n));if(!next)return say('Everyone in this demo is already added.');S.d.people.push({name:next,role:'owes',share:0,paid:0});return render()}
     case 'rmp':S.d.people.splice(+b.dataset.i,1);return render();
-    case 'role':{const x=S.d.people[+b.dataset.i];x.role=ROLES[(ROLES.indexOf(x.role)+1)%3];return render()}
+    case 'role':{const x=S.d.people[+b.dataset.i];if(x.you){x.role=x.role==='owes'?'owed':'owes';render();return say('You can’t be the witness on your own agreement. A witness is someone else.')}x.role=ROLES[(ROLES.indexOf(x.role)+1)%3];return render()}
     case 'split':S.d.split=b.dataset.v;return render();
     case 'verify':return open({t:'verify'});
+    case 'addev':S.evt=null;return open({t:'addev',id:page().id});
+    case 'pickev':{if(!S.evt)return say('Choose what you are adding first.');const a=S.list.find(x=>x.id===page().id);const L=evOf(a);
+      if(L.length>=25)return say('This agreement has 25 files, the most it can hold.');
+      L.push({t:S.evt,name:EVT[S.evt][0]+' '+(L.length+1),mb:+(0.4+Math.random()*3).toFixed(1),on:'10 Nov'});S.pages.pop();render();return say('Demo: file added. In the real app you choose it from your phone.')}
+    case 'rmev':{const a=S.list.find(x=>x.id===page().id);evOf(a).splice(+b.dataset.i,1);return render()}
     case 'myrecord':return open({t:'record',me:true});
     case 'other':{const n=b.dataset.n;if(!TR[n].shared)return say(n.split(' ')[0]+' hasn’t shared a track record.');return open({t:'record',name:n})}
     case 'trshare':TR['Amina Noor'].shared=!TR['Amina Noor'].shared;render();return say(TR['Amina Noor'].shared?'People on your agreements can now see your track record.':'Your track record is private again.');
@@ -345,14 +382,17 @@ screen.addEventListener('click',e=>{
     case 'review':{const e=draftError();if(e){S.d.err=e;return render()}return open({t:'review'})}
     case 'save':{const a=saveDraft();S.pages=[];S.tab=0;open({t:'agreement',id:a.id});return say('Draft saved. Send it when everyone’s details are right.')}
     case 'payby':return open({t:'payby',id:page().id});
-    case 'paid':{const ag=S.list.find(x=>x.id===page().id);const x=ag.people[+b.dataset.i];const add=Math.min(50,x.share-x.paid);x.paid+=add;ag.paid+=add;if(ag.paid>=ag.amt)ag.status='completed';S.pages.pop();render();return say(`£${add} from ${x.you?'you':x.name.split(' ')[0]} recorded (example).`)}
+    case 'paid':{const ag=S.list.find(x=>x.id===page().id);const x=ag.people[+b.dataset.i];const add=Math.min(50,x.share-x.paid-(x.pending||0));if(add<=0)return;x.pending=(x.pending||0)+add;ag.pend.push({from:x.you?'you':x.name.split(' ')[0],i:+b.dataset.i,amt:add,on:fmt(TODAY)});S.pages.pop();render();return say(`£${add} from ${x.you?'you':x.name.split(' ')[0]} recorded. It counts once ${owedName(ag)} confirms.`)}
+    case 'pconf':case 'pdemo':{const ag=S.list.find(x=>x.id===page().id);const [q]=ag.pend.splice(+b.dataset.i,1);ag.paid=Math.min(ag.amt,ag.paid+q.amt);if(ag.people&&q.i!=null){const x=ag.people[q.i];x.pending-=q.amt;x.paid+=q.amt}if(ag.paid>=ag.amt)ag.status='completed';render();return say(ag.status==='completed'?'Confirmed. Everything is paid, so the agreement is complete.':`Confirmed. ${gbp(q.amt)} now counts as paid.`)}
+    case 'prej':{const ag=S.list.find(x=>x.id===page().id);const [q]=ag.pend.splice(+b.dataset.i,1);render();return say(`Marked as not received. ${q.from} is told (example).`)}
+    case 'fullpaid':{const ag=S.list.find(x=>x.id===page().id);ag.pend=[];ag.paid=ag.amt;ag.status='completed';render();return say('Marked as paid in full. The agreement is complete.')}
     case 'invites':return say('Invitations are already in the app. Not redrawn here yet.');
     case 'invite':S.invite=false;render();return say('Opens Invitations (already in the app). Removed from Needs you for this demo.');
     case 'docview':return say('The agreement copy is already in the app. Not redrawn here yet.');
     case 'remind':{const ag=S.list.find(x=>x.id===page().id);return say(`Reminder sent to ${ag.who.split(' ')[0]} (example).`)}
     case 'sign':{const ag=S.list.find(x=>x.id===page().id);ag.status='active';render();return say('Signed. The agreement is now active.')}
     case 'send':{const ag=S.list.find(x=>x.id===page().id);ag.status='awaiting';render();return say('Sent. Waiting for signatures.')}
-    case 'pay':{if(S.list.find(x=>x.id===page().id).people)return open({t:'payby',id:page().id});const ag=S.list.find(x=>x.id===page().id);ag.paid=Math.min(ag.amt,ag.paid+50);if(ag.paid===ag.amt)ag.status='completed';render();return say('Payment of £50 recorded (example).')}
+    case 'pay':{if(S.list.find(x=>x.id===page().id).people)return open({t:'payby',id:page().id});const ag=S.list.find(x=>x.id===page().id);ag.paid=Math.min(ag.amt,ag.paid+50);if(ag.paid===ag.amt)ag.status='completed';render();return say(ag.owedByYou?'£50 recorded. You are owed, so it counts straight away.':'£50 recorded (example).')}
     default:return say('Not part of this design yet.');
   }
 });
@@ -361,26 +401,22 @@ document.getElementById('backout').onclick=back;
 /* ---------- rail ---------- */
 const STATES=[['normal','Example records'],['calm','Nothing needs you'],['empty','New member (no agreements)'],['loading','Loading'],['error','Couldn’t load']];
 function drawRail(){
-  document.getElementById('demo').innerHTML=STATES.map(([k,l])=>`<button data-s="${k}" aria-pressed="${S.scen===k}">${l}</button>`).join('');
-  document.getElementById('ts').innerHTML=`<button class="pill" data-ts="A" aria-pressed="true">Seven launch types</button>`;
-  document.getElementById('tsHint').textContent='LOCK 2 (8 Nov): A plus family and custom. Tap to open the Type step.';
-  document.getElementById('size').innerHTML=[['pro','iPhone 15 Pro Max'],['se','iPhone SE']].map(([k,l])=>`<button class="pill" data-z="${k}" aria-pressed="${S.size===k}">${l}</button>`).join('');
+  document.getElementById('flows').innerHTML=[['app','Wafa app'],['home','Phone home screen']].map(([k,l])=>`<button data-flow="${k}" aria-pressed="${(k==='home')===(S.view==='spring')}">${l}</button>`).join('');
+  const st=document.getElementById('states');st.hidden=!!S.view;
+  st.innerHTML='<b>Try</b>'+STATES.map(([k,l])=>`<button data-s="${k}" aria-pressed="${S.scen===k}">${l}</button>`).join('');
+  document.getElementById('uopt').hidden=true;
 }
-const reset=()=>{S.list=BASE.map(a=>({...a}));S.tab=0;S.pages=[];S.filt='all';S.invite=S.scen!=='calm'};
-document.querySelector('.rail').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.s){S.scen=b.dataset.s;reset()}
-  if(b.dataset.z){S.size=b.dataset.z}
-  if(b.dataset.ao){S.scen='normal';S.tab=3;S.pages=[{t:'record',me:true}]}
-  if(b.dataset.vo){S.scen='normal';S.tab=3;S.pages=[{t:'verify'}]}
-  if(b.dataset.fam){S.scen='normal';reset();S.tab=1;S.pages=[{t:'agreement',id:'a7'}]}
-  if(b.dataset.ts){S.ts=b.dataset.ts;S.kind=null;if(!page()||page().t!=='create'){S.scen='normal';S.tab=0;S.pages=[{t:'create'}]}}
+const reset=()=>{S.list=BASE.map(a=>({...a,pend:(a.pend||[]).map(x=>({...x})),people:a.people?a.people.map(x=>({...x,pending:0})):undefined}));S.ev=JSON.parse(JSON.stringify(EV0));S.tab=0;S.pages=[];S.filt='all';S.invite=S.scen!=='calm'};
+document.querySelector('.bar').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.id==='backout')return;
+  if(b.dataset.flow){clearTimeout(S.lt);S.view=b.dataset.flow==='home'?'spring':null}
+  if(b.dataset.s){S.scen=b.dataset.s;S.view=null;reset()}
   render();});
 
 /* ---------- scale phone to fit ---------- */
 function fit(){
   const dev=document.getElementById('dev'),w=(S.size==='se'?375:430)+24,h=(S.size==='se'?667:932)+24;
   dev.style.width=(w-24)+'px';dev.style.height=(h-24)+'px';
-  const avail=Math.min(window.innerWidth-32,w), availH=Math.max(window.innerHeight-90,420);
+  const avail=Math.min(window.innerWidth-32,w), availH=Math.max(window.innerHeight-document.querySelector('.bar').offsetHeight-48,420);
   const s=Math.min(1,avail/w,availH/h);
   dev.style.transform=`scale(${s})`;
   const f=document.getElementById('fit');f.style.width=w*s+'px';f.style.height=h*s+'px';

@@ -149,7 +149,7 @@ Nothing is overwritten. Every change is permanently
 recorded.
 
 ------------------------------------------------------------
-ISLAMIC FINANCE TRACKER
+VALUES-BASED FINANCE TRACKER
 ------------------------------------------------------------
 
 Users can monitor:

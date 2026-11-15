@@ -61,7 +61,7 @@ SCHOLAR MARKETPLACE (TBC)
 
 Paid services:
   • Contract Review
-  • Islamic Compliance Review
+  • Religious Compliance Review
   • Explain Contract Clauses
   • Ask Contract Questions
 
@@ -70,7 +70,7 @@ verified witnesses where appropriate under the community's
 religious requirements and the law.
 
 ------------------------------------------------------------
-EXPANDED ISLAMIC CONTRACT LIBRARY
+EXPANDED CONTRACT LIBRARY
 ------------------------------------------------------------
 
 Add new contract types without changing the overall system.
@@ -120,6 +120,8 @@ APPROVED TO-DO LIST
   before development begins.
 • Define Evidence Vault storage limits and pricing.
 • Define Scholar Marketplace vetting and approval process.
+  (Decided 10 Nov 2026: through partner organisations, yearly
+  check - SCHOLAR_VETTING_CURRENT_VERSION_V1.md)
 • Define Mosque and Charity account feature set.
 • Define Business Workspace feature set.
 • Legal and scholarly review required before Estate /

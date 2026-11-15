@@ -16,3 +16,4 @@ owner: WAFA chat
 | 1 (confirmations) | 2026-11-08 ~10:35 | Note move: "Yes, move it (Recommended)" · Loading/Couldn't load: "Wait (Recommended)" | Confirms spec V1 §2 and §4 as written - no spec change | 3 |
 | 1 (masters re-rendered) | 2026-11-08 ~11:55 | (consequence of LOCK 2) | Masters w01-w07 re-rendered with LOCK 2 example records (Van hire, Mum's care costs: Active 3, "4 agreements running"). Layout and spec V1 unchanged | 3 |
 | 1 (masters re-rendered) | 2026-11-10 ~12:20 | (consequence of LOCK 6) | w01-w07 re-rendered: top-left logo is now the waw icon + "wafa" (BrandMark per Brand spec §4). Layout and spec V1 unchanged | 3 |
+| 1 (consequence of LOCK 7) | 2026-11-13 ~08:20 | (consequence of LOCK 7) | "Needs you" gains a "confirm a payment" row after "Waiting for your signature" - specified in `AGREEMENT_RULES/RECORD/AGREEMENT_RULES_SPEC_CURRENT_VERSION_V1.md` §3; LOCK 1 spec V1 and masters w01-w07 unchanged | 12 |

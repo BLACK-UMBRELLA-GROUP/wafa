@@ -150,7 +150,7 @@ The platform is built around:
 
 The application NEVER generates contracts containing
 Riba (interest). AI actively protects users by identifying
-prohibited clauses and suggesting halal alternatives.
+prohibited clauses and suggesting permitted alternatives.
 
 ------------------------------------------------------------
 CORE PRINCIPLES
@@ -227,8 +227,8 @@ BUSINESS MODEL
 Wafa is not marketed as an AI contract generator.
 
 Positioned as:
-  "The trusted Islamic platform for creating, managing
-  and fulfilling agreements."
+  "The trusted platform for creating, managing and
+  fulfilling agreements in line with the community's values."
 
 AI powers the experience but is not the product itself.
 

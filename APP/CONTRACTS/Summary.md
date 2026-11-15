@@ -73,7 +73,7 @@ Each community term can be tapped to view:
   • Future: Qur'an and Hadith references
 
 ------------------------------------------------------------
-ISLAMIC COMPLIANCE ENGINE
+VALUES COMPLIANCE ENGINE
 ------------------------------------------------------------
 
 Every contract is automatically analysed.
@@ -92,7 +92,7 @@ If prohibited wording is detected:
   AI then:
   • Highlights the clause
   • Explains why it is prohibited
-  • Suggests halal wording
+  • Suggests permitted wording
 
 Wafa never generates interest-bearing contracts.
 
@@ -256,7 +256,7 @@ Timeline permanently records all dispute events.
 Final implementation: TBC.
 
 ------------------------------------------------------------
-PRIVATE ISLAMIC FINANCE ASSISTANT
+PRIVATE FINANCE ASSISTANT
 ------------------------------------------------------------
 
 Each contract includes a private financial assistant
@@ -290,7 +290,7 @@ APPROVED TO-DO LIST
 
 • Confirm MVP contract types for launch.
 • Define exact question flows per contract type.
-• Design the Islamic Compliance Engine warning UI.
+• Design the Values Compliance Engine warning UI.
 • Define Rahn collateral photo and document requirements.
 • Define witness invitation and signature flow.
 • Define verification badge tiers.

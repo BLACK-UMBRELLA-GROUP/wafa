@@ -126,7 +126,7 @@ _Stop here unless you need to look up another ID._
 
 | ID | File | Type | Purpose | Links | KB |
 |---|---|---|---|---|---|
-| DOC-WAFA-0007 | `APP/APPROVED/BUILD_QUEUE.md` | REGISTER | Build queue - every LOCKed brief waits here; Codex builds WAITING lines at 01:00 or on GO (charters rule 9) | AD-AIOS-115 | 9 |
+| DOC-WAFA-0007 | `APP/APPROVED/BUILD_QUEUE.md` | REGISTER | Build queue - every LOCKed brief waits here; Codex builds WAITING lines at 01:00 or on GO (charters rule 9) | AD-AIOS-115 | 10 |
 | DOC-WAFA-0008 | `APP/APPROVED/QUESTIONS.md` | REGISTER | Codex's questions for the WAFA chat - Codex never asks Shakeel in chat; he files the question here, marks… | AD-AIOS-116 | 11 |
 
 ## Old versions (1) — superseded or retired; open only to check history

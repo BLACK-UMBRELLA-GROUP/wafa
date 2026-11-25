@@ -40,7 +40,9 @@ document, overlay or AD says otherwise, this block wins.
 4. **Never delete.** Move unwanted files to `~/_to_delete/<WHAT>_<date>/` on the Mac -
    the ONE delete folder (Founder, 10 Nov: "I DONT WANNA HAVE TO DELETE 2 FODLERS");
    **never a `_to_delete` or `tmp/_to_delete` inside any repo** (S22, S25). The Founder
-   empties it. If the folder is missing, create it.
+   empties it. If the folder is missing, create it. A Claude chat that has only the DEVELOPMENT
+   folder moves to `DEVELOPMENT/_to_delete/<WHAT>_<date>/` instead (Founder 24 Nov, AD-AIOS-140);
+   the 03:27 night tidy-up moves it into ~/_to_delete. Never ask the Founder to delete by hand.
 5. **Findings become actions** — every finding gets an OA number or a
    written refusal.
 6. **One CURRENT_VERSION per document system.** Register entries append
@@ -128,7 +130,7 @@ WAFA's build freeze was lifted on 8 Nov 2026 (AD-AIOS-131): Codex builds WAITING
 - Next read `MAP.md`: every WAFA document by ID and the task routes. Open only what the
   task needs. Read it only down to "Route paths" (the file paths); search the rest by ID.
 - Group lessons every agent must read first:
-  `../BLACK UMBRELLA GROUP/SYSTEM/DOCUMENTS/MASTER_GOVERNANCE/AGENT_LESSONS_LEARNED_CURRENT_VERSION_V2.md`
+  `../BLACK UMBRELLA GROUP/SYSTEM/DOCUMENTS/MASTER_GOVERNANCE/AGENT_LESSONS_LEARNED_CURRENT_VERSION_V3.md`
 
 ## Public check before you finish (AD-AIOS-146)
 This is a public repo. Before ending any session (business chat or Codex line owner), run

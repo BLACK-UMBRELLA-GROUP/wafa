@@ -1,0 +1,385 @@
+{
+  "queue_line": 11,
+  "action": "OA-AIOS-452 / A-06",
+  "disposition": "QUESTION",
+  "question": 10,
+  "built_from": "APP/APPROVED/BASELINE/BRIEFS/BUILD_BRIEF_2026-11-13_V1.md",
+  "brief_sha256": "89585d7f9ed838055ac325fd0e3b9e1582463ccd4795339fc06b923d0e5bebb7",
+  "source_commit_sha": "92d0bea14013644526deaeb2ebdee9b4fd5c8bc5",
+  "flutter_version": "3.44.2",
+  "dart_version": "3.12.2",
+  "build_mode": "flutter test widget capture (debug); no app binary",
+  "timestamp_utc": "2026-11-27T20:58:39.337330+00:00",
+  "surface_logical": [
+    430,
+    932
+  ],
+  "device_pixel_ratio": 3,
+  "render_count": 26,
+  "full_frame_count": 25,
+  "full_frame_dimensions": [
+    1290,
+    2796
+  ],
+  "crop_dimensions": [
+    1170,
+    120
+  ],
+  "crop_source_rect": [
+    60,
+    186,
+    1170,
+    120
+  ],
+  "crop_validation": "Independent standard-library PNG decoding verified exact pixels from saved w01.",
+  "font": "Existing cached Roboto Regular/Medium/Bold via FontLoader as Roboto and Ahem; existing cached MaterialIcons. Null-family text remains blocks; no app font edits.",
+  "checks": {
+    "capture_full_runs": [
+      {
+        "passed": 9
+      },
+      {
+        "passed": 9
+      }
+    ],
+    "focused_font_diagnostic_passed": 1,
+    "normal_tests_passed": 116,
+    "analyzer": "No issues found (4.2 seconds); initial unnecessary import removed",
+    "failed_full_test_runs": 0
+  },
+  "method": "Existing test navigation, fixtures and people. RepaintBoundary.toImage(pixelRatio:3); w30 exact ui.Canvas crop. No simulator, device, app install or app source change.",
+  "differences": [
+    "Null-family labels remain test-font blocks despite cached FontLoader setup; candidate is not usable build-check evidence.",
+    "Widget renders omit prototype/native status frame, have different navigation and layout; exact w30 box contains greeting rather than brand header.",
+    "Dashboard uses existing 21 Oct test fixture: 12 days overdue and Family support due in 7 days; master says 8 Nov, 7 days overdue and Van hire due in 4 days; Draft count 0 versus master 1. No app or data patch inferred.",
+    "Create details use existing default due date rather than forcing master date; widget layout and scroll differ from prototype."
+  ],
+  "skipped": {
+    "w04_w05": "Not built; Founder Wait decision.",
+    "w15": "Historical; superseded by verification w31 per Q8.",
+    "w28_w29": "Native assets already checked by WAFA Claude."
+  },
+  "held_candidate": "SOURCE/build/held/LINE11/2026-11-27_Q10",
+  "candidate_files": [
+    {
+      "original_path": "SOURCE/test_screens/build_check_renders_test.dart",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/SOURCE/test_screens/build_check_renders_test.dart",
+      "sha256": "20a7de0b3cc6ca04394f95dab6e816ff4fd703860c4b0973349d74f4ae147943",
+      "bytes": 13679
+    },
+    {
+      "original_path": "APP/APPROVED/DASHBOARD/BUILT/w01_home__needs_you.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/DASHBOARD/BUILT/w01_home__needs_you.png",
+      "sha256": "48088f999199b98286f67ad4d75aa89c4c4e6fa7928a660ef1378a1c9ef3a93d",
+      "bytes": 226844,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/DASHBOARD/MASTERS/w01_home__needs_you.png",
+      "master_sha256": "2396970b45ce31c9b7031de26afb3cd7dca2e1c538903abe26258f30d437405b"
+    },
+    {
+      "original_path": "APP/APPROVED/DASHBOARD/BUILT/w02_home__nothing_needs_you.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/DASHBOARD/BUILT/w02_home__nothing_needs_you.png",
+      "sha256": "80ad456c8a39463078f5538da273386a4c0e42b957395170dc0c2c070784598a",
+      "bytes": 189168,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/DASHBOARD/MASTERS/w02_home__nothing_needs_you.png",
+      "master_sha256": "784f05bcfeaa7019a85fefec89ef99260bd876c131d88728949ccebb8c07276d"
+    },
+    {
+      "original_path": "APP/APPROVED/DASHBOARD/BUILT/w03_home__new_member.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/DASHBOARD/BUILT/w03_home__new_member.png",
+      "sha256": "8372df1f35e3638919ce0d06839367ea0db0594b3ad02204c80737b2f4872843",
+      "bytes": 111699,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/DASHBOARD/MASTERS/w03_home__new_member.png",
+      "master_sha256": "a443a7af11c8b6992b71d42f1a8416c440d368fb8da2c0e9c7cb071afd400431"
+    },
+    {
+      "original_path": "APP/APPROVED/DASHBOARD/BUILT/w06_section__list.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/DASHBOARD/BUILT/w06_section__list.png",
+      "sha256": "b8ae106e7761145c0ee47c8fe69788ef6f434dfab31267f4deac3eba325f0217",
+      "bytes": 69600,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/DASHBOARD/MASTERS/w06_section__list.png",
+      "master_sha256": "bd0ca70e8d59f961beeb1126e3d719ce7c73b77f9c3072987601a22b16ae38be"
+    },
+    {
+      "original_path": "APP/APPROVED/DASHBOARD/BUILT/w07_section__empty.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/DASHBOARD/BUILT/w07_section__empty.png",
+      "sha256": "1e0d09fc64b88d7247d823fb7b9a26f4466c46606afe818adc78253f66ba5654",
+      "bytes": 71480,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/DASHBOARD/MASTERS/w07_section__empty.png",
+      "master_sha256": "87671eadb500a10da340369844757fd84bf4431c22db2b577cc18c368db1ef90"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w08_create__type.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w08_create__type.png",
+      "sha256": "c9cc696bf514766b7e48a4e626b39fa90b8e97eb72736f51cf25cd838095577f",
+      "bytes": 242004,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w08_create__type.png",
+      "master_sha256": "db97e84db20963b983e7b37d5f06a7359fe9826f99eab3a86e73ddcbf8adbaab"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w09_create__type_scrolled.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w09_create__type_scrolled.png",
+      "sha256": "65d3bcd1479379955e9b5bb919be4f2434c3b336383727bec73a00544d01c7bb",
+      "bytes": 233951,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w09_create__type_scrolled.png",
+      "master_sha256": "a21fbdbf08473434d9043b105bf414484afc842c4134b431d171ad6fe25c9976"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w10_create__details_equal.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w10_create__details_equal.png",
+      "sha256": "28f37f7d7fa5f573a6dde54f721fbae79719b5bdfb8a04fbcc5fac6ded52ad5e",
+      "bytes": 174189,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w10_create__details_equal.png",
+      "master_sha256": "c34e103dbc55bbd7ff7196bbc41ac6bd79dae0443cdfd8a5fddbd41b1ccb3145"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w11_create__details_set.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w11_create__details_set.png",
+      "sha256": "984587e8cb8806086b1620664bdf121fa85e0894b5af50c7859d11842e061d66",
+      "bytes": 185278,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w11_create__details_set.png",
+      "master_sha256": "c3e05fbe8c4bb56169410989d87978ce7de9d91adcb3e009fdb3fa42c039b045"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w12_create__details_error.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w12_create__details_error.png",
+      "sha256": "651ae0d7d56c00c7932187519c0dc91571b27168ee9327169428c5da0ca90912",
+      "bytes": 175102,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w12_create__details_error.png",
+      "master_sha256": "415ef41ffc4aab52532ed8ca5d0173dbfe8e3483156ffd8e27b9ca74c5e9a12b"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w13_create__review.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w13_create__review.png",
+      "sha256": "04c3717a1880511cfb8c26711dc597d12017309310afcbd528f7a4d781c30a9e",
+      "bytes": 190470,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w13_create__review.png",
+      "master_sha256": "2c47455a4bdc8fec724001e00cab04879bc7d6eb0b50cdf3633f64e3ae03b586"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w14_agreement__many_people.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w14_agreement__many_people.png",
+      "sha256": "6ccb643aca0eec093b7083bf3171def5c0ee83fa1c72c14b375ab8ac9fa5f025",
+      "bytes": 191883,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w14_agreement__many_people.png",
+      "master_sha256": "97c07f48c9461e6d39b36cc08b6be135ca4fcd35954c91e27cd53ce28a6817c6"
+    },
+    {
+      "original_path": "APP/APPROVED/AGREEMENTS/BUILT/w16_create__custom_warning.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/AGREEMENTS/BUILT/w16_create__custom_warning.png",
+      "sha256": "9f0d9830c4a6fb7266acf570b5a3fcc681923518997bd60a7be7e1752fa59615",
+      "bytes": 175329,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/AGREEMENTS/MASTERS/w16_create__custom_warning.png",
+      "master_sha256": "04dabf92dc2fd630db0237800d08e4ae801a62737d11ad43886a1bdbb2ce6302"
+    },
+    {
+      "original_path": "APP/APPROVED/VERIFICATION/BUILT/w17_profile.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/VERIFICATION/BUILT/w17_profile.png",
+      "sha256": "0d3fe118159493462a0e653dd21d112f71ddf2851bb5f37b17e7157abd579194",
+      "bytes": 216722,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/VERIFICATION/MASTERS/w17_profile.png",
+      "master_sha256": "b43884e4565c11ce19ad3f7d5d29a6cdf741ef691c4941ea0f6e908517103f96"
+    },
+    {
+      "original_path": "APP/APPROVED/VERIFICATION/BUILT/w18_verification__email_only.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/VERIFICATION/BUILT/w18_verification__email_only.png",
+      "sha256": "f65c7c2734e05af2fa3e918970bf916c233b799d835d02eb0046c3ca77a71d0a",
+      "bytes": 211030,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/VERIFICATION/MASTERS/w18_verification__email_only.png",
+      "master_sha256": "ca634619e0f3d4e582017a7ffb2537ba51c9ab4adaaa5e2e56d7cdccd734818d"
+    },
+    {
+      "original_path": "APP/APPROVED/VERIFICATION/BUILT/w19_verification__basic.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/VERIFICATION/BUILT/w19_verification__basic.png",
+      "sha256": "e87e3a3097162a2cbdd71ed2490bcb96d27d4db0db846f0aadd4e3f337c9343a",
+      "bytes": 217729,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/VERIFICATION/MASTERS/w19_verification__basic.png",
+      "master_sha256": "c07b4ed2c95e24a3691f0b727ef3c31bdfe0aaa2ceac2b3dbc7c24e82f4e82f4"
+    },
+    {
+      "original_path": "APP/APPROVED/VERIFICATION/BUILT/w20_verification__verified.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/VERIFICATION/BUILT/w20_verification__verified.png",
+      "sha256": "5ba8a52e5d2f4425cf299b292a97c5ac0ec6f2baec07d27fe9915a1feae0edfe",
+      "bytes": 214998,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/VERIFICATION/MASTERS/w20_verification__verified.png",
+      "master_sha256": "cb279f83c0d1a6f111d956c436dd8ab367c38a579385e8cba3ab70c337de1553"
+    },
+    {
+      "original_path": "APP/APPROVED/VERIFICATION/BUILT/w31_verification__who_paid.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/VERIFICATION/BUILT/w31_verification__who_paid.png",
+      "sha256": "b155db68e12afc5990a7f84ef110a99cb2a6e745e6d19d2a341516d5b5600721",
+      "bytes": 69562,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/VERIFICATION/MASTERS/w31_verification__who_paid.png",
+      "master_sha256": "375ea13b0aa8ec161d7bd64c148af18916cbcdc99773f48744083666ee18a8ee"
+    },
+    {
+      "original_path": "APP/APPROVED/TRACK_RECORD/BUILT/w21_track_record__mine_shared.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/TRACK_RECORD/BUILT/w21_track_record__mine_shared.png",
+      "sha256": "a049aa1cdbdaf4408aebc58d338b0083802c16ca6d28613c86893103a0ebe058",
+      "bytes": 174938,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/TRACK_RECORD/MASTERS/w21_track_record__mine_shared.png",
+      "master_sha256": "af8c97f080b3066e84f6eb4dde569ec23b2253a6b27a3ac40827350db4d0c680"
+    },
+    {
+      "original_path": "APP/APPROVED/TRACK_RECORD/BUILT/w22_track_record__mine_private.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/TRACK_RECORD/BUILT/w22_track_record__mine_private.png",
+      "sha256": "046b220b537121fddbcca98952d216e1d9f1e2c41d13083af32de3ed894bef65",
+      "bytes": 177143,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/TRACK_RECORD/MASTERS/w22_track_record__mine_private.png",
+      "master_sha256": "fa358f7b95890f1400f47f0116bc2df515dd11cfc138e59030748d6fa5588fa9"
+    },
+    {
+      "original_path": "APP/APPROVED/TRACK_RECORD/BUILT/w23_track_record__other_person.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/TRACK_RECORD/BUILT/w23_track_record__other_person.png",
+      "sha256": "6126ab2f129b6906ed3f8de1bbcf4c2fe1f0ae035329aeb183f1d6a9828239d5",
+      "bytes": 149093,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/TRACK_RECORD/MASTERS/w23_track_record__other_person.png",
+      "master_sha256": "fe3eae3019d239f33d58fc2bb901a93d9c2830eae0bcb9a6b99a84d054a2932c"
+    },
+    {
+      "original_path": "APP/APPROVED/EVIDENCE/BUILT/w24_evidence__list_signed.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/EVIDENCE/BUILT/w24_evidence__list_signed.png",
+      "sha256": "de446a6896f8f3275573af4c8f2460fb575f8fefb3ff2ad3f20390ceacda6a78",
+      "bytes": 199723,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/EVIDENCE/MASTERS/w24_evidence__list_signed.png",
+      "master_sha256": "d7ed7d70467d7eb485e8976b2dcf0c0fa4a04fdf2a25643513225dc335138ba0"
+    },
+    {
+      "original_path": "APP/APPROVED/EVIDENCE/BUILT/w25_evidence__add.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/EVIDENCE/BUILT/w25_evidence__add.png",
+      "sha256": "9998f8d6c386803fc3b5a6090b2117f616d9626883fd3cbb18ae5c84e850dbfb",
+      "bytes": 170264,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/EVIDENCE/MASTERS/w25_evidence__add.png",
+      "master_sha256": "b723f0a71bcacb3371437ca8af928f238c1db295ce85fde8d85482dbe00361a5"
+    },
+    {
+      "original_path": "APP/APPROVED/EVIDENCE/BUILT/w26_evidence__empty.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/EVIDENCE/BUILT/w26_evidence__empty.png",
+      "sha256": "a22eb9e1f7679c19841b6bc0000e22e46fba1b6911267ea131ea9e03504acfa4",
+      "bytes": 199936,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/EVIDENCE/MASTERS/w26_evidence__empty.png",
+      "master_sha256": "2500d2e41afa64e73230e8cb7a058fe1a19b3e0d7edd291f629e5d82531cc514"
+    },
+    {
+      "original_path": "APP/APPROVED/EVIDENCE/BUILT/w27_evidence__draft_removable.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/EVIDENCE/BUILT/w27_evidence__draft_removable.png",
+      "sha256": "05ae546684476ad3c93c72f7feae7a4e17cb11fba3ac26d57d81d78cc7040fc8",
+      "bytes": 195777,
+      "dimensions": [
+        1290,
+        2796
+      ],
+      "master_path": "APP/APPROVED/EVIDENCE/MASTERS/w27_evidence__draft_removable.png",
+      "master_sha256": "f559390168ca53b072efb9d327c3c402dbd5de0928130818abaf1cdc290ab655"
+    },
+    {
+      "original_path": "APP/APPROVED/BRAND/BUILT/w30_in_app_mark__home_top.png",
+      "held_path": "SOURCE/build/held/LINE11/2026-11-27_Q10/APP/APPROVED/BRAND/BUILT/w30_in_app_mark__home_top.png",
+      "sha256": "23409bf62eb60202a69bc41e25cba3b49be43774e381cf1746bc4815b5ffdf9b",
+      "bytes": 15361,
+      "dimensions": [
+        1170,
+        120
+      ],
+      "master_path": "APP/APPROVED/BRAND/MASTERS/w30_in_app_mark__home_top.png",
+      "master_sha256": "c3e78533c7d65c9f2f41bfaef1cbdd49c56f1532794331cd46cdf0739c98dfbe"
+    }
+  ],
+  "designer_match": "Not claimed; WAFA Claude alone records the build check.",
+  "next_dependency": "Line 12 remains dependent on line 11 and WAFA Claude recorded build check; no line 12 work started."
+}

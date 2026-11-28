@@ -29,10 +29,10 @@ Founder, 13 Nov 2026 (audit action A-06): "A-06 Build check (Recommended)". The 
 | Feature | Masters (render each) | Skip (and why) |
 |---|---|---|
 | DASHBOARD | w01 needs you · w02 nothing needs you · w03 new member · w06 section list · w07 section empty | w04 loading, w05 couldn't load - not built, by Founder decision ("Wait") |
-| AGREEMENTS | w08 type · w09 type scrolled · w10 details equal · w11 details set · w12 details error · w13 review · w14 agreement many people · w15 who paid · w16 custom warning | - |
+| AGREEMENTS | w08 type · w09 type scrolled · w10 details equal · w11 details set · w12 details error · w13 review · w14 agreement many people · w16 custom warning | w15 who paid - superseded by VERIFICATION w31 (QUESTIONS 7, 8); Who paid? is rendered once, as w31 |
 | VERIFICATION | w17 profile · w18 email only · w19 basic · w20 verified · w31 who paid | - |
 | TRACK_RECORD | w21 mine shared · w22 mine private · w23 other person | - |
 | EVIDENCE | w24 list signed · w25 add · w26 empty · w27 draft removable | - |
-| BRAND | w30 in-app mark home top | w28 home-screen icon, w29 launch screen - already checked by the WAFA chat from the asset files (13 Nov: icon matches, launch mark identical) |
+| BRAND | w30 in-app mark home top - render the full Home screen in w01's state, then crop x 60-1229, y 186-305 px (390 × 40 pt at x 20, y 62) and save only the crop (QUESTIONS 8) | w28 home-screen icon, w29 launch screen - already checked by the WAFA chat from the asset files (13 Nov: icon matches, launch mark identical) |
 
 The renders are working files for the WAFA chat's comparison; the Founder is not shown PNGs (Founder rule, 8 Nov).

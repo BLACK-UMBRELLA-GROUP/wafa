@@ -12,7 +12,9 @@ owner: WAFA chat
 
 **Copy exactly. No improvements. Unclear or conflicting → stop, file it in `APP/APPROVED/QUESTIONS.md`, set the line to QUESTION (rule 10).**
 
-Build after line 11 **and** after the WAFA chat has recorded the line 11 build check (Founder, 13 Nov: the build waits until the check is done). No ROADMAP row; name it "LOCK 7 agreement rules" in the commit.
+Build after line 11 **and** after the WAFA chat has recorded the line 11 build check (Founder, 13 Nov: the build waits until the check is done).
+
+Needs: `NEEDS line 11 BUILT - Founder 13 Nov: line 12 is built only after the line 11 build check is recorded, and line 12's captures use line 11's capture method` (Fable 27 Nov, QUESTIONS 9). Master w36's "Demo: confirm as Sara" is a prototype-only helper - build no such control (spec section 2); captures use a fixed demo today of 12 Nov 2026 (spec section 5 gives 7 Nov for the Family support payment); the £50 from Omar recorded 8 Nov on w36 is a capture-only test fixture (Fable removed the demo link from master w36 on 27 Nov). No ROADMAP row; name it "LOCK 7 agreement rules" in the commit.
 
 | # | Step | Detail |
 |---|---|---|
